@@ -1,0 +1,14 @@
+<section id="hero" class="hero-section">
+    <div class="container">
+        <h1>{{ hero.title }}</h1>
+        <p>{{ hero.subtitle }}</p>
+        {% for button in hero.buttons %}
+          {% if button.action_type == "email" %}
+             <a href="mailto:{{ button.target }}" class="btn btn-{{ button.type }}" aria-label="{{ button.text }}">{{ button.text }}</a>
+          {% elif button.action_type == "link" %}
+             <a href="{{ button.target }}" class="btn btn-{{ button.type }}" aria-label="{{ button.text }}">{{ button.text }}</a>
+          {% endif %}
+       {% endfor %}
+ 
+    </div>
+ </section>

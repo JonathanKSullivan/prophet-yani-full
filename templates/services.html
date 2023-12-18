@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <!-- Additional head content specific to the services page -->
+{% endblock %}
+
+{% block header %}
+    <h1>Our Services</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <div class="row">
+            {% for service in services %}
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        {% if service.image_url %}
+                            <img src="{{ service.image_url }}" class="card-img-top" alt="{{ service.name }}">
+                        {% else %}
+                            <img src="path/to/default/image.jpg" class="card-img-top" alt="Default Image">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ service.name }}</h5>
+                            <p class="card-text">{{ service.description }}</p>
+                            <p class="card-text"><strong>Duration:</strong> {{ service.duration }} minutes</p>
+                            <p class="card-text"><strong>Price:</strong> ${{ service.price }}</p>
+                            {% if session.get('user_id') %}
+                                <form action="{{ url_for('booking_blueprint.book_service', service_id=service.id) }}" method="POST">
+                                    <input type="date" name="booking_date" required>
+                                    <button type="submit" class="btn btn-primary">Book Now</button>
+                                </form>
+                            {% else %}
+                                <a href="{{ url_for('user_blueprint.login') }}" class="btn btn-primary">Login to Book</a>
+                                <a href="{{ url_for('user_blueprint.register_user') }}" class="btn btn-secondary">Register</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12">
+                    <p>No services available at the moment.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

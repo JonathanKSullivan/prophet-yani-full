@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block head %}
+<style>
+    /* Custom CSS for header */
+    .header-section {
+        background: url("{{ content['header_image_background']['url'] }}") no-repeat center center;
+        background-size: cover;
+        height: 100vh; /* Make header take up the full viewport height */
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+
+    /* Custom CSS for the image */
+    .header-image {
+        max-width: 300px; /* Set the maximum width for the image */
+        width: 100%; /* Ensure the image scales within its container */
+    }
+</style>
+{% endblock%}
+
+{% block header %}
+<header class="header-section">
+    <div class="container">
+        <img src="{{ content['header_image']['url'] }}" alt="{{ content['header_image']['alt_text'] }}" class="img-fluid rounded-circle mb-3 header-image">
+        <h1>{{ content['title'] }}</h1>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    {% for section in content['sections'] %}
+        <section class="mt-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 offset-md-2">
+                        <h2 class="text-center">{{ section['title'] }}</h2>
+                        <p>{{ section['content'] }}</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    {% endfor %}
+</div>
+{% endblock %}

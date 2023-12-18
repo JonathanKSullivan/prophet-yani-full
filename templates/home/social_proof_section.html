@@ -1,0 +1,145 @@
+<section id="social-proof" class="container my-5">
+    <h2>{{ social_proof.title }}</h2>
+    <!-- Testimonials with Images -->
+    <div class="row mb-5">
+       <!-- Each Testimonial with Image -->
+       {% for testimonial in social_proof.testimonials %}
+             <div class="col-md-4 mb-4">
+                <img src="{{ testimonial.image_url }}" alt="Client Testimonial" class="img-fluid mb-3">
+                <p><strong>{{ testimonial.author }}:</strong> "{{ testimonial.quote }}"</p>
+             </div>
+       {% endfor %}
+    </div>
+    <!-- Success Stories -->
+    <div class="row mb-5">
+       <div class="col-12 mb-3">
+          <h3 class="text-center">Success Stories</h3>
+       </div>
+       {% for story in social_proof.success_stories %}
+    
+          <div class="col-md-6 mb-4">
+             <div class="card h-100">
+                   <img src="{{ story.image_url }}" alt="{{ story.title }}" class="card-img-top">
+                   <div class="card-body">
+                      <h4 class="card-title">{{ story.title }}</h4>
+                      <p class="card-text">{{ story.description }}</p>
+                   </div>
+             </div>
+          </div>
+       {% endfor %}
+    </div>
+    <!-- Media Features -->
+    <div class="row mb-5">
+       <div class="col-12 mb-3">
+          <h3 class="text-center">Media Features and Endorsements</h3>
+       </div>
+       {% for feature in social_proof.media_features %}
+          <div class="col-md-6 mb-4">
+                <div class="media">
+                   <img src="{{ feature.image_url }}" class="mr-3" alt="{{ feature.alt_text }}">
+                   <div class="media-body">
+                      <h5 class="mt-0">{{ feature.title }}</h5>
+                      <p>{{ feature.description }}</p>
+                   </div>
+                </div>
+          </div>
+       {% endfor %}
+    </div>
+    <!-- Partnerships and Collaborations -->
+    <div class="row mb-5">
+       <div class="col-12 mb-3">
+          <h3 class="text-center">Partnerships and Collaborations</h3>
+       </div>
+       <!-- Partnership 1 -->
+       <div class="col-md-6 mb-4">
+          <div class="card h-100">
+             <div class="card-body">
+                <h4 class="card-title">Charity A Collaboration</h4>
+                <p class="card-text"><strong>Contribution:</strong> $50,000 for educational programs...</p>
+                <img src="https://placekitten.com/g/80/80" alt="Charity A Logo" class="img-fluid mb-2">
+                <!-- Description or details about the partnership -->
+             </div>
+          </div>
+       </div>
+    </div>
+ 
+    <!-- Social Media Highlights -->
+    <div class="row mb-5">
+       <div class="col-12 mb-4">
+          <h3 class="text-center">Social Media Highlights</h3>
+       </div>
+ 
+       <div class="col-md-6 mb-4">
+          <div class="card text-center">
+             <div class="card-body">
+                   <h4 class="card-title">Followers Count</h4>
+                   <img src="{{ social_proof.social_media_highlights.followers.image_url }}" alt="{{ social_proof.social_media_highlights.followers.alt_text }}" class="img-fluid mb-3">
+                   <p class="card-text"><i class="fab fa-twitter fa-2x"></i> Twitter: {{ social_proof.social_media_highlights.followers.twitter }} Followers</p>
+                   <p class="card-text"><i class="fab fa-facebook fa-2x"></i> Facebook: {{ social_proof.social_media_highlights.followers.facebook }} Followers</p>
+             </div>
+          </div>
+       </div>
+ 
+       <div class="col-md-6">
+          <div class="card text-center">
+             <div class="card-body">
+                   <h4 class="card-title">Engagement Rate</h4>
+                   <img src="{{ social_proof.social_media_highlights.engagement.image_url }}" alt="{{ social_proof.social_media_highlights.engagement.alt_text }}" class="img-fluid mb-3">
+                   <p class="card-text">Average Engagement Rate: {{ social_proof.social_media_highlights.engagement.average_rate }}%</p>
+                   <p class="card-text">Top Engaged Post: "{{ social_proof.social_media_highlights.engagement.top_post }}"</p>
+             </div>
+          </div>
+       </div>
+    </div>
+ 
+    <!-- Impact Statistics -->
+    <div class="row mb-5">
+       <div class="col-12 mb-4">
+          <h3 class="text-center">Impact Statistics</h3>
+       </div>
+ 
+       <!-- Consultations Statistic -->
+       <div class="col-md-4 mb-4">
+          <div class="card text-center">
+             <div class="card-body">
+                   <h4 class="card-title">Consultations</h4>
+                   <img src="{{ social_proof.impact_statistics.consultations.image_url }}" alt="{{ social_proof.impact_statistics.consultations.alt_text }}" class="img-fluid mb-3">
+                   <p class="card-text statistic-count">{{ social_proof.impact_statistics.consultations.count }}</p>
+                   <p class="card-text">{{ social_proof.impact_statistics.consultations.description }}</p>
+             </div>
+          </div>
+       </div>
+ 
+       <!-- Donations Statistic -->
+       <div class="col-md-4 mb-4">
+          <div class="card text-center">
+             <div class="card-body">
+                   <h4 class="card-title">Donations</h4>
+                   <img src="{{ social_proof.impact_statistics.donations.image_url }}" alt="{{ social_proof.impact_statistics.donations.alt_text }}" class="img-fluid mb-3">
+                   <p class="card-text statistic-count">{{ social_proof.impact_statistics.donations.count }}</p>
+                   <p class="card-text">{{ social_proof.impact_statistics.donations.description }}</p>
+             </div>
+          </div>
+       </div>
+ 
+       <!-- Global Impact Statistic -->
+       <div class="col-md-4">
+          <div class="card text-center">
+             <div class="card-body">
+                   <h4 class="card-title">Global Impact</h4>
+                   <img src="{{ social_proof.impact_statistics.global_impact.image_url }}" alt="{{ social_proof.impact_statistics.global_impact.alt_text }}" class="img-fluid mb-3">
+                   <p class="card-text statistic-count">{{ social_proof.impact_statistics.global_impact.count }}</p>
+                   <p class="card-text">{{ social_proof.impact_statistics.global_impact.description }}</p>
+             </div>
+          </div>
+       </div>
+    </div>
+ 
+    <!-- Certifications and Recognition -->
+    <div class="row">
+       <div class="col">
+          <h3>Certifications and Recognition</h3>
+          <p>{{ social_proof.certifications.details }}</p>
+       </div>
+    </div>
+ </section>

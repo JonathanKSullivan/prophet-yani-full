@@ -1,0 +1,12 @@
+<section id="problem-solution" class="container my-5">
+    <h2>{{ problem_solution.title }}</h2>
+    <div class="row">
+       {% for problem in problem_solution.problems %}
+          <div class="col-md-4">
+                <img src="{{ problem.image_url }}" alt="Image description for {{ problem.title }}" class="img-fluid mb-3">
+                <h3 class="subheading">{{ problem.title }}</h3>
+                <p>{{ problem.description }}</p>
+          </div>
+       {% endfor %}
+    </div>
+ </section>

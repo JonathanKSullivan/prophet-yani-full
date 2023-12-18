@@ -1,0 +1,14 @@
+<section id="benefits" class="container my-5">
+    <h2>{{ benefits.title }}</h2>
+    <div class="row">
+       {% for benefit in benefits.benefits %}
+          <div class="col-md-4">
+                <img src="{{ benefit.image_url }}" alt="Image description for {{ benefit.title }}" class="img-fluid mb-3">
+                <h3 class="subheading">{{ benefit.title }}</h3>
+                <p><strong>Feature:</strong> {{ benefit.features }}</p>
+                <p>{{ benefit.description }}</p>
+                <p><strong>Impact:</strong> {{ benefit.impact }}</p>
+          </div>
+       {% endfor %}
+    </div>
+ </section>
