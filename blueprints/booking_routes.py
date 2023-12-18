@@ -1,5 +1,6 @@
 from flask import Blueprint, redirect, render_template, request, url_for
 from lib.booking_manager import BookingManager
+from models import Service
 
 booking_blueprint = Blueprint('booking_blueprint', __name__)
 

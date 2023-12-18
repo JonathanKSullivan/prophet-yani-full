@@ -12,13 +12,16 @@ from blueprints.service_routes import service_blueprint
 from blueprints.user_routes import user_blueprint
 
 from extensions import db
+from config import DevelopmentConfig, ProductionConfig
 
+
+# Create and configure app
 app = Flask(__name__)
-
-# Configure the SQLAlchemy part
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///prophet_yani.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = 'your_random_secret_key'  # Replace with your secret key
+env = os.environ.get('FLASK_ENV', 'development')
+if env == 'production':
+    app.config.from_object(ProductionConfig)
+else:
+    app.config.from_object(DevelopmentConfig)
 
 # Initialize the database with the Flask app
 db.init_app(app)
