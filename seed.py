@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash
 from app import app, db  # Replace with your actual Flask app init file
 from models import User, Service, Booking, Donation, Charity, Location, Payment
@@ -36,7 +36,7 @@ def add_services():
         description='Description for Service 1',
         duration=60,
         price=100.00,
-        image_url='http://example.com/service1.jpg',
+        image_url='https://placehold.co/600x400',
         type='Type1',
         donation_percentage=10.00
     )
@@ -48,6 +48,7 @@ def add_bookings():
         service_id=1,  # Assuming service with id 1 exists
         booking_date=datetime.now(),
         appointment_date=datetime.now(),
+        appointment_end = datetime.now() + timedelta(minutes=30),
         status='confirmed'
     )
     db.session.add(booking1)

@@ -6,6 +6,7 @@
     <title>{{ metadata.page_title }}</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://jonathanksullivan.github.io/prophet-yani/homepage.css">
+    <link rel="icon" type="image/webp" href="https://jonathanksullivan.github.io/prophet-yani/image/logo.webp">
     <style>
         /* Make the navbar sticky to the top of the screen */
         .navbar {
@@ -42,7 +43,7 @@
     </main>
 
     <footer class="text-center mt-5">
-        <p>{{ footer.text }}</p>
+        <p>{{ footer.text | safe }}</p>
     </footer>
 
     <script>
@@ -58,7 +59,7 @@
 
     </script>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>

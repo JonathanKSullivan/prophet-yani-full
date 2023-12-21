@@ -349,3 +349,13 @@ user_dashboard_page_content = {
         "text": "&copy; 2023 prophetyani.com. All rights reserved."
     }
 }
+
+
+confirm_booking_page_content = {
+    "meta": {
+        "page_title":"Prophet Yani - Spiritual Guidance and Charity",
+    },
+    "footer": {
+        "text": "&copy; 2023 prophetyani.com. All rights reserved."
+    }
+}

@@ -24,6 +24,10 @@ class PaymentManager:
         return Payment.query.get(payment_id)
 
     @staticmethod
+    def get_payments_by_user(user_id):
+        return Payment.query.filter_by(user_id=user_id).all()
+
+    @staticmethod
     def update_payment(payment_id, **kwargs):
         payment = Payment.query.get(payment_id)
         if not payment:
@@ -46,3 +50,24 @@ class PaymentManager:
     @staticmethod
     def list_all_payments():
         return Payment.query.all()
+
+    @staticmethod
+    def summarize_payments(user_id=None):
+        query = Payment.query
+        if user_id:
+            query = query.filter_by(user_id=user_id)
+        total_amount = query.with_entities(db.func.sum(Payment.amount)).scalar()
+        return total_amount
+
+    @staticmethod
+    def filter_payments(start_date=None, end_date=None, min_amount=None, max_amount=None):
+        query = Payment.query
+        if start_date:
+            query = query.filter(Payment.payment_date >= start_date)
+        if end_date:
+            query = query.filter(Payment.payment_date <= end_date)
+        if min_amount:
+            query = query.filter(Payment.amount >= min_amount)
+        if max_amount:
+            query = query.filter(Payment.amount <= max_amount)
+        return query.all()

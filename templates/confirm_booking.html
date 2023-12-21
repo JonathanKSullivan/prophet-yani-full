@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="card shadow">
+        <div class="card-body">
+            <h2 class="card-title text-center mb-4">Confirm Booking</h2>
+            <div class="row">
+                <div class="col-md-6 offset-md-3">
+                    <p class="text-muted"><strong>Service:</strong> {{ service.name }}</p>
+                    <p class="text-muted">
+                        <strong>Time:</strong> 
+                        <span id="formattedBookingTime"></span>
+                    </p>
+
+                    <form action="/process_payment" method="post" id="payment-form" class="mt-3">
+                        <input type="hidden" name="service_id" value="{{ service.id }}">
+                        <input type="hidden" name="start_time" value="{{ start_time }}">
+                        <input type="hidden" name="end_time" value="{{ end_time }}">
+
+                        <div class="form-group">
+                            <label for="cardholder-name">Cardholder's Name</label>
+                            <input type="text" id="cardholder-name" name="cardholder_name" class="form-control">
+                        </div>
+
+                        <div id="card-element" class="form-group">
+                            <!-- Stripe's card element will go here -->
+                        </div>
+
+                        <div id="card-errors" role="alert" class="text-danger"></div>
+
+                        <button type="submit" class="btn btn-primary btn-block mt-4">Confirm and Pay</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Function to format start time
+        const formatFullStartTime = (dateTimeStr) => {
+            const date = new Date(dateTimeStr);
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const timeOptions = { hour: '2-digit', minute: '2-digit' };
+            return date.toLocaleDateString("en-US", dateOptions) + ' at ' + date.toLocaleTimeString("en-US", timeOptions);
+        };
+
+        // Function to format end time
+        const formatEndTime = (dateTimeStr) => {
+            const date = new Date(dateTimeStr);
+            return date.toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit' });
+        };
+
+        // Formatting and displaying the booking time
+        const startTimeFormatted = formatFullStartTime("{{ start_time }}");
+        const endTimeFormatted = formatEndTime("{{ end_time }}");
+        document.getElementById('formattedBookingTime').textContent = `${startTimeFormatted} to ${endTimeFormatted}`;
+
+        // Stripe Elements integration
+        var stripe = Stripe('YOUR_STRIPE_PUBLIC_KEY'); // Replace with your Stripe public key
+        var elements = stripe.elements();
+        var card = elements.create('card');
+        card.mount('#card-element');
+
+        // Handle real-time validation errors from the card Element
+        card.addEventListener('change', function(event) {
+            var displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
+        // Handle form submission
+        var form = document.getElementById('payment-form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var additionalData = {
+                name: document.getElementById('cardholder-name').value,
+            };
+
+            stripe.createToken(card, additionalData).then(function(result) {
+                if (result.error) {
+                    var errorElement = document.getElementById('card-errors');
+                    errorElement.textContent = result.error.message;
+                } else {
+                    stripeTokenHandler(result.token);
+                }
+            });
+        });
+
+        function stripeTokenHandler(token) {
+            var form = document.getElementById('payment-form');
+            var hiddenInput = document.createElement('input');
+            hiddenInput.setAttribute('type', 'hidden');
+            hiddenInput.setAttribute('name', 'stripeToken');
+            hiddenInput.setAttribute('value', token.id);
+            form.appendChild(hiddenInput);
+            form.submit();
+        }
+    });
+</script>
+
+
+
+{% endblock %}

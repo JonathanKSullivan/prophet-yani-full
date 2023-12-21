@@ -3,12 +3,13 @@ from datetime import datetime
 
 class BookingManager:
     @staticmethod
-    def add_booking(user_id, service_id, appointment_date):
+    def add_booking(user_id, service_id, appointment_date, appointment_end):
         new_booking = Booking(
             user_id=user_id,
             service_id=service_id,
             booking_date=datetime.now(),
             appointment_date=appointment_date,
+            appointment_end=appointment_end,  # Include appointment_end in the booking
             status='Booked'
         )
         db.session.add(new_booking)

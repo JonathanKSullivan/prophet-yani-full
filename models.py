@@ -37,6 +37,7 @@ class Booking(db.Model):
     service_id = db.Column(db.Integer, db.ForeignKey('service.id'))
     booking_date = db.Column(db.DateTime)
     appointment_date = db.Column(db.DateTime)
+    appointment_end = db.Column(db.DateTime)  # New column for storing the end time
     status = db.Column(db.String(50))
 
 class Donation(db.Model):
@@ -74,3 +75,13 @@ class Payment(db.Model):
     transaction_id = db.Column(db.String(100))
     payment_method = db.Column(db.String(50))
     payment_date = db.Column(db.DateTime)
+
+class Availability(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    start_time = db.Column(db.DateTime, nullable=False)
+    end_time = db.Column(db.DateTime, nullable=False)
+    is_available = db.Column(db.Boolean, default=True)
+
+    # Relationship with User
+    user = db.relationship('User', backref='availability')

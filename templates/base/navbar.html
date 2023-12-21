@@ -1,40 +1,53 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light opaque">
-    <a class="navbar-brand" href="{{ url_for('general_blueprint.home') }}">Logo</a>
+    <a class="navbar-brand" href="{{ url_for('general_blueprint.home') }}">
+        <img src="https://jonathanksullivan.github.io/prophet-yani/image/logo.webp" alt="Prophet Yani Logo" class="img-fluid" style="max-height: 50px;">
+    </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-            <!-- Existing links -->
             <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('general_blueprint.about') }}">About</a>
+                <a class="nav-link" href="{{ url_for('general_blueprint.about') }}">
+                    <i class="fas fa-info-circle"></i> About
+                </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('general_blueprint.services') }}">Services</a>
+                <a class="nav-link" href="{{ url_for('general_blueprint.services') }}">
+                    <i class="fas fa-concierge-bell"></i> Services
+                </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('general_blueprint.contact') }}">Contact Us</a>
+                <a class="nav-link" href="{{ url_for('general_blueprint.contact') }}">
+                    <i class="fas fa-envelope"></i> Contact Us
+                </a>
             </li>
-
-            <!-- User management links -->
             {% if not session.get('user_id') %}
-                <!-- Show these links if user is not logged in -->
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('user_blueprint.login') }}">Login</a>
+                    <a class="nav-link" href="{{ url_for('user_blueprint.login') }}">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('user_blueprint.register_user') }}">Register</a>
+                    <a class="nav-link" href="{{ url_for('user_blueprint.register_user') }}">
+                        <i class="fas fa-user-plus"></i> Register
+                    </a>
                 </li>
             {% else %}
-                <!-- Show these links if user is logged in -->
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('user_blueprint.profile') }}">Profile</a>
+                    <a class="nav-link" href="{{ url_for('user_blueprint.profile') }}">
+                        <i class="fas fa-user-circle"></i> Profile
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('general_blueprint.user_dashboard') }}">Dashboard</a>
+                    <a class="nav-link" href="{{ url_for('general_blueprint.user_dashboard') }}">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('user_blueprint.logout') }}">Logout</a>
+                    <a class="nav-link" href="{{ url_for('user_blueprint.logout') }}">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
                 </li>
             {% endif %}
         </ul>

@@ -1,10 +1,32 @@
 {% extends "base.html" %}
 
+{% block head %}
+<style>
+    /* Custom styles for the profile page */
+    .profile-header {
+        background-color: #f8f9fa; /* Light grey background */
+        border-bottom: 1px solid #e9ecef; /* Border for separation */
+        padding: 1rem 0; /* Padding for space */
+    }
+    .profile-header h2 {
+        font-weight: bold;
+        color: #333; /* Dark text for contrast */
+    }
+</style>
+{% endblock %}
+
+{% block header %}
+<div class="profile-header">
+    <div class="container">
+        <h2 class="text-center">Your Profile</h2>
+    </div>
+</div>
+{% endblock %}
+
 {% block content %}
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <h2 class="mb-4 text-center">Profile</h2>
             <!-- Display any flash messages here -->
             {% with messages = get_flashed_messages() %}
               {% if messages %}
