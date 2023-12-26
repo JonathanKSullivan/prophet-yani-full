@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, session
 from flask_sqlalchemy import SQLAlchemy
 from data import home_page_content, about_page_content
 
@@ -12,9 +12,13 @@ from blueprints.payment_routes import payment_blueprint
 from blueprints.service_routes import service_blueprint
 from blueprints.user_routes import user_blueprint
 
-from extensions import db
+from extensions import db, mail
 from config import DevelopmentConfig, ProductionConfig
+from flask import g
 
+# Import models here. This ensures they are known to SQLAlchemy
+from models import User, Service, Booking, Donation, Charity, Location, Payment
+from utils import is_user_admin
 
 # Create and configure app
 app = Flask(__name__)
@@ -26,17 +30,28 @@ else:
 
 # Initialize the database with the Flask app
 db.init_app(app)
+mail.init_app(app)
 
 # Function to initialize the database
 def initialize_database():
     with app.app_context():
-        # Import models here. This ensures they are known to SQLAlchemy
-        from models import User, Service, Booking, Donation, Charity, Location, Payment
         # Create tables
         db.create_all()
 
 # Call the initialize function
 initialize_database()
+
+
+@app.context_processor
+def inject_user():
+    user = None
+    if 'user_id' in session:
+        user = User.query.get(session['user_id'])
+    return dict(user=user)
+
+@app.context_processor
+def inject_admin_check():
+    return dict(is_user_admin=is_user_admin)
 
 # Register blueprints
 app.register_blueprint(booking_blueprint, url_prefix='/booking')

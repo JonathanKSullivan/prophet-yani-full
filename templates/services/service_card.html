@@ -1,7 +1,7 @@
-<div class="col-md-4 mb-3">
+<div class="col-md-6 mb-3">
     <div class="card h-100 service-card"  data-service-id="{{ service.id }}">
         {% if service.image_url %}
-            <img src="{{ service.image_url }}" class="card-img-top" alt="{{ service.name }}">
+            <img src="{{ url_for('static', filename=service.image_url) }}" class="card-img-top" alt="{{ service.name }}">
         {% else %}
             <img src="path/to/default/image.jpg" class="card-img-top" alt="Default Image">
         {% endif %}
@@ -9,7 +9,7 @@
             <h5 class="card-title">{{ service.name }}</h5>
             <p class="card-text">{{ service.description }}</p>
             <p class="card-text"><strong>Duration:</strong> {{ service.duration }} minutes</p>
-            <p class="card-text"><strong>Price:</strong> ${{ service.price }}</p>
+            <p class="card-text"><strong>Min. Donation:</strong> ${{ service.price }}</p>
             {% if session.get('user_id') %}
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#calendarModal-{{ service.id }}">
                     Book {{ service.name }}

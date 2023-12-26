@@ -2,6 +2,7 @@ from flask import Blueprint, redirect, request, render_template, session, url_fo
 from sqlalchemy import func
 from data import home_page_content, about_page_content, user_dashboard_page_content
 from lib.service_manager import ServiceManager
+from lib.donation_manager import DonationManager
 
 # Import models
 from models import User, Service, Booking, Donation, Charity, Location, Payment
@@ -44,7 +45,8 @@ def contact():
         # Process the contact form data (e.g., send an email, store in database)
         process_contact_form(name, email, message)
         
-        return render_template('contact_thankyou.html', name=name)
+        return render_template('contact_thankyou.html', name=name, metadata=about_page_content['meta'],
+        footer=about_page_content['footer'])
 
     return render_template(
         'contact.html',
@@ -104,4 +106,5 @@ def admin_dashboard():
         'total_donations': total_donations
     }
 
-    return render_template('admin_dashboard.html', data=admin_dashboard_data)
+    return render_template('admin_dashboard.html', data=admin_dashboard_data, metadata=user_dashboard_page_content["meta"], 
+        footer=user_dashboard_page_content["footer"])

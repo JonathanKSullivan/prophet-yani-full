@@ -1,22 +1,27 @@
 # model.py
 from flask_sqlalchemy import SQLAlchemy
 from extensions import db
+from datetime import datetime
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
+    username = db.Column(db.String(100), unique=True, nullable=False)  # Adjusted length
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
     first_name = db.Column(db.String(100))
     last_name = db.Column(db.String(100))
-    profile_image_url = db.Column(db.String(255))
+    profile_image_url = db.Column(db.String(255))  # URL for profile image
+    bio = db.Column(db.String(500))  # New field for biography
     create_date = db.Column(db.DateTime)
     last_login_date = db.Column(db.DateTime)
     user_role = db.Column(db.String(50))
     status = db.Column(db.String(50))
+    # Relationships
     bookings = db.relationship('Booking', backref='user', lazy=True)
     donations = db.relationship('Donation', backref='user', lazy=True)
     payments = db.relationship('Payment', backref='user', lazy=True)
+
 
 class Service(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -85,3 +90,15 @@ class Availability(db.Model):
 
     # Relationship with User
     user = db.relationship('User', backref='availability')
+
+class ContactMessage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    email = db.Column(db.String(100))
+    message = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __init__(self, name, email, message):
+        self.name = name
+        self.email = email
+        self.message = message

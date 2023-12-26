@@ -5,14 +5,16 @@ import datetime
 
 class UserManager:
     @staticmethod
-    def add_user(username, email, password, first_name='', last_name=''):
+    def add_user(username, email, password, first_name='', last_name='', bio=''):
         new_user = User(
             username=username,
             email=email,
             password_hash=generate_password_hash(password),
             first_name=first_name,
             last_name=last_name,
+            bio=bio,  # Add bio field
             create_date=datetime.datetime.now(),
+            last_login_date=datetime.datetime.now(),  # Assuming this is a new field
             status='Active'
         )
         db.session.add(new_user)
@@ -36,9 +38,14 @@ class UserManager:
         user = User.query.get(user_id)
         if not user:
             return None
+
+        immutable_fields = {'id', 'username', 'password_hash', 'create_date'}
         for key, value in kwargs.items():
+            if key in immutable_fields:
+                continue  # Skip updating immutable fields
             if hasattr(user, key):
                 setattr(user, key, value)
+
         db.session.commit()
         return user
 

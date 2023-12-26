@@ -6,13 +6,13 @@
                 <div class="card-header" id="heading{{ loop.index }}">
                    <h5 class="mb-0">
                       <button class="btn btn-link {{ 'collapsed' if not loop.first }}" type="button" data-toggle="collapse" data-target="#collapse{{ loop.index }}" aria-expanded="{{ 'true' if loop.first else 'false' }}" aria-controls="collapse{{ loop.index }}">
-                            Q: {{ faq.question }}
+                            Q: <span class="faq-text">{{ faq.question }}</span>
                       </button>
                    </h5>
                 </div>
                 <div id="collapse{{ loop.index }}" class="collapse {{ 'show' if loop.first }}" aria-labelledby="heading{{ loop.index }}" data-parent="#faqAccordion">
                    <div class="card-body">
-                      A: {{ faq.answer }}
+                      A: <span class="faq-text">{{ faq.answer }}</span>
                    </div>
                 </div>
           </div>

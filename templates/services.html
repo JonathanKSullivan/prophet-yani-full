@@ -12,7 +12,7 @@
     }
     /* Custom CSS for header */
     .header-section {
-        background: url("https://placehold.co/400") no-repeat center center;
+        background: url("https://jonathanksullivan.github.io/prophet-yani/image/services_hero.webp") no-repeat center center;
         background-size: cover;
         height: 100vh; /* Make header take up the full viewport height */
         text-align: center;
@@ -58,7 +58,7 @@
 
 {% block content %}
 <div class="container mt-4">
-    <div class="row">
+    <div class="d-flex justify-content-center">
         {% for service in services %}
             {% include 'services/service_card.html' with context %}
         {% else %}

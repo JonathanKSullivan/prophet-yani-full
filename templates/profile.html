@@ -12,6 +12,19 @@
         font-weight: bold;
         color: #333; /* Dark text for contrast */
     }
+    .non-editable-field {
+        background-color: #e9ecef; /* Light grey background for non-editable fields */
+        padding: 0.5rem;
+        border: none;
+        border-radius: 0.25rem;
+    }
+    .profile-image {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%; /* Circular image */
+        object-fit: cover;
+        margin-bottom: 1rem;
+    }
 </style>
 {% endblock %}
 
@@ -26,7 +39,9 @@
 {% block content %}
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div class="col-md-6 text-center">
+            <!-- Profile Image -->
+            <img src="{{ user.profile_image_url if user.profile_image_url else 'https://jonathanksullivan.github.io/prophet-yani/image/default_profile.webp' }}" alt="Profile Image" class="profile-image">
             <!-- Display any flash messages here -->
             {% with messages = get_flashed_messages() %}
               {% if messages %}
@@ -37,14 +52,19 @@
                 </div>
               {% endif %}
             {% endwith %}
-            <form method="POST" action="{{ url_for('user_blueprint.profile') }}">
+            <form method="POST" action="{{ url_for('user_blueprint.profile') }}" enctype="multipart/form-data">
+                <!-- Profile Image Upload -->
+                <div class="form-group">
+                    <label for="profile_image">Profile Image</label>
+                    <input type="file" class="form-control-file" id="profile_image" name="profile_image">
+                </div>
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" required>
+                    <div class="non-editable-field">{{ user.username }}</div>
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
+                    <div class="non-editable-field">{{ user.email }}</div>
                 </div>
                 <div class="form-group">
                     <label for="first_name">First Name</label>
@@ -54,10 +74,15 @@
                     <label for="last_name">Last Name</label>
                     <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user.last_name }}">
                 </div>
-                <!-- Add more fields as necessary -->
+                <div class="form-group">
+                    <label for="bio">Bio</label>
+                    <textarea class="form-control" id="bio" name="bio">{{ user.bio }}</textarea>
+                </div>
                 <button type="submit" class="btn btn-primary">Update Profile</button>
             </form>
         </div>
     </div>
 </div>
 {% endblock %}
+
+

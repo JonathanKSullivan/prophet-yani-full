@@ -15,7 +15,7 @@
                 </div>
               {% endif %}
             {% endwith %}
-            <form method="POST" action="{{ url_for('user_blueprint.register_user') }}">
+            <form id="registrationForm" method="POST" action="{{ url_for('user_blueprint.register_user') }}">
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" class="form-control" id="username" name="username" required>
@@ -44,4 +44,36 @@
         </div>
     </div>
 </div>
+
+<script>
+document.getElementById('registrationForm').addEventListener('submit', function(event) {
+    var username = document.getElementById('username').value;
+    var email = document.getElementById('email').value;
+    var password = document.getElementById('password').value;
+    var errorMessages = [];
+
+    // Username validation
+    if (username.length < 3) {
+        errorMessages.push('Username must be at least 3 characters long.');
+    }
+
+    // Email validation using regex
+    var emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if (!emailRegex.test(email)) {
+        errorMessages.push('Please enter a valid email address.');
+    }
+
+    // Password validation
+    var passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+    if (!passwordRegex.test(password)) {
+        errorMessages.push('Password must be at least 8 characters long and include a number, an uppercase letter, and a lowercase letter.');
+    }
+
+    // Display error messages
+    if (errorMessages.length > 0) {
+        alert(errorMessages.join('\n'));
+        event.preventDefault();
+    }
+});
+</script>
 {% endblock %}

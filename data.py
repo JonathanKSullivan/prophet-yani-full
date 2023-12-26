@@ -1,3 +1,9 @@
+from lib.booking_manager import BookingManager
+from lib.donation_manager import DonationManager
+from lib.location_manager import LocationManager
+from twitter_service import TwitterService
+
+
 home_page_content = {
     "meta": {
         "page_title":"Prophet Yani - Spiritual Guidance and Charity",
@@ -103,65 +109,111 @@ home_page_content = {
                 "description": "Maria's story is one of remarkable change, from skepticism to becoming an active and engaged community member. Her transformation highlights the impact of spiritual connection and community support in rediscovering life's joys and meanings..."
             }
         ],
-        "media_features": [
-            {
-                "title": "The Spiritual Herald",
-                "description": "Featured for innovative approaches in spiritual guidance and community building...",
-                "image_url": "https://placekitten.com/g/64/64",
-                "alt_text": "The Spiritual Herald Logo"
-            },
-            {
-                "title": "Mindful Living Magazine",
-                "description": "Recognized for contributions to mindful living practices and holistic well-being...",
-                "image_url": "https://placekitten.com/g/65/65",
-                "alt_text": "Mindful Living Magazine Logo"
-            }
-        ],
+        # "media_features": [
+        #     {
+        #         "title": "The Spiritual Herald",
+        #         "description": "Featured for innovative approaches in spiritual guidance and community building...",
+        #         "image_url": "https://placekitten.com/g/64/64",
+        #         "alt_text": "The Spiritual Herald Logo"
+        #     },
+        #     {
+        #         "title": "Mindful Living Magazine",
+        #         "description": "Recognized for contributions to mindful living practices and holistic well-being...",
+        #         "image_url": "https://placekitten.com/g/65/65",
+        #         "alt_text": "Mindful Living Magazine Logo"
+        #     }
+        # ],
         "partnerships": [
             {
-                "title": "Charity A Collaboration",
-                "description": "$50,000 for educational programs...",
-                "image_url": "https://placekitten.com/g/80/80"
+                "title": "Zodiac Psychics",
+                "feature_offering": "Personalized psychic readings and spiritual consultations.",
+                "unique_value": "Dive into a world of intuitive guidance and self-discovery with Prophet Yani, enhancing your spiritual journey.",
+                "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/home_zodiac.png",
+                "url": "https://zodiacempress.com/"
+            },
+            {
+                "title": "Bigo Live",
+                "feature_offering": "Weekly live spiritual discussions hosted by Prophet Yani.",
+                "unique_value": "Engage in deep conversations covering topics like faith, personal growth, and universal spirituality every Sunday at 11 am.",
+                "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/home_bigo.png",
+                "url": "https://www.bigo.tv/en/sugarbabycam"
+            },
+            {
+                "title": "Instagram",
+                "feature_offering": "Visual storytelling of Prophet Yani's predictions and spiritual guidance.",
+                "unique_value": "A visual odyssey into the world of spirituality, combining insightful narratives with engaging imagery.",
+                "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/home_instagram.png",
+                "url": "https://www.instagram.com/yani.vip/"
+            },
+            {
+                "title": "Tik Tok",
+                "feature_offering": "Short, engaging spiritual content with TikTok's interactive features.",
+                "unique_value": "Quick, impactful spiritual insights, leveraging TikTok’s unique format for a dynamic spiritual experience.",
+                "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/home_tiktok.png",
+                "url": "https://www.tiktok.com/@zodiac_empress"
+            },
+            {
+                "title": "Youtube",
+                "feature_offering": "Celebrity readings, prophetic insights, and Bible studies.",
+                "unique_value": "In-depth spiritual teachings and personal readings, offering a deeper understanding of spiritual principles and personal guidance.",
+                "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/home_youtube.png",
+                "url": "https://www.youtube.com/yaniwhite"
             },
         ],
         "social_media_highlights": {
-            "followers": {
-                "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/social-highlights-1.webp",
-                "alt_text": "Social Media Followers",
-                "twitter": 10000,
-                "facebook": 10000
-            },
-            "engagement": {
-                "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/social-highlights-2.webp",
-                "alt_text": "Engagement Rate",
-                "average_rate": 15,
-                "top_post": "Inspirational Quote of the Day"
-            }
+            "followers": [
+                {
+                    "name": "Bigo",
+                    "icon": "svg",
+                    "icon_svg": "images/bigo-live.svg",
+                    "count": "15000"
+                },
+                {
+                    "name": "Instagram",
+                    "icon": "fab fa-instagram",
+                    "count": "1300"
+                },
+                {
+                    "name": "TikTok",
+                    "icon": "fab fa-tiktok",
+                    "count": "1062"
+                },
+                {
+                    "name": "Twitter",
+                    "icon": "fab fa-twitter",
+                    "count": "64"
+                },
+                {
+                    "name": "YouTube",
+                    "icon": "fab fa-youtube",
+                    "count": "16"
+                }
+            ]
         },
 
         "impact_statistics": {
             "consultations": {
                 "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/impact-1.webp",
                 "alt_text": "Consultations Statistic",
-                "count": "10,000+",
+                "count": BookingManager.count_past_bookings(),
                 "description": "Individual consultations conducted"
             },
             "donations": {
                 "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/impact-2.webp",
                 "alt_text": "Donations Statistic",
-                "count": "$500,000+",
+                "count": f"${DonationManager.calculate_total_donations():.2f}",
                 "description": "Contributed to charitable causes"
             },
             "global_impact": {
                 "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/impact-3.webp",
                 "alt_text": "Global Impact Statistic",
-                "count": "30+",
+                "count": LocationManager.count_locations_by_country(),
                 "description": "Countries positively impacted"
             }
         },
 
         "certifications": {
-            "details": "Certifications and awards details (if applicable)."
+            "details": "<b/>Ordained Minister and Certified Spiritual Guide:</b> As an ordained minister and holder of various spiritual certifications, I bring a blend of formal recognition and profound commitment to my role as a spiritual guide. This ordination underscores my dedication to ethical, compassionate leadership in spiritual counseling. It reflects my continuous pursuit of knowledge and excellence in guiding individuals towards enlightenment and peace, reinforcing the trust and integrity at the core of my spiritual mentorship."
         },
     },
     "features_section": {

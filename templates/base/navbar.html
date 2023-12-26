@@ -6,7 +6,7 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
+        <ul class="navbar-nav mr-auto">
             <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('general_blueprint.about') }}">
                     <i class="fas fa-info-circle"></i> About
@@ -22,6 +22,8 @@
                     <i class="fas fa-envelope"></i> Contact Us
                 </a>
             </li>
+        </ul>
+        <ul class="navbar-nav">
             {% if not session.get('user_id') %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('user_blueprint.login') }}">
@@ -36,9 +38,20 @@
             {% else %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('user_blueprint.profile') }}">
-                        <i class="fas fa-user-circle"></i> Profile
+                        <img src="{{ user.profile_image_url if user.profile_image_url else 'https://jonathanksullivan.github.io/prophet-yani/image/default_profile.webp' }}" alt="Profile Image" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; margin-right: 5px;">
+                        Profile
                     </a>
                 </li>
+                
+                <!-- Check if user is an admin -->
+                {% if is_user_admin() %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('general_blueprint.admin_dashboard') }}">
+                            <i class="fas fa-user-shield"></i> Admin Dashboard
+                        </a>
+                    </li>
+                {% endif %}
+
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('general_blueprint.user_dashboard') }}">
                         <i class="fas fa-tachometer-alt"></i> Dashboard

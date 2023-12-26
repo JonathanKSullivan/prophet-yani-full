@@ -1,6 +1,16 @@
+from sqlalchemy import func
 from models import db, Donation
 
 class DonationManager:
+    @staticmethod
+    def calculate_total_donations():
+        try:
+            total = db.session.query(func.sum(Donation.amount)).scalar()
+            return total if total is not None else 0
+        except Exception as e:
+            print("Error calculating total donations:", e)
+            return -1
+        
     @staticmethod
     def add_donation(user_id, amount, charity_id, service_id, donation_date, donation_type):
         new_donation = Donation(

@@ -1,0 +1,190 @@
+/* Import font */
+@import url('https://db.onlinewebfonts.com/c/45efcf93d0c9504aa316c9bb7ce66a2e?family=Pietra+LP+W01+Regular');
+
+/* Font Face Declaration */
+@font-face {
+    font-family: "Pietra LP W01 Regular";
+    src: url("https://db.onlinewebfonts.com/t/45efcf93d0c9504aa316c9bb7ce66a2e.eot"); /* IE9 Compat Modes */
+    src: url("https://db.onlinewebfonts.com/t/45efcf93d0c9504aa316c9bb7ce66a2e.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+         url("https://db.onlinewebfonts.com/t/45efcf93d0c9504aa316c9bb7ce66a2e.woff2") format("woff2"), /* Super Modern Browsers */
+         url("https://db.onlinewebfonts.com/t/45efcf93d0c9504aa316c9bb7ce66a2e.woff") format("woff"), /* Modern Browsers */
+         url("https://db.onlinewebfonts.com/t/45efcf93d0c9504aa316c9bb7ce66a2e.ttf") format("truetype"), /* Safari, Android, iOS */
+         url("https://db.onlinewebfonts.com/t/45efcf93d0c9504aa316c9bb7ce66a2e.svg#Pietra LP W01 Regular") format("svg"); /* Legacy iOS */
+}
+
+/* CSS Variables for Easy Maintenance */
+:root {
+    --primary-color: #2B213A;
+    --secondary-color: #DAA520;
+    --background-color: #F5F5F5;
+    --text-color: #2B213A;
+    --hero-bg: url('https://jonathanksullivan.github.io/prophet-yani/image/hero-background.webp');
+    --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* CSS Resets */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* General Style */
+body {
+    font-family: "Pietra LP W01 Regular", Arial, sans-serif;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+p {
+    font-family: "hoefler Text";
+}
+
+.faq-text {
+    font-family: "hoefler Text";
+}
+
+
+/* Header and Navigation */
+header {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+}
+
+/* Hero Section */
+.hero-section {
+    background: var(--hero-bg) no-repeat center/cover;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+.hero-content {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 15px;
+    background-color: rgba(43, 33, 58, 0.7);
+    border-radius: 10px;
+}
+
+.hero-heading, .hero-subtext {
+    color: var(--secondary-color);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Main Content and Typography */
+main {
+    padding: 20px;
+}
+
+section, p {
+    margin-bottom: 40px;
+}
+
+h2, .subheading {
+    color: var(--primary-color);
+}
+
+h3 {
+    font-size: 30px;
+    font-family: "hoefler Text";
+}
+
+/* Buttons */
+.btn-primary, .btn-secondary {
+    border: none;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: var(--secondary-color);
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: darken(var(--secondary-color), 10%);
+}
+
+.btn-secondary {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background-color: lighten(var(--primary-color), 10%);
+}
+
+/* Make the navbar sticky to the top of the screen */
+.navbar {
+    position: sticky;
+    top: 0;
+    background-color: transparent; /* Set an initial transparent background */
+    transition: background-color 0.3s ease; /* Add a smooth transition effect */
+}
+
+/* When scrolling down, change the background color to solid */
+.navbar.opaque {
+    background-color: rgba(255, 255, 255, 0.9); /* Adjust the opacity and color as needed */
+}
+
+/* Footer */
+footer {
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+}
+
+/* Additional Styles */
+.img-fluid {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.card {
+    border: none;
+    box-shadow: var(--box-shadow);
+    transition: box-shadow 0.3s;
+}
+
+.card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card-title {
+    color: var(--primary-color);
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.accordion .card-header {
+    background-color: var(--background-color);
+    border: none;
+}
+
+.accordion .btn-link {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .hero-section {
+        height: 50vh;
+    }
+
+    .hero-content {
+        padding: 10px;
+    }
+}

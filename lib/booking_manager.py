@@ -2,6 +2,17 @@ from models import db, Booking
 from datetime import datetime
 
 class BookingManager:
+
+    @staticmethod
+    def count_past_bookings():
+        try:
+            now = datetime.utcnow()
+            past_bookings_count = Booking.query.filter(Booking.appointment_end < now).count()
+            return past_bookings_count
+        except Exception as e:
+            print("Error counting past bookings:", e)
+            return -1
+        
     @staticmethod
     def add_booking(user_id, service_id, appointment_date, appointment_end):
         new_booking = Booking(

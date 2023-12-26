@@ -1,11 +1,28 @@
 {% extends "base.html" %}
 
 {% block head %}
-    <!-- Any additional head content specific to the contact thank you page -->
+<style>
+    /* Custom CSS for header */
+    .header-section {
+        background: url({{ url_for('static', filename='images/contact_thanks.webp') }}) no-repeat center center;
+        background-size: cover;
+        height: 100vh; /* Make header take up the full viewport height */
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+</style>
 {% endblock %}
 
 {% block header %}
-    <h1>Thank You!</h1>
+<header class="header-section">
+    <div class="container text-center">
+    </div>
+</header>
+    
 {% endblock %}
 
 {% block content %}
