@@ -1,0 +1,55 @@
+<!-- Service List Section -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h3 class="mb-3">Service List</h3>
+
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Duration</th>
+                        <th>Type</th>
+                        <th>Donation %</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="service in services" :key="service.id">
+                        <td>${ service.id }</td>
+                        <td>
+                            <img :src="service.image_url" class="img-thumbnail" style="width: 60px; height: 60px;">
+                        </td>
+                        <td>${ service.name }</td>
+                        <td>${ service.description }</td>
+                        <td>${ service.price }</td>
+                        <td>${ service.duration } min</td>
+                        <td>${ service.type }</td>
+                        <td>${ service.donation_percentage }%</td>
+                        <td>
+                            <!-- Action Buttons Grouped -->
+                            <div class="btn-group" role="group" aria-label="Service Actions">
+                                <!-- Edit Button -->
+                                <button class="btn btn-sm btn-outline-success" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <!-- Delete Button -->
+                                <button class="btn btn-sm btn-outline-danger" title="Delete">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                                <!-- Info Button -->
+                                <button class="btn btn-sm btn-outline-info" title="More Info">
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

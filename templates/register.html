@@ -19,24 +19,44 @@
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" class="form-control" id="username" name="username" required>
+                    <span class="text-danger" id="usernameError"></span>
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" class="form-control" id="email" name="email" required>
+                    <span class="text-danger" id="emailError"></span>
                 </div>
+                <!-- Password Field -->
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="password" name="password" required>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <span class="text-danger" id="passwordError"></span>
                 </div>
                 <div class="form-group">
                     <label for="first_name">First Name</label>
                     <input type="text" class="form-control" id="first_name" name="first_name">
+                    <span class="text-danger" id="firstNameError"></span>
                 </div>
                 <div class="form-group">
                     <label for="last_name">Last Name</label>
                     <input type="text" class="form-control" id="last_name" name="last_name">
+                    <span class="text-danger" id="lastNameError"></span>
                 </div>
-                <button type="submit" class="btn btn-primary">Register</button>
+                <!-- Country Selection -->
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <select class="form-control" id="country" name="country">
+                        <!-- Countries will be populated here -->
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" id="submitBtn" disabled>Register</button>
             </form>
             <div class="mt-3">
                 <a href="{{ url_for('user_blueprint.login') }}">Already have an account? Login</a>
@@ -45,35 +65,178 @@
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script>
-document.getElementById('registrationForm').addEventListener('submit', function(event) {
-    var username = document.getElementById('username').value;
-    var email = document.getElementById('email').value;
-    var password = document.getElementById('password').value;
-    var errorMessages = [];
+    $(document).ready(function() {
+        var debounceTimer;
 
-    // Username validation
-    if (username.length < 3) {
-        errorMessages.push('Username must be at least 3 characters long.');
-    }
+        function debounce(func, delay) {
+            return function() {
+                var context = this, args = arguments;
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(function() {
+                    func.apply(context, args);
+                }, delay);
+            };
+        }
 
-    // Email validation using regex
-    var emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    if (!emailRegex.test(email)) {
-        errorMessages.push('Please enter a valid email address.');
-    }
+        function displayError(fieldId, message) {
+            $(fieldId + 'Error').text(message);
+            if (message) {
+                $(fieldId).addClass('error-field');
+            } else {
+                $(fieldId).removeClass('error-field');
+            }
+        }
 
-    // Password validation
-    var passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
-    if (!passwordRegex.test(password)) {
-        errorMessages.push('Password must be at least 8 characters long and include a number, an uppercase letter, and a lowercase letter.');
-    }
+        function validateUsername() {
+            var username = $('#username').val();
+            if (username.length < 3) {
+                displayError('#username', 'Username must be at least 3 characters long.');
+                return false;
+            } else {
+                displayError('#username', '');
+                return true;
+            }
+        }
+        function validateEmail() {
+            var email = $('#email').val();
+            var emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            if (!emailRegex.test(email)) {
+                displayError('#email', 'Please enter a valid email address.');
+                return false;
+            } else {
+                displayError('#email', '');
+                return true;
+            }
+        }
 
-    // Display error messages
-    if (errorMessages.length > 0) {
-        alert(errorMessages.join('\n'));
-        event.preventDefault();
-    }
-});
+        function validatePassword() {
+            var password = $('#password').val();
+            var lengthCheck = password.length >= 8;
+            var digitCheck = /[0-9]/.test(password);
+            var uppercaseCheck = /[A-Z]/.test(password);
+            var lowercaseCheck = /[a-z]/.test(password);
+
+            var passwordErrorText = '';
+            if (!lengthCheck) passwordErrorText += 'Password must be at least 8 characters long. ';
+            if (!digitCheck) passwordErrorText += 'Password must include a number. ';
+            if (!uppercaseCheck) passwordErrorText += 'Password must include an uppercase letter. ';
+            if (!lowercaseCheck) passwordErrorText += 'Password must include a lowercase letter. ';
+
+            displayError('#password', passwordErrorText.trim());
+            return lengthCheck && digitCheck && uppercaseCheck && lowercaseCheck;
+        }
+
+        function validateFirstName() {
+            var firstName = $('#first_name').val();
+            if (firstName.length < 1) {
+                displayError('#first_name', 'First name is required.');
+                return false;
+            } else {
+                displayError('#first_name', '');
+                return true;
+            }
+        }
+
+        function validateLastName() {
+            var lastName = $('#last_name').val();
+            if (lastName.length < 1) {
+                displayError('#last_name', 'Last name is required.');
+                return false;
+            } else {
+                displayError('#last_name', '');
+                return true;
+            }
+        }
+
+        function updateSubmitButtonState() {
+            var isUsernameValid = validateUsername();
+            var isEmailValid = validateEmail();
+            var isPasswordValid = validatePassword();
+            var isFirstNameValid = validateFirstName();
+            var isLastNameValid = validateLastName();
+            $('#submitBtn').prop('disabled', !(isUsernameValid && isEmailValid && isPasswordValid && isFirstNameValid && isLastNameValid));
+        }
+
+
+        function validateCountry() {
+            var country = $('#country').val();
+            if (!country) {
+                displayError('#country', 'Country selection is required.');
+                return false;
+            } else {
+                displayError('#country', '');
+                return true;
+            }
+        }
+
+        function updateSubmitButtonState() {
+            var isUsernameValid = validateUsername();
+            var isEmailValid = validateEmail();
+            var isPasswordValid = validatePassword();
+            var isFirstNameValid = validateFirstName();
+            var isLastNameValid = validateLastName();
+            var isCountryValid = validateCountry();
+            $('#submitBtn').prop('disabled', !(isUsernameValid && isEmailValid && isPasswordValid && isFirstNameValid && isLastNameValid && isCountryValid));
+        }
+
+        // Attach event handlers
+        $('#username, #email, #password, #first_name, #last_name').on('input', debounce(updateSubmitButtonState, 300));
+        $('#country').on('change', updateSubmitButtonState);
+
+        $('#registrationForm').on('submit', function(event) {
+            updateSubmitButtonState();
+            if ($('#submitBtn').prop('disabled')) {
+                event.preventDefault();
+            }
+        });
+
+        // Call the update function to set the initial state of the submit button
+        updateSubmitButtonState();
+
+        // Function to fetch and populate countries (remains unchanged)
+        // Function to fetch and populate countries
+        function populateCountries() {
+            $.ajax({
+                url: "https://restcountries.com/v3.1/all",
+                dataType: "json",
+                success: function(data) {
+                    // Sort countries alphabetically by name
+                    data.sort(function(a, b) {
+                        return a.name.common.localeCompare(b.name.common);
+                    });
+
+                    $('#country').empty(); // Clear existing options
+                    $('#country').append(new Option('Select Country', '')); // Default option
+                    data.forEach(function(country) {
+                        $('#country').append(new Option(country.name.common, country.cca2)); // Using common name and country code
+                    });
+                    $('#country').select2(); // Re-initialize Select2 for country dropdown
+                }
+            });
+        }
+
+        // Toggle Password Visibility
+        document.getElementById('togglePassword').addEventListener('click', function (e) {
+            // Prevent the button from submitting the form
+            e.preventDefault();
+
+            // Toggle the type attribute
+            const passwordInput = document.getElementById('password');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+
+            // Toggle the eye / eye-slash icon
+            this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        });
+
+
+        // Call populateCountries on page load
+        populateCountries();
+    });
 </script>
+    
 {% endblock %}

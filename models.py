@@ -17,6 +17,10 @@ class User(db.Model):
     last_login_date = db.Column(db.DateTime)
     user_role = db.Column(db.String(50))
     status = db.Column(db.String(50))
+    country = db.Column(db.String(100))
+    confirmed = db.Column(db.Boolean, default=False)
+
+
     # Relationships
     bookings = db.relationship('Booking', backref='user', lazy=True)
     donations = db.relationship('Donation', backref='user', lazy=True)
@@ -35,7 +39,7 @@ class Service(db.Model):
     donation_percentage = db.Column(db.Numeric(5, 2))
     bookings = db.relationship('Booking', backref='service', lazy=True)
     donations = db.relationship('Donation', backref='service', lazy=True)
-
+    
 class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -67,7 +71,7 @@ class Location(db.Model):
     address = db.Column(db.String(255))
     city = db.Column(db.String(100))
     state = db.Column(db.String(100))
-    country = db.Column(db.String(100))
+    country = db.Column(db.String(100), nullable=False)
     zip_code = db.Column(db.String(20))
     location_type = db.Column(db.String(50))
     services = db.relationship('Service', backref='location', lazy=True)
@@ -81,15 +85,24 @@ class Payment(db.Model):
     payment_method = db.Column(db.String(50))
     payment_date = db.Column(db.DateTime)
 
-class Availability(db.Model):
+class AvailabilityRule(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    start_time = db.Column(db.DateTime, nullable=False)
-    end_time = db.Column(db.DateTime, nullable=False)
-    is_available = db.Column(db.Boolean, default=True)
+    day_of_week = db.Column(db.Integer)  # 0 for Sunday, 1 for Monday, etc.
+    start_time = db.Column(db.Time, nullable=False)
+    end_time = db.Column(db.Time, nullable=False)
+    priority = db.Column(db.Integer, default=0)
+    is_recurring = db.Column(db.Boolean, default=True)
+    exclusion_dates = db.relationship('ExclusionDate', backref='availability_rule', lazy=True)
 
-    # Relationship with User
-    user = db.relationship('User', backref='availability')
+class ExclusionDate(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    availability_rule_id = db.Column(db.Integer, db.ForeignKey('availability_rule.id'), nullable=True)  # Updated to match the table name
+    date = db.Column(db.Date, nullable=False)
+
+class GlobalExclusionDate(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date, nullable=False)
+    # Additional fields for user specification if necessary
 
 class ContactMessage(db.Model):
     id = db.Column(db.Integer, primary_key=True)

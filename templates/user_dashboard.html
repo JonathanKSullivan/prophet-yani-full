@@ -7,34 +7,103 @@
             <h2 class="mb-4">Your Dashboard</h2>
 
             <!-- User Bookings Section -->
-            <h3>Your Bookings</h3>
-            {% if data.bookings %}
-                <ul class="list-group mb-4">
-                    {% for booking in data.bookings %}
-                        <li class="list-group-item">
-                            Booking ID: {{ booking.id }} - Date: {{ booking.appointment_date }}
-                            <!-- Add more booking details as needed -->
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>You have no bookings.</p>
-            {% endif %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3>Your Bookings</h3>
+                </div>
+                <div class="card-body">
+                    {% if data.bookings %}
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Service</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for booking in data.bookings %}
+                                    <tr>
+                                        <td>{{ booking.id }}</td>
+                                        <td>{{ booking.service.name }}</td>
+                                        <td>{{ booking.appointment_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                                        <td>{{ booking.status }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p>You have no bookings.</p>
+                    {% endif %}
+                </div>
+            </div>
 
             <!-- User Donations Section -->
-            <h3>Your Donations</h3>
-            {% if data.donations %}
-                <ul class="list-group mb-4">
-                    {% for donation in data.donations %}
-                        <li class="list-group-item">
-                            Donation ID: {{ donation.id }} - Amount: {{ donation.amount }}
-                            <!-- Add more donation details as needed -->
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>You have not made any donations.</p>
-            {% endif %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3>Your Donations</h3>
+                </div>
+                <div class="card-body">
+                    {% if data.donations %}
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Charity</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for donation in data.donations %}
+                                    <tr>
+                                        <td>{{ donation.id }}</td>
+                                        <td>{{ donation.charity.name }}</td>
+                                        <td>{{ donation.amount }}</td>
+                                        <td>{{ donation.donation_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p>You have not made any donations.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- User Payments Section -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Your Payments</h3>
+                </div>
+                <div class="card-body">
+                    {% if data.payments %}
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Amount</th>
+                                    <th>Method</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for payment in data.payments %}
+                                    <tr>
+                                        <td>{{ payment.id }}</td>
+                                        <td>{{ payment.amount }}</td>
+                                        <td>{{ payment.payment_method }}</td>
+                                        <td>{{ payment.payment_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p>You have not made any payments.</p>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 </div>

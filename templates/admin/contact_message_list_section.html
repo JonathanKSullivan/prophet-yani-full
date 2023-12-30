@@ -1,0 +1,44 @@
+<!-- Contact Message List Section -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h3 class="mb-3">Contact Message List</h3>
+
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Message</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="message in contactMessages" :key="message.id">
+                        <td>${ message.id }</td>
+                        <td>${ message.name }</td>
+                        <td>${ message.email }</td>
+                        <td>
+                            ${ truncateMessage(message.message) } <!-- Assuming truncateMessage method is defined -->
+                        </td>
+                        <td>${ formatDateTime(message.created_at) }</td>
+                        <td>
+                            <!-- Action Buttons -->
+                            <button class="btn btn-sm btn-primary" @click="viewFullMessage(message)">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-success">
+                                <i class="fas fa-reply"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

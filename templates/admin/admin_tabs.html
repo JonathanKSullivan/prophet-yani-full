@@ -1,0 +1,32 @@
+<ul class="nav nav-tabs nav-fill">
+    <li class="nav-item">
+        <a class="nav-link" :class="{ 'active': activeTab === 'statistics' }" href="#" v-on:click.prevent="activeTab = 'statistics'">Statistics</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" :class="{ 'active': activeTab === 'users' }" href="#" v-on:click.prevent="activeTab = 'users'">Users</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" :class="{ 'active': activeTab === 'services' }" href="#" v-on:click.prevent="activeTab = 'services'">Services</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" :class="{ 'active': activeTab === 'bookings' }" href="#" v-on:click.prevent="activeTab = 'bookings'">Bookings</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" :class="{ 'active': activeTab === 'donations' }" href="#" v-on:click.prevent="activeTab = 'donations'">Donations</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" :class="{ 'active': activeTab === 'charities' }" href="#" v-on:click.prevent="activeTab = 'charities'">Charities</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" :class="{ 'active': activeTab === 'locations' }" href="#" v-on:click.prevent="activeTab = 'locations'">Locations</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" :class="{ 'active': activeTab === 'payments' }" href="#" v-on:click.prevent="activeTab = 'payments'">Payments</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" :class="{ 'active': activeTab === 'availabilities' }" href="#" v-on:click.prevent="activeTab = 'availabilities'">Availabilities</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" :class="{ 'active': activeTab === 'contactMessages' }" href="#" v-on:click.prevent="activeTab = 'contactMessages'">Contact Messages</a>
+    </li>
+</ul>

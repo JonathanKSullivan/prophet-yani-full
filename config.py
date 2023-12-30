@@ -21,6 +21,8 @@ class Config:
     TWITTER_ACCESS_TOKEN = os.environ.get('TWITTER_ACCESS_TOKEN', 'YOUR_ACCESS_TOKEN')
     TWITTER_ACCESS_TOKEN_SECRET = os.environ.get('TWITTER_ACCESS_TOKEN_SECRET', 'YOUR_ACCESS_TOKEN_SECRET')
 
+    SECURITY_PASSWORD_SALT="123"
+
 class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///prophet_yani_dev.db'
     DEBUG = True

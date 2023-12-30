@@ -1,0 +1,8 @@
+{% extends "email/base.html" %}
+
+{% block content %}
+    <h1>Welcome to Our Service!</h1>
+    <p>Thank you for registering. Please click the link below to activate your account:</p>
+    <a href="{{ confirm_url }}" class="button">Activate Account</a>
+    <p>If you did not create an account, no further action is required.</p>
+{% endblock %}

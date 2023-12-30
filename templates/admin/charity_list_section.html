@@ -1,0 +1,49 @@
+<!-- Charity List Section -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h3 class="mb-3">Charity List</h3>
+
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Location</th>
+                        <th>Donations</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="charity in charities" :key="charity.id">
+                        <td>${ charity.id }</td>
+                        <td>
+                            <img :src="charity.image_url" class="img-thumbnail" style="width: 60px; height: 60px;">
+                        </td>
+                        <td>${ charity.name }</td>
+                        <td>${ charity.description }</td>
+                        <td>${ charity.location_name }</td> <!-- Assuming location_name is added -->
+                        <td>
+                            <!-- Link to donations or count -->
+                            ${ charity.donations_count } Donations <!-- Assuming donations_count is added -->
+                        </td>
+                        <td>
+                            <!-- Icons for actions (Edit, Delete, Details, etc.) -->
+                            <button class="btn btn-sm btn-primary">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            <button class="btn btn-sm btn-info">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

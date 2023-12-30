@@ -1,10 +1,15 @@
 # utils.py
 
 import os
-from flask import session
+from flask import current_app, session
 from models import ContactMessage, User
 from flask_mail import Message
 from extensions import mail, db
+from itsdangerous import URLSafeTimedSerializer
+
+def generate_confirmation_token(email):
+    serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    return serializer.dumps(email, salt=current_app.config['SECURITY_PASSWORD_SALT'])
 
 def is_user_admin():
     """
@@ -35,4 +40,29 @@ def process_contact_form(name, email, message):
                   sender=os.environ.get('MAIL_USERNAME', 'SullivanSoftwareSolutions@gmail.com'),
                   recipients=["prophetyani@gmail.com"])
     msg.body = f"Name: {name}\nEmail: {email}\nMessage: {message}"
+    mail.send(msg)
+
+def send_email(to, subject, template):
+    msg = Message(
+        subject,
+        recipients=[to],
+        html=template,
+        sender=current_app.config['MAIL_DEFAULT_SENDER']
+    )
+    mail.send(msg)
+
+def send_username_recovery_email(email, username):
+    # Define email subject
+    subject = "Username Recovery"
+
+    # Render email template
+    html = render_template('email/username_recovery.html', username=username)
+
+    # Send email
+    msg = Message(
+        subject,
+        recipients=[email],
+        html=html,
+        sender=current_app.config['MAIL_DEFAULT_SENDER']
+    )
     mail.send(msg)

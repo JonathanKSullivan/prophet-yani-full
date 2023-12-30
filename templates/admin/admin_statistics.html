@@ -1,0 +1,155 @@
+<!-- Displaying Admin Statistics with Vue.js -->
+<div class="row">
+
+
+    <!-- Bookings Section -->
+    <div class="col-md-3">
+        <div class="card text-center bg-success text-white mb-3">
+            <div class="card-body">
+                <h3>Services</h3>
+                <h4>{{ serviceCount }}</h4>
+
+                <h5 class="mt-3">By Type</h5>
+                <ul>
+                    {% for service_type, count in data.services_by_type.items() %}
+                        <li>{{ service_type }}: {{ count }}</li>
+                    {% endfor %}
+                </ul>
+
+                <h5 class="mt-3">Popular</h5>
+                <ul>
+                    {% for service_name, count in data.popular_services.items() %}
+                        <li>{{ service_name }}: {{ count }} bookings</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        
+    </div>
+        <div class="col-md-9">
+            <div class="card text-center bg-info text-white mb-3">
+                <div class="card-body">
+                    <h3>Bookings</h3>
+                    <h4>{{ data.booking_count }}</h4>
+
+                    <h5 class="mt-3">Monthly</h5>
+                    <ul>
+                        {% for month, count in data.monthly_bookings.items() %}
+                            <li>{{ month }}: {{ count }}</li>
+                        {% endfor %}
+                    </ul>
+
+                    <h5 class="mt-3">Status</h5>
+                    <ul>
+                        {% for status, count in data.bookings_by_status.items() %}
+                            <li>{{ status.capitalize() }}: {{ count }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        
+        </div>
+
+        <!-- Services Section -->
+        <div class="col-md-3">
+            <div class="card text-center bg-warning text-white mb-3">
+                <div class="card-body">
+                    <h3>Donations</h3>
+                    <h4>{{ data.donation_count }}</h4>
+                    <p>Total: {{ data.total_donations }}</p>
+                    <p>Average: {{ data.avg_donation_amount }}</p>
+                </div>
+            </div>
+            
+            <div class="card text-center bg-secondary text-white mb-3">
+                <div class="card-body">
+                    <h3>Financials</h3>
+                    <h4>{{ paymentCount }}</h4>
+                    <p>Total Payments: {{ data.total_payments }}</p>
+                    <!-- Add any other financial metrics here -->
+                </div>
+            </div>
+            
+            <div class="card text-center bg-dark text-white mb-3">
+                <div class="card-body">
+                    <h3>Locations</h3>
+                    {% if data.services_by_location %}
+                        <p>Services by Location:</p>
+                        <ul>
+                            {% for location, count in data.services_by_location.items() %}
+                                <li>{{ location }}: {{ count }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No services available by physical location.</p>
+                    {% endif %}
+                    <!-- Add any other location-based metrics here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Users Section -->
+        <div class="col-md-9">
+            <!-- User Count Card -->
+            <div class="card text-center bg-primary text-white mb-3">
+                <div class="card-body">
+                    <h3>Users</h3>
+                    <h4>{{ data.user_count }}</h4>
+                </div>
+            </div>
+    
+            <!-- Roles Table Card -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Roles</h5>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Role</th>
+                                <th>Count</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for role, count in data.users_by_role.items() %}
+                                <tr>
+                                    <td>{{ role.capitalize() }}</td>
+                                    <td>{{ count }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    
+            <!-- Latest Sign-ups Card -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Latest Sign-ups</h5>
+                    <ul class="list-group list-group-flush">
+                        {% for signup in data.latest_signups %}
+                            <li class="list-group-item">
+                                <div class="media align-items-center">
+                                    <img src="{{ signup.profile_image_url if signup.profile_image_url else 'https://jonathanksullivan.github.io/prophet-yani/image/default_profile.webp' }}" 
+                                        alt="Profile Image" 
+                                        class="mr-3 rounded-circle" 
+                                        style="height: 60px; width: 60px; object-fit: cover;">
+                                    <div class="media-body">
+                                        <h6 class="mt-0">{{ signup.username }} ({{ signup.first_name }} {{ signup.last_name }})</h6>
+                                        Signed up on {{ signup.create_date.strftime('%B %d, %Y') }} - {{ signup.country }}
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    
+
+
+        
+    
+
+
+</div>

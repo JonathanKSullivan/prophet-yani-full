@@ -2,7 +2,6 @@ from models import db, Booking
 from datetime import datetime
 
 class BookingManager:
-
     @staticmethod
     def count_past_bookings():
         try:

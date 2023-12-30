@@ -1,0 +1,39 @@
+<!-- Payment List Section -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h3 class="mb-3">Payment List</h3>
+
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Amount</th>
+                        <th>Transaction ID</th>
+                        <th>Payment Method</th>
+                        <th>Payment Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="payment in payments" :key="payment.id">
+                        <td>${ payment.id }</td>
+                        <td>${ payment.user_name }</td> <!-- Assuming user_name is added -->
+                        <td>${ formatCurrency(payment.amount) }</td>
+                        <td>${ payment.transaction_id }</td>
+                        <td>${ payment.payment_method }</td>
+                        <td>${ formatDateTime(payment.payment_date) }</td>
+                        <td>
+                            <!-- Action Buttons -->
+                            <button class="btn btn-sm btn-info">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <!-- Additional buttons as needed -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

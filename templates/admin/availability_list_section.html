@@ -1,0 +1,71 @@
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h3 class="mb-3">Availability List</h3>
+
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Day of Week</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Priority</th>
+                        <th>Recurring</th>
+                        <th>Exclusion Dates</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="availability in availabilityRules" :key="availability.id">
+                        <td>${ availability.id }</td>
+                        <td>${ formatDayOfWeek(availability.day_of_week) }</td>
+                        <td>
+                            <input type="time" v-model="availability.start_time" @change="updateAvailability(availability)">
+                        </td>
+                        <td>
+                            <input type="time" v-model="availability.end_time" @change="updateAvailability(availability)">
+                        </td>
+                        <td>${ availability.priority }</td>
+                        <td>${ availability.is_recurring ? 'Yes' : 'No' }</td>
+                        <td>
+                            <ul>
+                                <li v-for="date in availability.exclusion_dates" :key="date">
+                                    ${ formatDateTime(date) }
+                                    <button class="btn btn-sm btn-danger" @click="confirmRemoveExclusionDate(availability, date)">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </li>
+                            </ul>
+                            <button class="btn btn-sm btn-primary" @click="showAddExclusionDateDialog(availability)">
+                                Add Date
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" @click="editAvailability(availability)">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" @click="confirmDeleteAvailability(availability.id)">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-12 mt-5">
+        <h3 class="mb-3">Global Exclusion Dates</h3>
+        <ul class="list-group">
+            <li class="list-group-item" v-for="date in globalExclusions" :key="date">
+                ${ formatDateTime(date) }
+                <button class="btn btn-sm btn-danger float-right" @click="confirmRemoveGlobalExclusionDate(date)">
+                    <i class="fas fa-times"></i> Remove
+                </button>
+            </li>
+        </ul>
+        <button class="btn btn-primary mt-3" @click="addGlobalExclusionDate">
+            <i class="fas fa-plus"></i> Add Global Exclusion Date
+        </button>
+    </div>
+</div>

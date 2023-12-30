@@ -1,50 +1,260 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-5">
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+
+<div id="vue-admin-dashboard" class="container mt-5">
     <div class="row">
         <div class="col-md-12">
             <h2 class="mb-4">Admin Dashboard</h2>
-            
-            <!-- Displaying Admin Statistics -->
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="card text-center bg-primary text-white mb-3">
-                        <div class="card-body">
-                            <h3>Users</h3>
-                            <h4>{{ data.user_count }}</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card text-center bg-success text-white mb-3">
-                        <div class="card-body">
-                            <h3>Services</h3>
-                            <h4>{{ data.service_count }}</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card text-center bg-info text-white mb-3">
-                        <div class="card-body">
-                            <h3>Bookings</h3>
-                            <h4>{{ data.booking_count }}</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card text-center bg-warning text-white mb-3">
-                        <div class="card-body">
-                            <h3>Donations</h3>
-                            <h4>{{ data.total_donations }}</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Additional admin information can be added here -->
 
+            <!-- Tab Buttons -->
+            {% include 'admin/admin_tabs.html' %}
+            
+
+            <!-- Tab Content -->
+            <div class="tab-content mt-4">
+                <div v-show="activeTab === 'statistics'">{% include 'admin/admin_statistics.html' %}</div>
+                <div v-show="activeTab === 'users'">{% include 'admin/user_list_section.html' %} {% include 'admin/user_edit_modal.html' %}</div>
+                <div v-show="activeTab === 'services'">{% include 'admin/service_list_section.html' %}</div>
+                <div v-show="activeTab === 'bookings'">{% include 'admin/booking_list_section.html' %}</div>
+                <div v-show="activeTab === 'donations'">{% include 'admin/donation_list_section.html' %}</div>
+                <div v-show="activeTab === 'charities'">{% include 'admin/charity_list_section.html' %}</div>
+                <div v-show="activeTab === 'locations'">{% include 'admin/location_list_section.html' %}</div>
+                <div v-show="activeTab === 'payments'">{% include 'admin/payment_list_section.html' %}</div>
+                <div v-show="activeTab === 'availabilities'">{% include 'admin/availability_list_section.html' %}</div>
+                <div v-show="activeTab === 'contactMessages'">{% include 'admin/contact_message_list_section.html' %}</div>
+            </div>
+
+            <!-- Edit Modals -->
+            
         </div>
     </div>
 </div>
+
+<script>
+    new Vue({
+        el: '#vue-admin-dashboard',
+        delimiters: ['${', '}'], // Change Vue delimiters to avoid conflict with Jinja
+        data: {
+            activeTab: 'statistics',
+            userCount: "{{ data.user_count }}", // Static data from Flask
+            serviceCount: 0,
+            bookingCount: 0,
+            donationCount: 0,
+            users: [], // Array to hold user data from API
+            services: [], // Array to hold service data from API
+            bookings: [], // Array to hold service data from API
+            donations: [], // Array to hold service data from API
+            charities: [], // Array to hold charity data from API
+            locations: [], // Array to hold location data from API
+            payments: [], // Array to hold payment data from API
+            availabilities: [], // Array to hold availability data from API
+            contactMessages: [], // Array to hold contact message data from API
+            availabilityRules: [],
+            globalExclusions: [],
+            selectedUser: {
+                id: null,
+                username: '',
+                email: '',
+                status: 'active',
+                role: 'user'
+            },
+            showUserEditModal: false,
+            
+        },
+        watch: {
+            activeTab(newTab, oldTab) {
+                this.updateUrl(newTab);
+            }
+        },
+        mounted() {
+            this.setActiveTabFromUrl();
+            fetch('/api/users')
+                .then(response => response.json())
+                .then(data => {
+                    this.users = data.users;
+                    this.userCount = data.users.length; // Dynamically set the user count
+                })
+                .catch(error => console.error('Error:', error));
+
+            fetch('/api/services')
+                .then(response => response.json())
+                .then(data => {
+                    this.services = data.services;
+                    this.serviceCount = data.services.length; // Dynamically set the service count
+                })
+                .catch(error => console.error('Error:', error));
+
+            fetch('/api/bookings')
+                .then(response => response.json())
+                .then(data => {
+                    this.bookings = data.bookings;
+                    this.bookingCount = data.bookings.length; // Dynamically set the booking count
+                })
+                .catch(error => console.error('Error:', error));
+            
+            fetch('/api/donations')
+                .then(response => response.json())
+                .then(data => {
+                    this.donations = data.donations;
+                    this.donationCount = data.donations.length; // Dynamically set the donation count
+                })
+                .catch(error => console.error('Error:', error));
+            
+            fetch('/api/charities')
+                .then(response => response.json())
+                .then(data => {
+                    this.charities = data.charities;
+                })
+                .catch(error => console.error('Error:', error));
+
+            fetch('/api/locations')
+                .then(response => response.json())
+                .then(data => {
+                    this.locations = data.locations;
+                })
+                .catch(error => console.error('Error:', error));
+
+            fetch('/api/payments')
+                .then(response => response.json())
+                .then(data => {
+                    this.payments = data.payments;
+                })
+                .catch(error => console.error('Error:', error));
+
+            fetch('/api/availabilities')
+                .then(response => response.json())
+                .then(data => {
+                    this.availabilityRules = data.availability_rules.map(rule => {
+                        rule.start_time = new Date(rule.start_time);
+                        rule.end_time = new Date(rule.end_time);
+                        rule.exclusion_dates = rule.exclusion_dates.map(dateStr => new Date(dateStr));
+                        return rule;
+                    });
+                    this.globalExclusions = data.global_exclusion_dates.map(dateStr => new Date(dateStr));
+                })
+                .catch(error => console.error('Error:', error));
+
+            fetch('/api/contact_messages')
+                .then(response => response.json())
+                .then(data => {
+                    this.contactMessages = data.contact_messages;
+                })
+                .catch(error => console.error('Error:', error));
+        },
+        computed: {
+            formattedLatestSignups() {
+                return this.data.latest_signups.all().map(user => ({
+                    id: user.id,
+                    username: user.username,
+                    signup_date: this.formatDate(user.signup_date)
+                }));
+            }
+        },
+        methods: {
+            changeTab(tabName) {
+                this.activeTab = tabName;
+            },
+            updateUrl(tabName) {
+                const newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + '?tab=' + tabName;
+                window.history.pushState({ path: newUrl }, '', newUrl);
+            },
+            setActiveTabFromUrl() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const tabParam = urlParams.get('tab');
+                if (tabParam && this.isTabValid(tabParam)) {
+                    this.activeTab = tabParam;
+                }
+            },
+            isTabValid(tabName) {
+                const validTabs = ['statistics', 'users', 'services', 'bookings', 'donations', 'charities', 'locations', 'payments', 'availabilities', 'contactMessages'];
+                return validTabs.includes(tabName);
+            },
+            redirectTo(url) {
+                window.location.href = url;
+            },
+
+            formatDateTime(datetimeStr) {
+                if (!datetimeStr) return '';
+                const date = new Date(datetimeStr);
+                return date.toLocaleString(); // You can customize the format as needed
+            },
+            formatCurrency(amount) {
+                if (amount === null || amount === undefined) return '';
+                // Format the amount as currency
+                // The 'en-US' locale is used as an example, adjust as per your requirement
+                return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+            },
+            truncateMessage(message, maxLength = 100) {
+                if (!message) return '';
+                if (message.length <= maxLength) return message;
+                return message.substring(0, maxLength) + '...';
+            },
+            addGlobalExclusionDate() {
+                // Use a simple prompt to get the date from the user
+                const newDateStr = prompt("Enter the date for exclusion (YYYY-MM-DD):");
+                if (!newDateStr) return; // Exit if no date is entered
+
+                // Validate the input date format (basic validation)
+                if (!/^\d{4}-\d{2}-\d{2}$/.test(newDateStr)) {
+                    alert("Invalid date format. Please use YYYY-MM-DD format.");
+                    return;
+                }
+
+                // Prepare the data to be sent
+                const newDate = { date: newDateStr };
+
+                // API call to add the date
+                fetch('/api/add-global-exclusion-date', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newDate)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        // Add the new date to the globalExclusions array
+                        this.globalExclusions.push(newDateStr);
+                    } else {
+                        alert("Failed to add date. " + (data.message || 'Server error'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("An error occurred while adding the date.");
+                });
+            },
+            editUser(user) {
+                    this.selectedUser = { ...user }; // Clone the user object
+                    $('#userEditModal').modal('show');
+                },
+            updateUser() {
+                // Implement the logic to update the user
+                console.log('Updating user:', this.selectedUser);
+                // Make API call to update the user
+                $('#userEditModal').modal('hide');
+            },
+            formatDayOfWeek(dayOfWeek) {
+                // Implement the formatting logic here
+                // For example, you can return the full name of the day
+                const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                return daysOfWeek[dayOfWeek];
+            },
+            openUserEditModal(user) {
+                this.selectedUser = { ...user }; // Clone the user object
+                this.showUserEditModal = true; // Show the modal
+            },
+            formatDate(date) {
+                if (!date) return '';
+                return new Date(date).toLocaleDateString(); // Adjust the date format as needed
+            },
+        }
+    });
+</script>
 {% endblock %}

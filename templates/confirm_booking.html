@@ -1,22 +1,68 @@
 {% extends "base.html" %}
 
+
 {% block content %}
 <div class="container my-5">
+    
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
     <div class="card shadow">
         <div class="card-body">
             <h2 class="card-title text-center mb-4">Confirm Booking</h2>
             <div class="row">
-                <div class="col-md-6 offset-md-3">
-                    <p class="text-muted"><strong>Service:</strong> {{ service.name }}</p>
-                    <p class="text-muted">
-                        <strong>Time:</strong> 
-                        <span id="formattedBookingTime"></span>
-                    </p>
+                <div class="col-md-8 offset-md-2">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ service.name }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Service Details</h6>
+                            <p class="card-text"><strong>Price:</strong> ${{ service.price }}</p>
+                            <p class="card-text"><strong>Donation Percentage:</strong> {{ service.donation_percentage }}%</p>
+                            <p class="card-text"><strong>Donation Amount:</strong> ${{ "%.2f"|format(service.price * (service.donation_percentage / 100)) }}</p>
+                            <p class="card-text">
+                                <strong>Time:</strong> 
+                                <span id="formattedBookingTime"></span>
+                            </p>
+                        </div>
+                    </div>
 
-                    <form action="/process_payment" method="post" id="payment-form" class="mt-3">
+                    <form action="{{ url_for('booking_blueprint.book_service', service_id=service.id) }}" method="post" id="payment-form" class="mt-3">
                         <input type="hidden" name="service_id" value="{{ service.id }}">
                         <input type="hidden" name="start_time" value="{{ start_time }}">
                         <input type="hidden" name="end_time" value="{{ end_time }}">
+
+                        <!-- Charity Selection with Radio Buttons -->
+                        <div class="form-group">
+                            <label>Choose a Charity</label>
+                            <div class="list-group">
+                                {% for charity in charities %}
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between align-items-start">
+                                        <div class="custom-control custom-radio flex-shrink-1 mr-3">
+                                            <input type="radio" id="charity{{ charity.id }}" name="charity_id" class="custom-control-input" value="{{ charity.id }}">
+                                            <label class="custom-control-label" for="charity{{ charity.id }}"></label>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h5 class="mb-1">{{ charity.name }}</h5>
+                                            <p class="mb-1">{{ charity.description }}</p>
+                                        </div>
+                                        <img src="{{ url_for('static', filename=charity.image_url) }}" alt="{{ charity.name }}" class="ml-3 charity-image img-thumbnail" style="max-width: 100px;">
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label for="cardholder-name">Cardholder's Name</label>
@@ -29,7 +75,7 @@
 
                         <div id="card-errors" role="alert" class="text-danger"></div>
 
-                        <button type="submit" class="btn btn-primary btn-block mt-4">Confirm and Pay</button>
+                        <button type="submit" class="btn btn-primary btn-block mt-3">Confirm and Pay</button>
                     </form>
                 </div>
             </div>
@@ -61,7 +107,7 @@
         document.getElementById('formattedBookingTime').textContent = `${startTimeFormatted} to ${endTimeFormatted}`;
 
         // Stripe Elements integration
-        var stripe = Stripe('YOUR_STRIPE_PUBLIC_KEY'); // Replace with your Stripe public key
+        var stripe = Stripe('pk_test_51ORmDrBO4RqVDnuZuqrlnOyhWBEJELt57CAxDpJDfcW7eVRFm1T4QwF9Sbhd0x1Vpb9iA1QOof1nU4PZvQZChS500036lqa94e'); // Replace with your Stripe public key
         var elements = stripe.elements();
         var card = elements.create('card');
         card.mount('#card-element');
@@ -106,7 +152,5 @@
         }
     });
 </script>
-
-
 
 {% endblock %}

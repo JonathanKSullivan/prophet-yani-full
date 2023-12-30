@@ -48,3 +48,7 @@ class ServiceManager:
     @staticmethod
     def list_all_services():
         return Service.query.all()
+    
+    @staticmethod
+    def list_all_services():
+        return Service.query.all()

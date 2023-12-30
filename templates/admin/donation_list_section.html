@@ -1,0 +1,41 @@
+<!-- Donation List Section -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h3 class="mb-3">Donation List</h3>
+
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Amount</th>
+                        <th>Charity</th>
+                        <th>Service</th>
+                        <th>Donation Date</th>
+                        <th>Type</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="donation in donations" :key="donation.id">
+                        <td>${ donation.id }</td>
+                        <td>${ donation.user_name }</td> <!-- Assuming user_name is added -->
+                        <td>${ formatCurrency(donation.amount) }</td> <!-- Assuming formatCurrency method is defined -->
+                        <td>${ donation.charity_name }</td> <!-- Assuming charity_name is added -->
+                        <td>${ donation.service_name }</td> <!-- Assuming service_name is added -->
+                        <td>${ formatDateTime(donation.donation_date) }</td>
+                        <td>${ donation.type }</td>
+                        <td>
+                            <!-- Action Buttons -->
+                            <!-- Example: View Details Button -->
+                            <button class="btn btn-sm btn-info">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

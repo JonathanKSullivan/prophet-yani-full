@@ -11,6 +11,7 @@ from blueprints.location_routes import location_blueprint
 from blueprints.payment_routes import payment_blueprint
 from blueprints.service_routes import service_blueprint
 from blueprints.user_routes import user_blueprint
+from blueprints.api import api_blueprint
 
 from extensions import db, mail
 from config import DevelopmentConfig, ProductionConfig
@@ -23,6 +24,11 @@ from utils import is_user_admin
 # Create and configure app
 app = Flask(__name__)
 env = os.environ.get('FLASK_ENV', 'development')
+
+@app.template_filter('currency')
+def currency_filter(value):
+    return "${:,.2f}".format(value)
+
 if env == 'production':
     app.config.from_object(ProductionConfig)
 else:
@@ -62,6 +68,7 @@ app.register_blueprint(location_blueprint, url_prefix='/location')
 app.register_blueprint(payment_blueprint, url_prefix='/payment')
 app.register_blueprint(service_blueprint, url_prefix='/service')
 app.register_blueprint(user_blueprint, url_prefix='/user')
+app.register_blueprint(api_blueprint, url_prefix='/api')
 
 # The following is not necessary if using `flask run`
 # if __name__ == '__main__':

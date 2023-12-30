@@ -1,0 +1,104 @@
+<!-- User List Section -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h3 class="mb-3">User List</h3>
+
+        <!-- Search and Filters -->
+        <div class="mb-3 d-flex flex-column flex-md-row">
+            <!-- Implement responsive search and filter fields here with icons -->
+        </div>
+
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="user in users" :key="user.id">
+                        <td>${ user.id }</td>
+                        <td>${ user.username }</td>
+                        <td>${ user.email }</td>
+                        <td>
+                            <select class="form-control" v-model="user.status">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control" v-model="user.user_role">
+                                <option value="admin">Admin</option>
+                                <option value="user">User</option>
+                            </select>
+                        </td>
+                        <td>
+                            <!-- Icons for actions -->
+                            <button class="btn btn-sm btn-primary"  @click="openUserEditModal(user)">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-secondary">
+                                <i class="fas fa-redo"></i>
+                            </button>
+                            <!-- Add other action icons as needed -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination and Bulk Actions -->
+        <div>
+            <!-- Implement responsive pagination and bulk actions here -->
+        </div>
+    </div>
+</div>
+
+<!-- User Edit Modal -->
+<div id="userEditModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editUserForm">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username" v-model="selectedUser.username">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" v-model="selectedUser.email">
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select class="form-control" id="status" v-model="selectedUser.status">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="role">Role</label>
+                        <select class="form-control" id="role" v-model="selectedUser.role">
+                            <option value="admin">Admin</option>
+                            <option value="user">User</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" @click="updateUser">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

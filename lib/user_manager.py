@@ -1,3 +1,4 @@
+from lib.location_manager import LocationManager
 from models import db, User
 from werkzeug.security import generate_password_hash, check_password_hash
 import datetime
@@ -5,16 +6,21 @@ import datetime
 
 class UserManager:
     @staticmethod
-    def add_user(username, email, password, first_name='', last_name='', bio=''):
+    def get_user_by_email(email):
+        return User.query.filter_by(email=email).first()
+
+    @staticmethod
+    def add_user(username, email, password, first_name='', last_name='', bio='', country=''):
         new_user = User(
             username=username,
             email=email,
             password_hash=generate_password_hash(password),
             first_name=first_name,
             last_name=last_name,
-            bio=bio,  # Add bio field
+            bio=bio,
+            country=country,  # Set country field
             create_date=datetime.datetime.now(),
-            last_login_date=datetime.datetime.now(),  # Assuming this is a new field
+            last_login_date=datetime.datetime.now(),
             status='Active'
         )
         db.session.add(new_user)
@@ -64,3 +70,43 @@ class UserManager:
         if user and check_password_hash(user.password_hash, password):
             return True
         return False
+
+    @staticmethod
+    def get_all_users():
+        return User.query.all()
+    
+    @staticmethod
+    def update_user_with_location(user_id, location_data, user_data):
+        user = User.query.get(user_id)
+        if not user:
+            return None
+
+        # Update user details
+        immutable_fields = {'id', 'username', 'password_hash', 'create_date'}
+        for key, value in user_data.items():
+            if key in immutable_fields:
+                continue  # Skip updating immutable fields
+            if hasattr(user, key):
+                setattr(user, key, value)
+
+        # Update country in location details
+        if user.location:
+            # Update existing location with new country
+            LocationManager.update_location(user.location.id, country=location_data.get('country'))
+        else:
+            # Add new location with provided country and associate it with the user
+            new_location = LocationManager.add_location(country=location_data.get('country'))
+            user.location_id = new_location.id
+
+        db.session.commit()
+        return user
+
+    @staticmethod
+    def update_password(user_id, new_password):
+        user = User.query.get(user_id)
+        if not user:
+            return False  # User not found
+
+        user.password_hash = generate_password_hash(new_password)
+        db.session.commit()
+        return True
