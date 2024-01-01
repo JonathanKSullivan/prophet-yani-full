@@ -1,4 +1,4 @@
-from models import db, ContactMessage
+from model import db, ContactMessage
 
 class ContactMessageManager:
     @staticmethod

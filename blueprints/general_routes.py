@@ -9,7 +9,7 @@ from lib.user_manager import UserManager
 
 
 # Import models
-from models import User, Service, Booking, Donation, Charity, Location, Payment
+from model import User, Service, Booking, Donation, Charity, Location, Payment
 
 from utils import process_contact_form, is_user_admin
 

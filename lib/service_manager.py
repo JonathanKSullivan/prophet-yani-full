@@ -1,4 +1,4 @@
-from models import db, Service
+from model import db, Service
 
 class ServiceManager:
     @staticmethod

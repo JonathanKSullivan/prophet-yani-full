@@ -18,7 +18,7 @@ from config import DevelopmentConfig, ProductionConfig
 from flask import g
 
 # Import models here. This ensures they are known to SQLAlchemy
-from models import User, Service, Booking, Donation, Charity, Location, Payment
+from model import User, Service, Booking, Donation, Charity, Location, Payment
 from utils import is_user_admin
 
 # Create and configure app

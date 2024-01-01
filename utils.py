@@ -1,8 +1,8 @@
 # utils.py
 
 import os
-from flask import current_app, session
-from models import ContactMessage, User
+from flask import current_app, render_template, session
+from model import ContactMessage, User
 from flask_mail import Message
 from extensions import mail, db
 from itsdangerous import URLSafeTimedSerializer

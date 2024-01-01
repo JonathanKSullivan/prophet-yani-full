@@ -1,5 +1,5 @@
 from sqlalchemy import func
-from models import db, Donation
+from model import db, Donation
 
 class DonationManager:
     @staticmethod

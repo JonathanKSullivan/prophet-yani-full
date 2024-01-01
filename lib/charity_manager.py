@@ -1,4 +1,4 @@
-from models import db, Charity
+from model import db, Charity
 
 class CharityManager:
     @staticmethod

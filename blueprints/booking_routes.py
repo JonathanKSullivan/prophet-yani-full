@@ -1,15 +1,18 @@
+import os
 from flask import Blueprint, flash, jsonify, redirect, render_template, request, session, url_for
 from lib.booking_manager import BookingManager
 from lib.charity_manager import CharityManager
 from lib.donation_manager import DonationManager
 from lib.payment_manager import PaymentManager
-from models import Charity, Service
+from model import Charity, Service
 from datetime import datetime
 from data import confirm_booking_page_content
 import stripe
 from dateutil import parser
 
-stripe.api_key = 'sk_test_51ORmDrBO4RqVDnuZ25SgvZLlo1HTt7RbNwlUbHnaeU2DdiiDugQRratl1G6FTtsfN7K69pfJn9GCvsNPYYMkNONX00m35NJUPM'
+
+# Set Stripe API key from environment variable
+stripe.api_key = os.environ.get('STRIPE_API_KEY')
 
 booking_blueprint = Blueprint('booking_blueprint', __name__)
 

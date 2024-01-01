@@ -1,33 +1,28 @@
 # config.py
 import os
 
-
 class Config:
+    SECRET_KEY = os.environ.get('SECRET_KEY')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SECRET_KEY = 'your_random_secret_key'
     
     # Configure Flask-Mail
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 587
     MAIL_USE_TLS = True
     MAIL_USE_SSL = False
-    MAIL_USERNAME = os.environ.get('MAIL_USERNAME', 'SullivanSoftwareSolutions@gmail.com')
-    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', 'omib pebi rwua mrsk')
-    MAIL_DEFAULT_SENDER = 'jonathan.k.sullivan@gmail.com'
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER')
 
-    # Twitter API Credentials
-    TWITTER_CONSUMER_KEY = os.environ.get('TWITTER_CONSUMER_KEY', 'YOUR_CONSUMER_KEY')
-    TWITTER_CONSUMER_SECRET = os.environ.get('TWITTER_CONSUMER_SECRET', 'YOUR_CONSUMER_SECRET')
-    TWITTER_ACCESS_TOKEN = os.environ.get('TWITTER_ACCESS_TOKEN', 'YOUR_ACCESS_TOKEN')
-    TWITTER_ACCESS_TOKEN_SECRET = os.environ.get('TWITTER_ACCESS_TOKEN_SECRET', 'YOUR_ACCESS_TOKEN_SECRET')
+    # Security
+    SECURITY_PASSWORD_SALT = os.environ.get('SECURITY_PASSWORD_SALT')
 
-    SECURITY_PASSWORD_SALT="123"
 
 class DevelopmentConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///prophet_yani_dev.db'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     DEBUG = True
 
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'sqlite:///prophet_yani.db')
-    SECRET_KEY = os.environ.get('SECRET_KEY', 'default_secret_key')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_WRITER_URL')
+    SQLALCHEMY_DATABASE_READ_REPLICA_URI = os.environ.get('DATABASE_READER_URL')
     DEBUG = False

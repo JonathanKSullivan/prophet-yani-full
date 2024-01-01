@@ -1,4 +1,4 @@
-from models import db, Payment
+from model import db, Payment
 from datetime import datetime
 
 class PaymentManager:

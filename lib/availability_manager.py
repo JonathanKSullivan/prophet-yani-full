@@ -1,4 +1,4 @@
-from models import db, AvailabilityRule, ExclusionDate, GlobalExclusionDate
+from model import db, AvailabilityRule, ExclusionDate, GlobalExclusionDate
 
 class AvailabilityManager:
     @staticmethod

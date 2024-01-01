@@ -103,19 +103,20 @@ def profile():
             'first_name': request.form.get('first_name'),
             'last_name': request.form.get('last_name'),
             'bio': request.form.get('bio'),
-            # ... other user-specific fields ...
-        }
-        location_data = {
-            'address': request.form.get('address'),
-            'city': request.form.get('city'),
-            'state': request.form.get('state'),
             'country': request.form.get('country'),
-            'zip_code': request.form.get('zip_code'),
-            # ... other location-specific fields ...
         }
 
-        # Update user data
-        UserManager.update_user_with_location(user_id, location_data, user_data)
+        # Handle profile image upload
+        profile_image = request.files.get('profile_image')
+        if profile_image:
+            bucket_name = 'prophet-yani-assests'  # Replace with your actual bucket name
+            image_url = UserManager.upload_to_s3(profile_image, bucket_name)
+            if image_url:
+                # Update user with new profile image URL
+                user_data['profile_image_url'] = image_url
+                # Update user in the database
+        UserManager.update_user(user_id, user_data)
+
 
         # Check and update password if new_password field is provided
         new_password = request.form.get('new_password')

@@ -55,7 +55,7 @@
          <div class="card-deck">
             {% for partnership in social_proof.partnerships %}
             <!-- Partnership -->
-            <div class="col-md-4 mb-4">
+            <div class="col-md-6 mb-4 offset-md-3">
                   <div class="card h-100 shadow-sm">
                      <img src="{{ partnership.image_url }}" alt="{{ partnership.title }} Logo" class="card-img-top">
                      <div class="card-body">
@@ -75,7 +75,7 @@
 
    </div>
  
-    <!-- Social Media Highlights -->
+   <!-- Social Media Highlights -->
    <div class="row mb-5">
       <div class="col-md-12 mb-4">
          <div class="card">
@@ -85,12 +85,16 @@
                      {% for follower in social_proof.social_media_highlights.followers %}
                         <div class="col-md-4 col-sm-6 mb-3 text-center">
                               <div class="d-flex flex-column align-items-center">
-                                 {% if follower.icon == "svg" %}
-                                    <img src="{{ url_for('static', filename=follower.icon_svg) }}" alt="{{ follower.name }}" style="height: 2em; width: auto;">
-                                 {% else %}
-                                    <i class="{{ follower.icon }} fa-2x mb-2"></i>
-                                 {% endif %}
-                                 <span>{{ follower.name }}: <strong>{{ follower.count }}</strong> Followers</span>
+                                 <a href="{{ follower.url }}" target="_blank">
+                                    {% if follower.icon == "svg" %}
+                                       <img src="{{ url_for('static', filename=follower.icon_svg) }}" alt="{{ follower.name }}" style="height: 2em; width: auto;">
+                                    {% else %}
+                                       <i class="{{ follower.icon }} fa-2x mb-2"></i>
+                                    {% endif %}
+                                 </a>
+                                 <a href="{{ follower.url }}" target="_blank">
+                                    <span>{{ follower.name }}: <strong>{{ follower.count }}</strong> Followers</span>
+                                 </a>
                               </div>
                         </div>
                      {% endfor %}
@@ -99,6 +103,7 @@
          </div>
       </div>
    </div>
+
 
  
     <!-- Impact Statistics -->

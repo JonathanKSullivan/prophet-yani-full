@@ -1,0 +1,31 @@
+name: Deploy to AWS Elastic Beanstalk
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Add steps for testing or other pre-deployment requirements here
+
+
+    - name: Zip the application
+      run: zip -r deploy-package.zip . -x "*.git*"
+
+
+    - name: Deploy to AWS Elastic Beanstalk
+      uses: einaregilsson/beanstalk-deploy@v18
+      with:
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        application_name: "prophet-yani"
+        environment_name: "Prophet-yani-env"
+        region: "us-east-1" 
+        version_label: ${{ github.sha }}
+        deployment_package: deploy-package.zip

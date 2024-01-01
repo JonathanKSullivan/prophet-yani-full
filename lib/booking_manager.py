@@ -1,4 +1,4 @@
-from models import db, Booking
+from model import db, Booking
 from datetime import datetime
 
 class BookingManager:

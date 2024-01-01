@@ -1,5 +1,5 @@
 from sqlalchemy import func
-from models import db, Location
+from model import db, Location
 
 class LocationManager:
     @staticmethod

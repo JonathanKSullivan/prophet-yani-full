@@ -131,34 +131,6 @@ home_page_content = {
                 "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/home_zodiac.png",
                 "url": "https://zodiacempress.com/"
             },
-            {
-                "title": "Bigo Live",
-                "feature_offering": "Weekly live spiritual discussions hosted by Prophet Yani.",
-                "unique_value": "Engage in deep conversations covering topics like faith, personal growth, and universal spirituality every Sunday at 11 am.",
-                "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/home_bigo.png",
-                "url": "https://www.bigo.tv/en/sugarbabycam"
-            },
-            {
-                "title": "Instagram",
-                "feature_offering": "Visual storytelling of Prophet Yani's predictions and spiritual guidance.",
-                "unique_value": "A visual odyssey into the world of spirituality, combining insightful narratives with engaging imagery.",
-                "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/home_instagram.png",
-                "url": "https://www.instagram.com/yani.vip/"
-            },
-            {
-                "title": "Tik Tok",
-                "feature_offering": "Short, engaging spiritual content with TikTok's interactive features.",
-                "unique_value": "Quick, impactful spiritual insights, leveraging TikTok’s unique format for a dynamic spiritual experience.",
-                "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/home_tiktok.png",
-                "url": "https://www.tiktok.com/@zodiac_empress"
-            },
-            {
-                "title": "Youtube",
-                "feature_offering": "Celebrity readings, prophetic insights, and Bible studies.",
-                "unique_value": "In-depth spiritual teachings and personal readings, offering a deeper understanding of spiritual principles and personal guidance.",
-                "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/home_youtube.png",
-                "url": "https://www.youtube.com/yaniwhite"
-            },
         ],
         "social_media_highlights": {
             "followers": [
@@ -166,17 +138,22 @@ home_page_content = {
                     "name": "Bigo",
                     "icon": "svg",
                     "icon_svg": "images/bigo-live.svg",
-                    "count": "15000"
+                    "count": "15000",
+                    "url": "https://www.bigo.tv/en/sugarbabycam"
+
                 },
                 {
                     "name": "Instagram",
                     "icon": "fab fa-instagram",
-                    "count": "1300"
+                    "count": "1300",
+                    "url": "https://www.instagram.com/yani.vip/"
+
                 },
                 {
                     "name": "TikTok",
                     "icon": "fab fa-tiktok",
-                    "count": "1062"
+                    "count": "1062",
+                    "url": "https://www.tiktok.com/@zodiac_empress"
                 },
                 {
                     "name": "Twitter",
@@ -186,7 +163,8 @@ home_page_content = {
                 {
                     "name": "YouTube",
                     "icon": "fab fa-youtube",
-                    "count": "16"
+                    "count": "16",
+                    "url": "https://www.youtube.com/yaniwhite"
                 }
             ]
         },
