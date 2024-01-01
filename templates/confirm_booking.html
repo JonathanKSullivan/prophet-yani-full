@@ -50,7 +50,7 @@
                                 <div class="list-group-item">
                                     <div class="d-flex w-100 justify-content-between align-items-start">
                                         <div class="custom-control custom-radio flex-shrink-1 mr-3">
-                                            <input type="radio" id="charity{{ charity.id }}" name="charity_id" class="custom-control-input" value="{{ charity.id }}">
+                                            <input type="radio" id="charity{{ charity.id }}" name="charity_id" class="custom-control-input" value="{{ charity.id }}" {{ 'checked' if loop.first }}>
                                             <label class="custom-control-label" for="charity{{ charity.id }}"></label>
                                         </div>
                                         <div class="flex-grow-1">
@@ -75,7 +75,8 @@
 
                         <div id="card-errors" role="alert" class="text-danger"></div>
 
-                        <button type="submit" class="btn btn-primary btn-block mt-3">Confirm and Pay</button>
+                        <button type="submit" class="btn btn-primary btn-block mt-3" id="submit-button" disabled>Confirm and Pay</button>
+
                     </form>
                 </div>
             </div>
@@ -87,51 +88,56 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Function to format start time
-        const formatFullStartTime = (dateTimeStr) => {
-            const date = new Date(dateTimeStr);
-            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const timeOptions = { hour: '2-digit', minute: '2-digit' };
-            return date.toLocaleDateString("en-US", dateOptions) + ' at ' + date.toLocaleTimeString("en-US", timeOptions);
-        };
-
-        // Function to format end time
-        const formatEndTime = (dateTimeStr) => {
-            const date = new Date(dateTimeStr);
-            return date.toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit' });
-        };
-
-        // Formatting and displaying the booking time
-        const startTimeFormatted = formatFullStartTime("{{ start_time }}");
-        const endTimeFormatted = formatEndTime("{{ end_time }}");
-        document.getElementById('formattedBookingTime').textContent = `${startTimeFormatted} to ${endTimeFormatted}`;
+        // ... Existing code to format time ...
 
         // Stripe Elements integration
-        var stripe = Stripe('pk_test_51ORmDrBO4RqVDnuZuqrlnOyhWBEJELt57CAxDpJDfcW7eVRFm1T4QwF9Sbhd0x1Vpb9iA1QOof1nU4PZvQZChS500036lqa94e'); // Replace with your Stripe public key
+        var stripe = Stripe('pk_test_51ORmDrBO4RqVDnuZuqrlnOyhWBEJELt57CAxDpJDfcW7eVRFm1T4QwF9Sbhd0x1Vpb9iA1QOof1nU4PZvQZChS500036lqa94e'); // Replace with your actual Stripe public key
         var elements = stripe.elements();
         var card = elements.create('card');
         card.mount('#card-element');
 
-        // Handle real-time validation errors from the card Element
-        card.addEventListener('change', function(event) {
+        var submitButton = document.getElementById('submit-button');
+        var cardholderNameInput = document.getElementById('cardholder-name');
+        var cardComplete = false;
+
+        // Function to update the state of the submit button
+        function updateSubmitButtonState() {
+            var cardholderName = cardholderNameInput.value.trim();
+            submitButton.disabled = !cardholderName || !cardComplete;
+        }
+
+        // Listen to changes in the card element and update the button state
+        card.on('change', function(event) {
+            cardComplete = event.complete;
             var displayError = document.getElementById('card-errors');
             if (event.error) {
                 displayError.textContent = event.error.message;
             } else {
                 displayError.textContent = '';
             }
+            updateSubmitButtonState();
         });
+
+        // Listen to changes in the cardholder's name input
+        cardholderNameInput.addEventListener('input', updateSubmitButtonState);
 
         // Handle form submission
         var form = document.getElementById('payment-form');
         form.addEventListener('submit', function(event) {
             event.preventDefault();
 
-            var additionalData = {
-                name: document.getElementById('cardholder-name').value,
-            };
+            var cardholderName = cardholderNameInput.value.trim();
+            if (!cardholderName) {
+                document.getElementById('card-errors').textContent = 'Please enter the cardholder\'s name.';
+                return;
+            }
 
-            stripe.createToken(card, additionalData).then(function(result) {
+            if (!cardComplete) {
+                document.getElementById('card-errors').textContent = 'Please fill out the card details.';
+                return;
+            }
+
+            stripe.createToken(card, { name: cardholderName }).then(function(result) {
                 if (result.error) {
                     var errorElement = document.getElementById('card-errors');
                     errorElement.textContent = result.error.message;
@@ -141,6 +147,7 @@
             });
         });
 
+        // Handle the Stripe token
         function stripeTokenHandler(token) {
             var form = document.getElementById('payment-form');
             var hiddenInput = document.createElement('input');
@@ -152,5 +159,7 @@
         }
     });
 </script>
+
+
 
 {% endblock %}

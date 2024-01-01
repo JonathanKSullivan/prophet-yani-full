@@ -50,7 +50,7 @@
                     <div class="alert alert-{{ category }}">{{ message }}</div>
                 {% endfor %}
             {% endwith %}
-            <form method="POST" action="{{ url_for('user_blueprint.profile') }}" enctype="multipart/form-data">
+            <form id="profile-form" method="POST" action="{{ url_for('user_blueprint.profile') }}" enctype="multipart/form-data">
                 <!-- Profile Information -->
                 <div class="form-group">
                     <label for="profile_image">Profile Image</label>
@@ -78,14 +78,13 @@
                 </div>
 
                 <!-- Location Information -->
-                <h3 class="mt-4">Location Information</h3>
                 <div class="form-group">
                     <label for="country">Country</label>
                     <select class="form-control" id="country" name="country">
                         <!-- Countries will be populated here -->
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary" name="action" value="update_profile">Update Profile</button>
+                <button type="submit" class="btn btn-primary" name="action" value="update_profile" id="update-profile-btn" disabled>Update Profile</button>
             </form>
 
             <!-- Password Change Form -->
@@ -102,7 +101,8 @@
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary" name="action" value="change_password">Update Password</button>
+                <button type="submit" class="btn btn-primary" name="action" value="change_password" id="change-password-btn" disabled>Update Password</button>
+
             </form>
         </div>
     </div>
@@ -111,43 +111,94 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script>
-    // Function to fetch and populate countries
-    function populateCountries() {
-        var currentUserCountry = "{{ user.country }}";
-
-        $.ajax({
-            url: "https://restcountries.com/v3.1/all",
-            dataType: "json",
-            success: function(data) {
-                data.sort(function(a, b) {
-                    return a.name.common.localeCompare(b.name.common);
-                });
-
-                $('#country').empty();
-                $('#country').append(new Option('Select Country', ''));
-                data.forEach(function(country) {
-                    var option = new Option(country.name.common, country.cca2);
-                    $('#country').append(option);
-                    if (country.name.common === currentUserCountry) {
-                        $('#country').val(country.cca2);
-                    }
-                });
-                $('#country').select2();
-            }
-        });
+    function previewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function() {
+            var output = document.querySelector('.profile-image');
+            output.src = reader.result;
+        };
+        
+        if (event.target.files.length > 0) {
+            reader.readAsDataURL(event.target.files[0]);
+        } else {
+            console.error("No file selected"); // Error log
+        }
     }
 
-    // Toggle Password Visibility
-    document.getElementById('togglePassword').addEventListener('click', function (e) {
-        // Toggle the type attribute
-        const password = document.getElementById('new_password');
-        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-        password.setAttribute('type', type);
+    $(document).ready(function() {
+        // Function to fetch and populate countries
+        function populateCountries(callback) {
+            var currentUserCountry = "{{ user.country }}";
 
-        // Toggle the eye / eye-slash icon
-        this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            $.ajax({
+                url: "https://restcountries.com/v3.1/all",
+                dataType: "json",
+                success: function(data) {
+                    data.sort(function(a, b) {
+                        return a.name.common.localeCompare(b.name.common);
+                    });
+
+                    $('#country').empty();
+                    $('#country').append(new Option('Select Country', ''));
+                    data.forEach(function(country) {
+                        var option = new Option(country.name.common, country.cca2);
+                        $('#country').append(option);
+                        if (country.name.common === currentUserCountry) {
+                            $('#country').val(country.cca2);
+                        }
+                    });
+                    $('#country').select2();
+                    callback(); // Call storeInitialValues after countries are populated
+                }
+            });
+        }
+
+        // Store the initial values of the form fields
+        var originalValues = {};
+        function storeInitialValues() {
+            $('#profile-form input[type="text"], #profile-form textarea, #profile-form select, #profile-form input[type="file"]').each(function() {
+                var input = $(this);
+                // Check for file input
+                if(input.attr('type') === 'file') {
+                    originalValues[input.attr('id')] = input.get(0).files.length > 0;
+                } else {
+                    originalValues[input.attr('id')] = input.val();
+                }
+            });
+        }
+
+        // Function to check if form fields have changed from their original values
+        function checkFormChanges() {
+            var isChanged = false;
+            $('#profile-form input[type="text"], #profile-form textarea, #profile-form select, #profile-form input[type="file"]').each(function() {
+                var input = $(this);
+                // Check for changes in file input
+                if(input.attr('type') === 'file') {
+                    if((originalValues[input.attr('id')] && input.get(0).files.length === 0) || (!originalValues[input.attr('id')] && input.get(0).files.length > 0)) {
+                        isChanged = true;
+                        return false; // Break the loop
+                    }
+                } else if (originalValues[input.attr('id')] !== input.val()) {
+                    isChanged = true;
+                    return false; // Break the loop
+                }
+            });
+            $('#update-profile-btn').prop('disabled', !isChanged);
+        }
+
+        // Attach change and keyup event listeners to the form fields
+        $('#profile-form').on('change keyup', 'input[type="text"], textarea, select, input[type="file"]', function() {
+            checkFormChanges();
+        });
+
+        // Attach the event listener to the file input for image preview
+        $('#profile_image').on('change', previewImage);
+
+        populateCountries(storeInitialValues);
     });
-
-    populateCountries();
 </script>
+
+
+
+
 {% endblock %}
