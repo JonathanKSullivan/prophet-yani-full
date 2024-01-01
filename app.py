@@ -72,5 +72,5 @@ app.register_blueprint(user_blueprint, url_prefix='/user')
 app.register_blueprint(api_blueprint, url_prefix='/api')
 
 # The following is not necessary if using `flask run`
-# if __name__ == '__main__':
-#     app.run(debug=True)
+if __name__ == "__main__":
+    app.run()
