@@ -29,6 +29,7 @@ env = os.environ.get('FLASK_ENV', 'development')
 def currency_filter(value):
     return "${:,.2f}".format(value)
 
+
 if env == 'production':
     app.config.from_object(ProductionConfig)
 else:

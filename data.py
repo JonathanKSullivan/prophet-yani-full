@@ -1,7 +1,7 @@
 from lib.booking_manager import BookingManager
 from lib.donation_manager import DonationManager
 from lib.location_manager import LocationManager
-from twitter_service import TwitterService
+
 
 
 home_page_content = {
