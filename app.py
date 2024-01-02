@@ -40,13 +40,13 @@ db.init_app(app)
 mail.init_app(app)
 
 # Function to initialize the database
-def initialize_database():
-    with app.app_context():
-        # Create tables
-        db.create_all()
+# def initialize_database():
+#     with app.app_context():
+#         # Create tables
+#         db.create_all()
 
 # Call the initialize function
-initialize_database()
+# initialize_database()
 
 
 @app.context_processor
