@@ -7,7 +7,6 @@ from model import User, Service, Charity
 import os
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_WRITER_URL')
 
-
 def add_users():
     """
     Creates and adds predefined users to the database.
