@@ -83,18 +83,27 @@ def add_charities():
 
 def seed_database():
     """
-    Seeds the database with initial data.
+    Drops existing tables, recreates them, and seeds the database with initial data.
     """
-    with app.app_context():
-        db.create_all()
-        try:
-            add_users()
-            add_services()
-            add_charities()
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            print(f"Error seeding database: {e}")
+    try:
+        with app.app_context():
+            db.drop_all()
+            print("Tables dropped successfully.")
+    except Exception as e:
+        print(f"Error dropping tables: {e}")
+
+    # try:
+    #     with app.app_context():
+    #         db.create_all()
+    #         print("Tables created successfully.")
+    #         add_users()
+    #         add_services()
+    #         add_charities()
+    #         db.session.commit()
+    #         print("Database seeded successfully.")
+    # except Exception as e:
+    #     db.session.rollback()
+    #     print(f"Error seeding database: {e}")
 
 if __name__ == '__main__':
     seed_database()
