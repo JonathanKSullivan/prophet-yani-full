@@ -13,7 +13,7 @@ home_page_content = {
         "subtitle": "Join Prophet Yani in a journey of enlightenment and compassion. Your contributions foster global goodwill and personal growth.",
         "buttons": [
             {
-                "text": "Book your consultation", 
+                "text": "Book your Consultation", 
                 "type": "primary",
                 "action_type": "email",
                 "target": "ProphetYani@gmail.com"
@@ -31,17 +31,17 @@ home_page_content = {
         "problems": [
             {
                 "title": "Seeking Harmony in Chaos",
-                "description": "In a world brimming with uncertainties and challenges, finding inner peace and purpose can seem elusive. You may feel overwhelmed by life's complexities, struggling to find solace in the midst of chaos. The quest for spiritual guidance and emotional balance is more pressing than ever, yet the path to enlightenment remains clouded for many.",
+                "description": "In a world brimming with uncertainties and challenges, finding inner peace and purpose can seem elusive. You may feel overwhelmed by ".title() + "Life's " + "complexities, struggling to find solace in the midst of chaos. The quest for spiritual guidance and emotional balance is more pressing than ever, yet the path to enlightenment remains clouded for many.".title(),
                 "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/problem-1.webp"
             },
             {
                 "title": "The Quest for Meaning",
-                "description": "Without guidance, these feelings of unrest and disconnection can grow, leaving you more lost in the intricacies of life. The absence of spiritual alignment not only affects your inner peace but also hinders your ability to contribute positively to the world around you. The gap between your current state and where you aspire to be in your spiritual journey can widen, making the search for meaning and fulfillment increasingly difficult.",
+                "description": "Without guidance, these feelings of unrest and disconnection can grow, leaving you more lost in the intricacies of life. The absence of spiritual alignment not only affects your inner peace but also hinders your ability to contribute positively to the world around you. The gap between your current state and where you aspire to be in your spiritual journey can widen, making the search for meaning and fulfillment increasingly difficult.".title(),
                 "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/problem-2.webp"
             },
             {
                 "title": "Illuminating Your Path",
-                "description": "Prophet Yani offers a beacon of light in this journey. Through personalized spiritual consultations and guidance, you can navigate these turbulent times with wisdom and clarity. Our approach blends ancient wisdom with modern understanding, providing you with the tools and insights needed for personal growth and enlightenment. By joining our community, you not only embark on a path to self-discovery but also contribute to a greater cause, as your participation aids in our charitable missions worldwide. Begin your transformative journey today and find the peace and purpose you seek.",
+                "description": "Prophet Yani offers a beacon of light in this journey. Through personalized spiritual consultations and guidance, you can navigate these turbulent times with wisdom and clarity. Our approach blends ancient wisdom with modern understanding, providing you with the tools and insights needed for personal growth and enlightenment. By joining our community, you not only embark on a path to self-discovery but also contribute to a greater cause, as your participation aids in our charitable missions worldwide. Begin your transformative journey today and find the peace and purpose you seek.".title(),
                 "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/problem-3.webp"
             }
         ]
@@ -140,59 +140,61 @@ home_page_content = {
                     "icon_svg": "images/bigo-live.svg",
                     "count": "15000",
                     "url": "https://www.bigo.tv/en/sugarbabycam"
-
                 },
                 {
                     "name": "Instagram",
                     "icon": "fab fa-instagram",
                     "count": "1300",
-                    "url": "https://www.instagram.com/yani.vip/"
-
+                    "url": "https://www.instagram.com/yani.vip/",
+                    "color":"#E4405F"
                 },
                 {
                     "name": "TikTok",
                     "icon": "fab fa-tiktok",
                     "count": "1062",
-                    "url": "https://www.tiktok.com/@zodiac_empress"
+                    "url": "https://www.tiktok.com/@zodiac_empress",
+                    "color":"#25F4EE"
                 },
                 {
                     "name": "Twitter",
                     "icon": "fab fa-twitter",
-                    "count": "64"
+                    "count": "64",
+                    "url": "https://www.youtube.com/yaniwhite",
+                    "color":"#1DA1F2"
                 },
                 {
                     "name": "YouTube",
                     "icon": "fab fa-youtube",
                     "count": "16",
-                    "url": "https://www.youtube.com/yaniwhite"
+                    "url": "https://www.youtube.com/yaniwhite",
+                    "color":"#FF0000"
                 }
             ]
         },
 
-        "impact_statistics": {
-            "consultations": {
+        "impact_statistics": [
+            {
+                "name": "Consultations",
                 "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/impact-1.webp",
                 "alt_text": "Consultations Statistic",
                 "count": BookingManager.count_past_bookings(),
                 "description": "Individual consultations conducted"
             },
-            "donations": {
+            {
+                "name": "Donations",
                 "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/impact-2.webp",
                 "alt_text": "Donations Statistic",
                 "count": f"${DonationManager.calculate_total_donations():.2f}",
                 "description": "Contributed to charitable causes"
             },
-            "global_impact": {
+            {
+                "name": "Global Impact",
                 "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/impact-3.webp",
                 "alt_text": "Global Impact Statistic",
                 "count": LocationManager.count_locations_by_country(),
                 "description": "Countries positively impacted"
             }
-        },
-
-        "certifications": {
-            "details": "<b/>Ordained Minister and Certified Spiritual Guide:</b> As an ordained minister and holder of various spiritual certifications, I bring a blend of formal recognition and profound commitment to my role as a spiritual guide. This ordination underscores my dedication to ethical, compassionate leadership in spiritual counseling. It reflects my continuous pursuit of knowledge and excellence in guiding individuals towards enlightenment and peace, reinforcing the trust and integrity at the core of my spiritual mentorship."
-        },
+        ]
     },
     "features_section": {
         "title": "Our Unique Features",
@@ -324,6 +326,10 @@ about_page_content = {
             {
                 "title": "The Transformational Odyssey",
                 "content": "Prophet Yani's story is one of transformation, shaped by personal challenges and a profound quest for understanding. Her empathetic approach to guiding others stems from this rich journey. Embracing both evidence-based practices and spiritual wisdom, she tailors her guidance to the unique journeys of her clients."
+            },
+            {
+                "title": "Guided by Wisdom and Recognition",
+                "content": "As an ordained minister and a certified spiritual guide, Prophet Yani combines recognized qualifications with deep spiritual insight. This unique blend reflects her commitment to ethical, compassionate spiritual leadership. Her dedication to continuous learning and excellence shines through in her guidance, fostering trust and integrity in the journey toward enlightenment and inner peace."
             },
             {
                 "title": "Empowering Lives and Spirits",

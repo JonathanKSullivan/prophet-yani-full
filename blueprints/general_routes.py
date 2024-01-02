@@ -104,7 +104,7 @@ def admin_dashboard():
 
     # Service Metrics
     service_count = Service.query.count()
-    services_by_type = db.session.query(Service.type, func.count(Service.id)).group_by(Service.type).all()
+    services_by_type = db.session.query(Service.service_type, func.count(Service.id)).group_by(Service.service_type).all()
     # Assuming Booking has a relationship with Service as 'service'
     popular_services = db.session.query(Service.name, func.count(Booking.id)).join(Booking).group_by(Service.name).order_by(func.count(Booking.id).desc()).limit(10)
 
@@ -137,9 +137,13 @@ def admin_dashboard():
         for user in latest_signups
     ]
 
+
+    # Set a default value for display when no data is available
+    default_display_value = "N/A"
+
     # Format monetary values as strings
-    formatted_total_donations = "${:,.2f}".format(total_donations)
-    formatted_avg_donation_amount = "${:,.2f}".format(avg_donation_amount)
+    formatted_total_donations = "${:,.2f}".format(total_donations) if total_donations is not None else default_display_value
+    formatted_avg_donation_amount = "${:,.2f}".format(avg_donation_amount)  if avg_donation_amount is not None else default_display_value 
     formatted_users_by_role = {role: count for role, count in users_by_role}
     formatted_services_by_type = {service_type: count for service_type, count in services_by_type}
     popular_services_query = db.session.query(Service.name, func.count(Booking.id)).join(Booking).group_by(Service.name).order_by(func.count(Booking.id).desc()).limit(10)

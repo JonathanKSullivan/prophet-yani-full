@@ -1,7 +1,9 @@
 <section id="hero" class="hero-section">
     <div class="container">
-        <h1>{{ hero.title }}</h1>
-        <h3>{{ hero.subtitle }}</h3>
+        <h1 id="home-hero-title">{{ hero.title }}</h1>
+        <div id="subtitle-div"> 
+         <h3 id="subtitle">{{ hero.subtitle }}</h3>
+        </div>
         {% for button in hero.buttons %}
           {% if button.action_type == "email" %}
              <a href="mailto:{{ button.target }}" class="btn btn-{{ button.type }}" aria-label="{{ button.text }}">{{ button.text }}</a>

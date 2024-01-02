@@ -4,6 +4,10 @@ from werkzeug.security import generate_password_hash
 from app import app, db  # Replace with your actual Flask app init file
 from model import User, Service, Charity
 
+import os
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_WRITER_URL')
+
+
 def add_users():
     """
     Creates and adds predefined users to the database.
@@ -50,7 +54,7 @@ def add_services():
         duration=30,
         price=20.00,
         image_url='images/consultations.webp',
-        type='Spiritual Guidance',
+        service_type='Spiritual Guidance',
         donation_percentage=10.00
     )
     db.session.add(service)

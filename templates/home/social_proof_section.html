@@ -1,159 +1,112 @@
 <section id="social-proof" class="container my-5">
-    <h2>{{ social_proof.title }}</h2>
-    <!-- Testimonials with Images -->
-    <div class="row mb-5">
-       <!-- Each Testimonial with Image -->
-       {% for testimonial in social_proof.testimonials %}
-             <div class="col-md-4 mb-4">
-                <img src="{{ testimonial.image_url }}" alt="Client Testimonial" class="img-fluid mb-3">
-                <p><strong>{{ testimonial.author }}:</strong> "{{ testimonial.quote }}"</p>
-             </div>
-       {% endfor %}
+    <div id="social_proof-title">
+      <h2>{{ social_proof.title }}</h2>
     </div>
+
     <!-- Success Stories -->
     <div class="row mb-5">
-       <div class="col-12 mb-3">
-          <h3 class="text-center">Success Stories</h3>
-       </div>
-       {% for story in social_proof.success_stories %}
-    
-          <div class="col-md-6 mb-4">
-             <div class="card h-100">
-                   <img src="{{ story.image_url }}" alt="{{ story.title }}" class="card-img-top">
-                   <div class="card-body">
-                      <h4 class="card-title">{{ story.title }}</h4>
-                      <p class="card-text">{{ story.description }}</p>
-                   </div>
-             </div>
-          </div>
-       {% endfor %}
-    </div>
-
-    <!-- Media Features
-    <div class="row mb-5">
-       <div class="col-12 mb-3">
-          <h3 class="text-center">Media Features and Endorsements</h3>
-       </div>
-       {% for feature in social_proof.media_features %}
-          <div class="col-md-6 mb-4">
-                <div class="media">
-                   <img src="{{ feature.image_url }}" class="mr-3" alt="{{ feature.alt_text }}">
-                   <div class="media-body">
-                      <h5 class="mt-0">{{ feature.title }}</h5>
-                      <p>{{ feature.description }}</p>
-                   </div>
-                </div>
-          </div>
-       {% endfor %}
-    </div> -->
-      <!-- Partnerships and Collaborations -->
-      <div class="row mb-5">
-         <div class="col-12 mb-3">
-            <h3 class="text-center">Partnerships and Collaborations</h3>
-         </div>
-         
-         <div class="card-deck">
-            {% for partnership in social_proof.partnerships %}
-            <!-- Partnership -->
-            <div class="col-md-6 mb-4 offset-md-3">
-                  <div class="card h-100 shadow-sm">
-                     <img src="{{ partnership.image_url }}" alt="{{ partnership.title }} Logo" class="card-img-top">
-                     <div class="card-body">
-                        <h4 class="card-title">{{ partnership.title }}</h4>
-                        <h6 class="card-subtitle mb-2 text-muted">Partnership Details</h6>
-                        <p class="card-text"><strong>Offering:</strong> {{ partnership.feature_offering }}</p>
-                        <p class="card-text"><strong>Value:</strong> {{ partnership.unique_value }}</p>
-                     </div>
-                     <div class="card-footer">
-                        <a href="{{ partnership.url }}" class="btn btn-primary">Learn More</a>
-                     </div>
+      <div class="col-12 mb-3">
+         <h3 class="text-center">Success Stories</h3>
+      </div>
+      {% for story in social_proof.success_stories %}
+   
+         <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                  <img src="{{ story.image_url }}" alt="{{ story.title }}" class="card-img-top">
+                  <div class="card-body">
+                     <h4 class="card-title">{{ story.title }}</h4>
+                     <p class="card-text">{{ story.description }}</p>
                   </div>
             </div>
-            {% endfor %}
          </div>
-      </div>
+      {% endfor %}
+    </div>
 
-   </div>
- 
    <!-- Social Media Highlights -->
    <div class="row mb-5">
       <div class="col-md-12 mb-4">
          <div class="card">
             <div class="card-body">
-                  <h4 class="card-title text-center mb-4">Followers Count</h4>
-                  <div class="row">
-                     {% for follower in social_proof.social_media_highlights.followers %}
-                        <div class="col-md-4 col-sm-6 mb-3 text-center">
-                              <div class="d-flex flex-column align-items-center">
-                                 <a href="{{ follower.url }}" target="_blank">
-                                    {% if follower.icon == "svg" %}
-                                       <img src="{{ url_for('static', filename=follower.icon_svg) }}" alt="{{ follower.name }}" style="height: 2em; width: auto;">
-                                    {% else %}
-                                       <i class="{{ follower.icon }} fa-2x mb-2"></i>
-                                    {% endif %}
-                                 </a>
-                                 <a href="{{ follower.url }}" target="_blank">
-                                    <span>{{ follower.name }}: <strong>{{ follower.count }}</strong> Followers</span>
-                                 </a>
-                              </div>
-                        </div>
-                     {% endfor %}
-                  </div>
+               <h4 class="card-title text-center mb-4 social-media-highlight-subtitle">Measure our Impact</h4>
+               <div class="row social-media-highlight-section">
+                  {% for statistic in social_proof.impact_statistics %}
+                     <div class="col-md-4 col-sm-6 mb-3 text-center">
+                           <div class="d-flex flex-column align-items-center">
+                              <img src="{{ statistic.image_url }}" alt="{{ statistic.alt_text }}" style="height: 2em; width: auto;">
+                              <span>{{ statistic.name }}: <strong>{{ statistic.count }}</strong></span>
+                           </div>
+                     </div>
+                  {% endfor %}
+               </div>
+               <h4 class="card-title text-center mb-4">Measure our Influnene</h4>
+               <div class="row social-media-highlight-section">
+                  {% for follower in social_proof.social_media_highlights.followers %}
+                     <div class="col-md-4 col-sm-6 mb-3 text-center">
+                           <div class="d-flex flex-column align-items-center">
+                              <a href="{{ follower.url }}" target="_blank" class="no-link-style">
+                                 {% if follower.icon == "svg" %}
+                                    <img src="{{ url_for('static', filename=follower.icon_svg) }}" alt="{{ follower.name }}" style="height: 2em; width: auto;">
+                                 {% else %}
+                                    <i class="{{ follower.icon }} fa-2x mb-2" style="color:{{ follower.color }}"></i>
+                                 {% endif %}
+                              </a>
+                              <a href="{{ follower.url }}" target="_blank">
+                                 <span>{{ follower.name }}: <strong>{{ follower.count }}</strong> Followers</span>
+                              </a>
+                           </div>
+                     </div>
+                  {% endfor %}
+               </div>
             </div>
          </div>
       </div>
    </div>
 
 
- 
-    <!-- Impact Statistics -->
-    <div class="row mb-5">
-       <div class="col-12 mb-4">
-          <h3 class="text-center">Impact Statistics</h3>
-       </div>
- 
-       <!-- Consultations Statistic -->
-       <div class="col-md-4 mb-4">
-          <div class="card text-center">
-             <div class="card-body">
-                   <h4 class="card-title">Consultations</h4>
-                   <img src="{{ social_proof.impact_statistics.consultations.image_url }}" alt="{{ social_proof.impact_statistics.consultations.alt_text }}" class="img-fluid mb-3">
-                   <p class="card-text statistic-count">{{ social_proof.impact_statistics.consultations.count }}</p>
-                   <p class="card-text">{{ social_proof.impact_statistics.consultations.description }}</p>
+   <!-- Testimonials with Images -->
+   <div id="testimonials" class="row">
+   <div class="col-12 mb-3">
+      <h3 class="text-center">Testimonials</h3>
+   </div>
+      <!-- Each Testimonial with Image -->
+      {% for testimonial in social_proof.testimonials %}
+            <div class="col-md-4 mb-4">
+               <img src="{{ testimonial.image_url }}" alt="Client Testimonial" class="img-fluid mb-3">
+               <p><strong>{{ testimonial.author }}:</strong> "{{ testimonial.quote }}"</p>
+            </div>
+      {% endfor %}
+   </div>
+
+   <!-- Partnerships and Collaborations -->
+   <div id="partnerships" class="row">
+      <div class="col-12 mb-3">
+         <h3 class="text-center">Partnerships and Collaborations</h3>
+      </div>
+      
+      <div class="container">
+         {% for partnership in social_proof.partnerships %}
+             <!-- Partnership -->
+             <div class="row mb-4">
+                 <div class="col-lg-3 col-md-4 col-sm-12">
+                     <img src="{{ partnership.image_url }}" alt="{{ partnership.title }} Logo" class="img-fluid">
+                 </div>
+                 <div class="col-lg-9 col-md-8 col-sm-12">
+                     <div class="d-flex flex-column justify-content-between h-100">
+                         <div>
+                             <h4>{{ partnership.title }}</h4>
+                             <h6 class="text-muted partnerships-details">Partnership Details</h6>
+                             <div class="partnership-features">{{ partnership.feature_offering }}</div>
+                             <div class="partnership-values">{{ partnership.unique_value }}</div>
+                         </div>
+                         <div class="text-right">
+                             <a href="{{ partnership.url }}" class="btn btn-primary">Learn More</a>
+                         </div>
+                     </div>
+                 </div>
              </div>
-          </div>
-       </div>
- 
-       <!-- Donations Statistic -->
-       <div class="col-md-4 mb-4">
-          <div class="card text-center">
-             <div class="card-body">
-                   <h4 class="card-title">Donations</h4>
-                   <img src="{{ social_proof.impact_statistics.donations.image_url }}" alt="{{ social_proof.impact_statistics.donations.alt_text }}" class="img-fluid mb-3">
-                   <p class="card-text statistic-count">{{ social_proof.impact_statistics.donations.count }}</p>
-                   <p class="card-text">{{ social_proof.impact_statistics.donations.description }}</p>
-             </div>
-          </div>
-       </div>
- 
-       <!-- Global Impact Statistic -->
-       <div class="col-md-4">
-          <div class="card text-center">
-             <div class="card-body">
-                   <h4 class="card-title">Global Impact</h4>
-                   <img src="{{ social_proof.impact_statistics.global_impact.image_url }}" alt="{{ social_proof.impact_statistics.global_impact.alt_text }}" class="img-fluid mb-3">
-                   <p class="card-text statistic-count">{{ social_proof.impact_statistics.global_impact.count }}</p>
-                   <p class="card-text">{{ social_proof.impact_statistics.global_impact.description }}</p>
-             </div>
-          </div>
-       </div>
-    </div>
- 
-    <!-- Certifications and Recognition -->
-    <div class="row">
-       <div class="col">
-          <h3>Certifications and Recognition</h3>
-          <p>{{ social_proof.certifications.details | safe  }}</p>
-       </div>
-    </div>
+         {% endfor %}
+     </div>
+     
+   </div>
+
  </section>

@@ -14,8 +14,8 @@
 
 /* CSS Variables for Easy Maintenance */
 :root {
-    --primary-color: #2B213A;
-    --secondary-color: #DAA520;
+    --primary-color: #f8c409;
+    --secondary-color: hwb(268 4% 78%);
     --background-color: #F5F5F5;
     --text-color: #2B213A;
     --hero-bg: url('https://jonathanksullivan.github.io/prophet-yani/image/hero-background.webp');
@@ -44,6 +44,21 @@ p {
     font-family: "hoefler Text";
 }
 
+.faq-text-question {
+    color: hsl(321, 21%, 36%);
+}
+
+#home-hero-title {
+    text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.4), -5px -5px 10px rgba(255, 255, 255, 0.8);
+}
+
+.social-media-highlight-section {
+    margin: 3em 0;
+}
+
+.social-media-highlight-subtitle {
+    color:  #523448;
+}
 
 /* Header and Navigation */
 header {
@@ -84,7 +99,7 @@ section, p {
 }
 
 h2, .subheading {
-    color: var(--primary-color);
+    color: #2B213A;
 }
 
 h3 {
@@ -102,25 +117,32 @@ h3 {
     font-size: 16px;
     transition: background-color 0.3s;
     cursor: pointer;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: 600;
 }
 
+
 .btn-primary {
-    background-color: var(--secondary-color);
+    background-color: #200a38;
     color: #fff;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.4), -5px -5px 10px rgba(255, 255, 255, 0.8);
 }
 
 .btn-primary:hover {
-    background-color: darken(var(--secondary-color), 10%);
+    background-color: #0446f9;
 }
 
 .btn-secondary {
-    background-color: var(--primary-color);
+    background-color: #523448;
     color: #fff;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.8), -10px -10px 20px rgba(255, 255, 255, 0.6);
 }
 
 .btn-secondary:hover {
-    background-color: lighten(var(--primary-color), 10%);
+    background-color: #13a92c;
 }
+
+
 
 /* Make the navbar sticky to the top of the screen */
 .navbar {
@@ -137,7 +159,7 @@ h3 {
 
 /* Footer */
 footer {
-    background-color: var(--primary-color);
+    background-color: var(--secondary-color);
     color: #fff;
     padding: 20px 0;
     text-align: center;
@@ -160,10 +182,6 @@ footer {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.card-title {
-    color: var(--primary-color);
-}
-
 .card-body {
     padding: 15px;
 }
@@ -178,6 +196,74 @@ footer {
     text-decoration: none;
 }
 
+div.benefit-features {
+    margin: 1em 0;
+    font-size: 1.25rem;
+    padding: 0 15px;
+}
+
+div.benefit-description {
+    font-family: "hoefler Text";
+    font-weight: 500;
+    margin-bottom: 1em;
+}
+div.benefit-impact {
+    font-family: "hoefler Text";
+    font-weight: 100;
+}
+
+#social_proof-title {
+    margin-bottom: 6em;
+}
+
+#testimonials {
+    margin-top: 9em;
+}
+
+#partnerships {
+    margin-top: 9em;
+}
+
+.partnerships-details {
+    margin-bottom: 1.75em;
+}
+
+.partnership-features {
+    font-family: "hoefler Text";
+    margin: 1em 0;
+}
+
+.partnership-values {
+    font-family: "hoefler Text";
+    margin: 1em 0;
+    font-weight: 200;
+}
+
+.no-link-style {
+    color: inherit;
+    text-decoration: none;
+}
+
+#subtitle-div {
+    padding: 0 6em;
+}
+
+input, textarea, select {
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px; /* You can adjust the size as needed */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: #66afe9;
+    outline: none;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(102, 175, 233, 0.6);
+}
+
 /* Media Queries for Responsiveness */
 @media (max-width: 768px) {
     .hero-section {
@@ -187,4 +273,8 @@ footer {
     .hero-content {
         padding: 10px;
     }
+}
+
+#partnerships {
+    margin-bottom: 12em;
 }
