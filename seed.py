@@ -92,18 +92,18 @@ def seed_database():
     except Exception as e:
         print(f"Error dropping tables: {e}")
 
-    # try:
-    #     with app.app_context():
-    #         db.create_all()
-    #         print("Tables created successfully.")
-    #         add_users()
-    #         add_services()
-    #         add_charities()
-    #         db.session.commit()
-    #         print("Database seeded successfully.")
-    # except Exception as e:
-    #     db.session.rollback()
-    #     print(f"Error seeding database: {e}")
+    try:
+        with app.app_context():
+            db.create_all()
+            print("Tables created successfully.")
+            add_users()
+            add_services()
+            add_charities()
+            db.session.commit()
+            print("Database seeded successfully.")
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error seeding database: {e}")
 
 if __name__ == '__main__':
     seed_database()

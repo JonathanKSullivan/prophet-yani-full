@@ -10,8 +10,8 @@ export AWS_DEFAULT_REGION='us-east-2'
 
 # Database Credentials (if applicable)
 export DATABASE_URL='sqlite:///prophet_yani_dev.db'
-export DATABASE_WRITER_URL='postgresql://postgres:MasterPassword@database-1-py-cluster.cluster-c96cgiewsw34.us-east-2.rds.amazonaws.com/postgres'
-export DATABASE_READER_URL='postgresql://postgres:MasterPassword@database-1-py-cluster.cluster-ro-c96cgiewsw34.us-east-2.rds.amazonaws.com/postgres'
+export DATABASE_WRITER_URL='postgresql://postgres:MasterPassword@database-1.c96cgiewsw34.us-east-2.rds.amazonaws.com/postgres'
+export DATABASE_READER_URL='postgresql://postgres:MasterPassword@database-1.c96cgiewsw34.us-east-2.rds.amazonaws.com/postgres'
 
 # Flask and Security Settings:
 export SECURITY_PASSWORD_SALT='gEqjCI2sfn+7bynRmslvlwNR/GiNGuH29H6WgIIzuuQ='
