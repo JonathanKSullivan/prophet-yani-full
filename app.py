@@ -19,7 +19,6 @@ from flask import g
 
 # Import models here. This ensures they are known to SQLAlchemy
 from model import User, Service, Booking, Donation, Charity, Location, Payment
-from seed import seed_database
 from utils import is_user_admin
 
 # Create and configure app
@@ -45,7 +44,6 @@ def initialize_database():
     with app.app_context():
         # Create tables
         db.create_all()
-        seed_database()
 
 # Call the initialize function
 initialize_database()
