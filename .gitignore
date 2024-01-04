@@ -106,3 +106,7 @@ Thumbs.db
 secret.py
 secret.sh
 config.py
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
