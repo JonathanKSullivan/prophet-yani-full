@@ -106,4 +106,5 @@ def seed_database():
         print(f"Error seeding database: {e}")
 
 if __name__ == '__main__':
-    seed_database()
+    # seed_database()
+    print("DB Already Seeded.")
