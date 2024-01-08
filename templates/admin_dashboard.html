@@ -1,5 +1,25 @@
 {% extends "base.html" %}
 
+{% block head %}
+<style>
+    .profile-img-thumbnail{
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 1rem;
+    }
+    .charity-action-buttons {
+        display: flex; /* or display: grid; for grid layout */
+        gap: 8px; /* Adjust the gap as needed */
+    }
+
+    .charity-action-buttons button {
+        flex: 1; /* or use grid-column: span 1; for grid layout */
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
 
@@ -15,7 +35,7 @@
             <!-- Tab Content -->
             <div class="tab-content mt-4">
                 <div v-show="activeTab === 'statistics'">{% include 'admin/admin_statistics.html' %}</div>
-                <div v-show="activeTab === 'users'">{% include 'admin/user_list_section.html' %} {% include 'admin/user_edit_modal.html' %}</div>
+                <div v-show="activeTab === 'users'">{% include 'admin/user_list_section.html' %}</div>
                 <div v-show="activeTab === 'services'">{% include 'admin/service_list_section.html' %}</div>
                 <div v-show="activeTab === 'bookings'">{% include 'admin/booking_list_section.html' %}</div>
                 <div v-show="activeTab === 'donations'">{% include 'admin/donation_list_section.html' %}</div>
@@ -25,9 +45,6 @@
                 <div v-show="activeTab === 'availabilities'">{% include 'admin/availability_list_section.html' %}</div>
                 <div v-show="activeTab === 'contactMessages'">{% include 'admin/contact_message_list_section.html' %}</div>
             </div>
-
-            <!-- Edit Modals -->
-            
         </div>
     </div>
 </div>
@@ -58,16 +75,47 @@
                 username: '',
                 email: '',
                 status: 'active',
-                role: 'user'
+                role: 'user',
+                first_name: '',
+                last_name: '',
+                profile_image_url: '',
+                bio: '',
             },
             showUserEditModal: false,
+            selectedMessage: '', // Holds the message to be viewed
+            showMessageModal: false, // Controls the visibility of the message modal
+            composeReplyModal: {
+                show: false,
+                message: '',
+                replyMessage: '',
+                email: ''
+            },
+            newService: {
+                name: '',
+                description: '',
+                price: null,
+                duration: null,
+                service_type: 'standard',
+                donation_percentage: null
+            },
+            selectedService: {},
+            imagePreview: null,
+            selectedCharity: {},
+            newCharity: {},
+            selectedPayment: {},
+            selectedBooking: {},
+            selectedDonation: {},
+            newLocation: {},
+            selectedLocation: {},
             
         },
+        
         watch: {
             activeTab(newTab, oldTab) {
                 this.updateUrl(newTab);
             }
         },
+        
         mounted() {
             this.setActiveTabFromUrl();
             fetch('/api/users')
@@ -81,8 +129,13 @@
             fetch('/api/services')
                 .then(response => response.json())
                 .then(data => {
-                    this.services = data.services;
-                    this.serviceCount = data.services.length; // Dynamically set the service count
+                    this.services = data.services.map(service => {
+                        return {
+                            ...service,
+                            image_url: '/static/' + service.image_url, // Adjust the path accordingly
+                        };
+                    });
+                    this.serviceCount = this.services.length; // Dynamically set the service count
                 })
                 .catch(error => console.error('Error:', error));
 
@@ -95,7 +148,9 @@
                 .catch(error => console.error('Error:', error));
             
             fetch('/api/donations')
-                .then(response => response.json())
+                .then(response => {
+                    return response.json();
+                })
                 .then(data => {
                     this.donations = data.donations;
                     this.donationCount = data.donations.length; // Dynamically set the donation count
@@ -105,7 +160,12 @@
             fetch('/api/charities')
                 .then(response => response.json())
                 .then(data => {
-                    this.charities = data.charities;
+                    this.charities = data.charities.map(charity => {
+                        return {
+                            ...charity,
+                            image_url: '/static/' + charity.image_url, // Adjust the path accordingly
+                        };
+                    });
                 })
                 .catch(error => console.error('Error:', error));
 
@@ -142,7 +202,15 @@
                     this.contactMessages = data.contact_messages;
                 })
                 .catch(error => console.error('Error:', error));
+
+            fetch('/api/contact_messages')
+                .then(response => response.json())
+                .then(data => {
+                    this.contactMessages = data.contact_messages;
+                })
+                .catch(error => console.error('Error:', error));
         },
+        
         computed: {
             formattedLatestSignups() {
                 return this.data.latest_signups.all().map(user => ({
@@ -152,7 +220,406 @@
                 }));
             }
         },
+        
         methods: {
+            deleteService(service) {
+                // Prompt the user for confirmation (you can use a library or a custom modal)
+                const confirmed = confirm("Are you sure you want to delete this service?");
+                
+                if (confirmed) {
+                    // Call the API to delete the service
+                    axios.delete(`/api/services/${service.id}`)
+                        .then(response => {
+                            // Handle success
+                            console.log(response.data.message);
+                            // Optionally, update the service list or perform any necessary actions
+                        })
+                        .catch(error => {
+                            // Handle error
+                            console.error("Error deleting service:", error);
+                        });
+                }
+            },
+            confirmBooking(bookingId) {
+                // Implement logic to confirm the booking
+                const confirmed = confirm("Are you sure you want to confirm this booking?");
+
+                if (confirmed) {
+                    // Call the API to confirm the booking
+                    axios.put(`/api/bookings/${bookingId}/confirm`)
+                        .then(response => {
+                            // Handle success
+                            console.log(response.data.message);
+                            // Optionally, update the booking list or perform any necessary actions
+                        })
+                        .catch(error => {
+                            // Handle error
+                            console.error("Error confirming booking:", error);
+                        });
+                }
+            },
+            viewLocation(location) {
+                // Set selectedLocation in your data to the clicked location
+                this.selectedLocation = location;
+                // Show the viewLocationModal
+                $('#viewLocationModal').modal('show');
+            },
+            editLocation(location) {
+                // Set selectedLocation in your data to the clicked location
+                this.selectedLocation = location;
+                // Show the editLocationModal
+                $('#editLocationModal').modal('show');
+            },
+            deleteLocation(location) {
+                // Set selectedLocation in your data to the clicked location
+                this.selectedLocation = location;
+                // Show the deleteLocationModal
+                $('#deleteLocationModal').modal('show');
+            },
+            
+            confirmDeleteLocation() {
+                // Call the API to delete the location
+                axios.delete(`/api/locations/${this.selectedLocation.id}`)
+                    .then(response => {
+                        // Handle success
+                        console.log(response.data.message);
+                        // Optionally, update the location list or perform any necessary actions
+                        // Close the modal
+                        $('#deleteLocationModal').modal('hide');
+                    })
+                    .catch(error => {
+                        // Handle error
+                        console.error("Error deleting location:", error);
+                    });
+            },
+            
+            updateLocation() {
+                // Validate the edited location data (you can add more validation if needed)
+
+                // Call the API to update the location
+                axios.put(`/api/locations/${this.selectedLocation.id}`, this.selectedLocation)
+                    .then(response => {
+                        // Handle success
+                        console.log(response.data.message);
+                        // Optionally, update the location list or perform any necessary actions
+                        // Close the modal
+                        $('#editLocationModal').modal('hide');
+                    })
+                    .catch(error => {
+                        // Handle error
+                        console.error("Error updating location:", error);
+                    });
+            },
+            saveLocation() {
+                // Validate the new location data (you can add more validation if needed)
+
+                // Call the API to add the new location
+                axios.post('/api/locations', this.newLocation)
+                    .then(response => {
+                        // Handle success
+                        console.log(response.data.message);
+                        // Optionally, update the location list or perform any necessary actions
+                        // Clear the form and close the modal
+                        this.newLocation = {};
+                        $('#addLocationModal').modal('hide');
+                    })
+                    .catch(error => {
+                        // Handle error
+                        console.error("Error adding new location:", error);
+                    });
+            },
+            addLocation() {
+                // Implement logic to show a modal or redirect to a page for adding a new location
+                // Example: $('#addLocationModal').modal('show');
+                // or router.push('/add-location');
+                this.newLocation = {};
+                $('#addLocationModal').modal('show');
+            },
+            showViewDonationModal(donation) {
+                // Implement logic to handle the "View" modal
+                // You can set the selectedDonation data property and show the modal
+                // Example: this.selectedDonation = donation;
+                // Example: $('#viewDonationModal').modal('show');
+                this.selectedDonation = donation;
+
+                $('#viewDonationModal').modal('show');
+            },
+            showViewBookingModal(booking) {
+                // Set the selectedBooking data property to the provided booking
+                this.selectedBooking = booking;
+
+                // Show the "View Booking" modal using jQuery
+                $('#viewBookingModal').modal('show');
+            },
+            showPaymentDetails(payment) {
+                // Set the selectedPayment data property
+                this.selectedPayment = payment;
+                // Trigger the modal to show
+                $('#viewPaymentModal').modal('show');
+            },
+            charityImagePreview() {},
+            addNewCharity() {
+                // Validate the new charity data (you can add more validation if needed)
+
+                // Call the API to add the new charity
+                axios.post('/api/charities', this.newCharity)
+                    .then(response => {
+                        // Handle success
+                        console.log(response.data.message);
+                        // Optionally, update the charity list or perform any necessary actions
+                        // Clear the form and close the modal
+                        this.newCharity = {};
+                        $('#addCharityModal').modal('hide');
+                    })
+                    .catch(error => {
+                        // Handle error
+                        console.error("Error adding new charity:", error);
+                    });
+            },
+            handleCharityImageUpload(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    // Use FileReader to read the selected file and update the preview
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        // Assuming `editedCharityImage` is a data property in your component
+                        this.editedCharityImage = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            },
+            editedCharityImage() {},
+            handleCharityImageUpload() {},
+            openViewCharityDetailsModal(charity) {
+                // Set the selected charity for displaying details
+                this.selectedCharity = charity;
+                // Open the "View Details" modal
+                $('#viewDetailsModal').modal('show');
+            },
+            openEditCharityModal(charity) {
+                // Set the selected charity for editing
+                this.selectedCharity = { ...charity };
+                // Open the "Edit Charity" modal
+                $('#editCharityModal').modal('show');
+            },
+            saveCharityChanges() {
+                // Validate the edited charity data (you can add more validation if needed)
+
+                // Call the API to update the charity
+                axios.put(`/api/charities/${this.selectedCharity.id}`, this.selectedCharity)
+                    .then(response => {
+                        // Handle success
+                        console.log(response.data.message);
+                        // Optionally, update the charity list or perform any necessary actions
+                        // Close the modal
+                        $('#editCharityModal').modal('hide');
+                    })
+                    .catch(error => {
+                        // Handle error
+                        console.error("Error saving charity changes:", error);
+                    });
+            },
+            deleteCharity(charityId) {
+                // Confirm before deleting
+                const confirmed = confirm("Are you sure you want to delete this charity?");
+
+                if (confirmed) {
+                    // Call the API to delete the charity
+                    axios.delete(`/api/charities/${charityId}`)
+                        .then(response => {
+                            // Handle success
+                            console.log(response.data.message);
+                            // Optionally, update the charity list or perform any necessary actions
+                        })
+                        .catch(error => {
+                            // Handle error
+                            console.error("Error deleting charity:", error);
+                        });
+                }
+                $('#editCharityModal').modal('hide');
+            },
+            
+            showServiceInfoModal(service) {
+                // Set the selectedService for displaying in the Info modal
+                this.selectedService = service;
+                // Open the Info modal
+                $('#infoServiceModal').modal('show');
+            },
+
+            showEditServiceModal(service) {
+                // Set the selectedService for editing in the Edit modal
+                this.selectedService = service;
+                // Open the Edit modal
+                $('#editServiceModal').modal('show');
+            },
+
+            saveServiceChanges() {
+                // Assuming you have initialized the selectedService object in your data
+                // Make sure to initialize it in your data() with the necessary fields
+                // selectedService: {
+                //     id: 0,
+                //     name: '',
+                //     description: '',
+                //     duration: 0,
+                //     price: 0,
+                //     service_type: 'standard',
+                //     donation_percentage: 0,
+                //     image_url: '',
+                //     // Add other fields as needed
+                // }
+
+                // Create FormData for the file upload
+                const formData = new FormData();
+                formData.append('name', this.selectedService.name);
+                formData.append('description', this.selectedService.description);
+                formData.append('duration', this.selectedService.duration);
+                formData.append('price', this.selectedService.price);
+                formData.append('service_type', this.selectedService.service_type);
+                formData.append('donation_percentage', this.selectedService.donation_percentage);
+                formData.append('image', this.selectedService.image);  // Assuming 'image' is the file input in your form
+
+                // Make API call to update the service using fetch
+                fetch(`/api/services/${this.selectedService.id}`, {
+                    method: 'PUT',
+                    body: formData,
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Service updated successfully:', data);
+                    // Optionally update your Vue data or take any other necessary action
+                    // Close the modal or update the service list, etc.
+                    $('#editServiceModal').modal('hide');
+                })
+                .catch(error => {
+                    console.error('Error updating service:', error);
+                    // Log the entire error object for more details
+                    // Handle the error as needed
+                });
+            },
+
+            addNewService() {
+                // Assuming you have initialized the newService object in your data
+                // Make sure to initialize it in your data() as an empty object
+                // newService: {
+                //     name: '',
+                //     description: '',
+                //     duration: 0,
+                //     price: 0,
+                //     service_type: 'standard',
+                //     donation_percentage: 0,
+                //     image: null,  // Assuming you will store the image file here
+                // }
+
+                // Create FormData for the file upload
+                const formData = new FormData();
+                formData.append('name', this.newService.name);
+                formData.append('description', this.newService.description);
+                formData.append('duration', this.newService.duration);
+                formData.append('price', this.newService.price);
+                formData.append('service_type', this.newService.service_type);
+                formData.append('donation_percentage', this.newService.donation_percentage);
+                formData.append('image', this.newService.image);  // Assuming 'image' is the file input in your form
+
+                // Make API call to add the new service using fetch
+                fetch('/api/services', {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Service added successfully:', data);
+                    // Optionally update your Vue data or take any other necessary action
+                    // Clear the form or close the modal, etc.
+                    $('#addServiceModal').modal('hide');
+                })
+                .catch(error => {
+                    console.error('Error adding service:', error);
+                    // Log the entire error object for more details
+                    // Handle the error as needed
+                });
+            },
+
+            viewUserDetails(user) {
+                // Set the selected user and show the modal
+                this.selectedUser = user;
+                $('#userDetailsModal').modal('show');
+            },
+
+            initiateReply(message) {
+                this.composeReplyModal.message = message;
+                this.composeReplyModal.email = message.email;
+                this.composeReplyModal.show = true;
+                $('#composeReplyModal').modal('show');
+            },
+
+            deleteMessage(messageId) {
+                // Call the API endpoint to delete the message
+                fetch(`/api/contact_messages/${messageId}`, { method: 'DELETE' })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Handle success or show an alert to the user
+                        console.log(data.message);
+                        // Refresh the contact messages list
+                        this.refreshContactMessages();
+                    })
+                    .catch(error => console.error('Error:', error));
+            },
+
+            refreshContactMessages() {
+                fetch('/api/contact_messages')
+                    .then(response => response.json())
+                    .then(data => {
+                        this.contactMessages = data.contact_messages;
+                    })
+                    .catch(error => console.error('Error:', error));
+            },
+
+            closeComposeReplyModal() {
+                // Close the modal and reset the reply message
+                this.composeReplyModal.show = false;
+                this.composeReplyModal.message = null;
+                this.composeReplyModal.replyMessage = '';
+            },
+
+            sendReply() {
+                // Call the API endpoint to send the reply
+                const messageId = this.composeReplyModal.message.id;
+                const replyMessage = this.composeReplyModal.replyMessage;
+                const userEmail = this.composeReplyModal.email;
+
+                fetch(`/api/contact_messages/${messageId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ reply_message: replyMessage, email: userEmail }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Handle success or show an alert to the user
+                        console.log(data.message);
+                        // Close the modal and reset the reply message
+                        this.closeComposeReplyModal();
+                        // Refresh the contact messages list
+                        this.refreshContactMessages();
+                    })
+                    .catch(error => console.error('Error:', error));
+            },
+            viewFullMessage(message) {
+                this.selectedMessage = message; // Set the selected message
+                this.showMessageModal = true; // Show the modal
+                $('#viewMessageModal').modal('show');
+            },
             changeTab(tabName) {
                 this.activeTab = tabName;
             },
@@ -231,14 +698,62 @@
                 });
             },
             editUser(user) {
-                    this.selectedUser = { ...user }; // Clone the user object
-                    $('#userEditModal').modal('show');
-                },
+                this.selectedUser = { ...user }; // Clone the user object
+                console.log(this.selectedUser);
+                $('#userEditModal').modal('show');
+            },
+            handleImageUpload(event) {
+                // Get the selected file from the input
+                const file = event.target.files[0];
+
+                // Update the image preview onscreen
+                const imagePreview = document.getElementById('imagePreview');
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        imagePreview.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    // If no file selected, show the default image
+                    imagePreview.src = 'https://jonathanksullivan.github.io/prophet-yani/image/default_profile.webp';
+                }
+
+                // Add the selected file to the form data (if needed)
+                if (file) {
+                    // Assuming you have a property in your data named formData
+                    // Make sure to initialize it in your data() as an empty FormData object
+                    this.formData.set('profileImage', file);
+                }
+            },
             updateUser() {
                 // Implement the logic to update the user
                 console.log('Updating user:', this.selectedUser);
-                // Make API call to update the user
-                $('#userEditModal').modal('hide');
+
+                // Make API call to update the user using fetch
+                fetch(`/api/users/${this.selectedUser.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(this.selectedUser),
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('User updated successfully:', data);
+                    // Optionally update your Vue data or take any other necessary action
+                    $('#userEditModal').modal('hide');
+                })
+                .catch(error => {
+                    console.error('Error updating user:', error);
+                    // Log the entire error object for more details
+                    // Handle the error as needed
+                });
             },
             formatDayOfWeek(dayOfWeek) {
                 // Implement the formatting logic here
@@ -246,15 +761,12 @@
                 const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
                 return daysOfWeek[dayOfWeek];
             },
-            openUserEditModal(user) {
-                this.selectedUser = { ...user }; // Clone the user object
-                this.showUserEditModal = true; // Show the modal
-            },
             formatDate(date) {
                 if (!date) return '';
                 return new Date(date).toLocaleDateString(); // Adjust the date format as needed
             },
         }
+    
     });
 </script>
 {% endblock %}

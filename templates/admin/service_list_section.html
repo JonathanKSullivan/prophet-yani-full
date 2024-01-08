@@ -1,7 +1,12 @@
-<!-- Service List Section -->
+<!-- Service List Section
 <div class="row mt-4">
     <div class="col-md-12">
         <h3 class="mb-3">Service List</h3>
+
+        <!-- Button to Add New Service -->
+        <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addServiceModal">
+            Add New Service
+        </button>
 
         <div class="table-responsive">
             <table class="table">
@@ -28,23 +33,25 @@
                         <td>${ service.description }</td>
                         <td>${ service.price }</td>
                         <td>${ service.duration } min</td>
-                        <td>${ service.type }</td>
+                        <td>${ service.service_type }</td>
                         <td>${ service.donation_percentage }%</td>
                         <td>
                             <!-- Action Buttons Grouped -->
                             <div class="btn-group" role="group" aria-label="Service Actions">
-                                <!-- Edit Button -->
-                                <button class="btn btn-sm btn-outline-success" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <!-- Delete Button -->
-                                <button class="btn btn-sm btn-outline-danger" title="Delete">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
                                 <!-- Info Button -->
-                                <button class="btn btn-sm btn-outline-info" title="More Info">
+                                <button class="btn btn-sm btn-outline-info" title="More Info" @click="showServiceInfoModal(service)">
                                     <i class="fas fa-info-circle"></i>
                                 </button>
+
+                                <!-- Edit Button -->
+                                <button class="btn btn-sm btn-outline-success" title="Edit" @click="showEditServiceModal(service)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+
+                                <!-- Delete Button -->
+                                <button class="btn btn-sm btn-outline-danger" title="Delete" @click="deleteService(service)">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>                                
                             </div>
                         </td>
                     </tr>
@@ -53,3 +60,189 @@
         </div>
     </div>
 </div>
+
+<!-- Add Service Modal -->
+<div id="addServiceModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Service</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form to Add New Service -->
+                <form id="addServiceForm">
+                    <!-- Service Name -->
+                    <div class="form-group">
+                        <label for="serviceName">Service Name</label>
+                        <input type="text" class="form-control" id="serviceName" v-model="newService.name">
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group">
+                        <label for="serviceDescription">Description</label>
+                        <textarea class="form-control" id="serviceDescription" v-model="newService.description"></textarea>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="form-group">
+                        <label for="servicePrice">Price</label>
+                        <input type="number" class="form-control" id="servicePrice" v-model="newService.price">
+                    </div>
+
+                    <!-- Duration -->
+                    <div class="form-group">
+                        <label for="serviceDuration">Duration (minutes)</label>
+                        <input type="number" class="form-control" id="serviceDuration" v-model="newService.duration">
+                    </div>
+
+                    <!-- Service Type -->
+                    <div class="form-group">
+                        <label for="serviceType">Service Type</label>
+                        <select class="form-control" id="serviceType" v-model="newService.service_type">
+                            <option value="standard">Standard</option>
+                            <option value="premium">Premium</option>
+                            <!-- Add other options as needed -->
+                        </select>
+                    </div>
+
+                    <!-- Donation Percentage -->
+                    <div class="form-group">
+                        <label for="donationPercentage">Donation Percentage</label>
+                        <input type="number" class="form-control" id="donationPercentage" v-model="newService.donation_percentage">
+                    </div>
+
+                    <!-- Image Upload -->
+                    <div class="form-group">
+                        <label for="serviceImage">Service Image</label>
+                        <input type="file" class="form-control-file" id="serviceImage" @change="handleImageUpload">
+                        <!-- Image Preview Area -->
+                        <div class="mt-2">
+                            <img :src="imagePreview" class="img-thumbnail" style="width: 100px; height: 100px;" v-if="imagePreview">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!-- Button to Add the New Service -->
+                <button type="button" class="btn btn-primary" @click="addNewService">Add Service</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Info Service Modal -->
+<div id="infoServiceModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Service Information</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Display Service Details -->
+                <div class="mb-3">
+                    <strong>ID:</strong> ${selectedService.id}
+                </div>
+                <div class="mb-3">
+                    <strong>Name:</strong> ${selectedService.name}
+                </div>
+                <div class="mb-3">
+                    <strong>Description:</strong> ${selectedService.description}
+                </div>
+                <div class="mb-3">
+                    <strong>Price:</strong> ${selectedService.price}
+                </div>
+                <div class="mb-3">
+                    <strong>Duration:</strong> ${selectedService.duration} min
+                </div>
+                <div class="mb-3">
+                    <strong>Type:</strong> ${selectedService.service_type}
+                </div>
+                <div class="mb-3">
+                    <strong>Donation Percentage:</strong> ${selectedService.donation_percentage}%
+                </div>
+                <!-- Display Image -->
+                <div>
+                    <strong>Image:</strong>
+                    <img :src="selectedService.image_url" class="img-thumbnail" style="width: 100px; height: 100px;" v-if="selectedService.image_url">
+                </div>
+                <!-- Add other details as needed -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Service Modal -->
+<div id="editServiceModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Service</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form to Edit Service -->
+                <form id="editServiceForm">
+                    <div class="form-group">
+                        <label for="editServiceName">Service Name</label>
+                        <input type="text" class="form-control" id="editServiceName" v-model="selectedService.name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editServiceDescription">Description</label>
+                        <textarea class="form-control" id="editServiceDescription" v-model="selectedService.description"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editServicePrice">Price</label>
+                        <input type="number" class="form-control" id="editServicePrice" v-model="selectedService.price">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editServiceDuration">Duration (minutes)</label>
+                        <input type="number" class="form-control" id="editServiceDuration" v-model="selectedService.duration">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editServiceType">Service Type</label>
+                        <select class="form-control" id="editServiceType" v-model="selectedService.service_type">
+                            <option value="standard">Standard</option>
+                            <option value="premium">Premium</option>
+                            <!-- Add other options as needed -->
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editDonationPercentage">Donation Percentage</label>
+                        <input type="number" class="form-control" id="editDonationPercentage" v-model="selectedService.donation_percentage">
+                    </div>
+
+                    <!-- Display Image -->
+                    <div class="form-group">
+                        <label for="editServiceImage">Service Image</label>
+                        <img :src="selectedService.image_url" class="img-thumbnail" style="width: 100px; height: 100px;" v-if="selectedService.image_url">
+                        <input type="file" class="form-control-file" id="editServiceImage" @change="handleImageUpload">
+                    </div>
+                    <!-- Add other input fields for editing as needed -->
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!-- Button to Save Changes -->
+                <button type="button" class="btn btn-primary" @click="saveServiceChanges">Save Changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div> -->

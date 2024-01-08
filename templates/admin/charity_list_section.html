@@ -3,6 +3,11 @@
     <div class="col-md-12">
         <h3 class="mb-3">Charity List</h3>
 
+        <!-- Button to Add New Charity -->
+        <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addCharityModal">
+            Add New Charity
+        </button>
+
         <div class="table-responsive">
             <table class="table">
                 <thead>
@@ -11,7 +16,6 @@
                         <th>Image</th>
                         <th>Name</th>
                         <th>Description</th>
-                        <th>Location</th>
                         <th>Donations</th>
                         <th>Actions</th>
                     </tr>
@@ -24,26 +28,145 @@
                         </td>
                         <td>${ charity.name }</td>
                         <td>${ charity.description }</td>
-                        <td>${ charity.location_name }</td> <!-- Assuming location_name is added -->
                         <td>
                             <!-- Link to donations or count -->
-                            ${ charity.donations_count } Donations <!-- Assuming donations_count is added -->
+                            ${ charity.donations_count } <!-- Assuming donations_count is added -->
                         </td>
                         <td>
-                            <!-- Icons for actions (Edit, Delete, Details, etc.) -->
-                            <button class="btn btn-sm btn-primary">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-sm btn-danger">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                            <button class="btn btn-sm btn-info">
-                                <i class="fas fa-eye"></i>
-                            </button>
+                            <div class="charity-action-buttons">
+                                <!-- View Details Button -->
+                                <button class="btn btn-sm btn-info" @click="openViewCharityDetailsModal(charity)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <!-- Edit Button -->
+                                <button class="btn btn-sm btn-primary" @click="openEditCharityModal(charity)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <!-- Delete Button -->
+                                <button class="btn btn-sm btn-danger" @click="deleteCharity(charity.id)">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+<!-- View Details Modal -->
+<div id="viewDetailsModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Charity Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Display Charity Details -->
+                <img :src="selectedCharity.image_url" class="img-thumbnail" style="width: 100px; height: 100px;" v-if="selectedCharity.image_url">
+                <p><strong>ID:</strong> ${ selectedCharity.id }</p>
+                <p><strong>Name:</strong> ${ selectedCharity.name }</p>
+                <p><strong>Description:</strong> ${ selectedCharity.description }</p>
+                <!-- Add other details as needed -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Charity Modal -->
+<div id="editCharityModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Charity</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Display Charity Image -->
+                <img :src="selectedCharity.image_url" class="img-thumbnail" style="width: 100px; height: 100px;" v-if="selectedCharity.image_url">
+                
+                <!-- Input for Charity Image -->
+                <div class="form-group mt-3">
+                    <label for="editCharityImage">Charity Image</label>
+                    <input type="file" class="form-control-file" id="editCharityImage" @change="handleCharityImageUpload">
+                    <!-- Image Preview Area -->
+                    <div class="mt-2">
+                        <img :src="editedCharityImage" class="img-thumbnail" style="width: 100px; height: 100px;" v-if="editedCharityImage">
+                    </div>
+                </div>
+
+                <!-- Form to Edit Charity -->
+                <form id="editCharityForm">
+                    <div class="form-group">
+                        <label for="editCharityName">Charity Name</label>
+                        <input type="text" class="form-control" id="editCharityName" v-model="selectedCharity.name">
+                    </div>
+                    <div class="form-group">
+                        <label for="editCharityDescription">Description</label>
+                        <textarea class="form-control" id="editCharityDescription" v-model="selectedCharity.description"></textarea>
+                    </div>
+                    <!-- Add other input fields for editing as needed -->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!-- Button to Save Changes -->
+                <button type="button" class="btn btn-primary" @click="saveCharityChanges">Save Changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Charity Modal -->
+<div id="addCharityModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Charity</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form to Add New Charity -->
+                <form id="addCharityForm">
+                    <!-- Charity Name -->
+                    <div class="form-group">
+                        <label for="charityName">Charity Name</label>
+                        <input type="text" class="form-control" id="charityName" v-model="newCharity.name">
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group">
+                        <label for="charityDescription">Description</label>
+                        <textarea class="form-control" id="charityDescription" v-model="newCharity.description"></textarea>
+                    </div>
+
+                    <!-- Image Upload -->
+                    <div class="form-group">
+                        <label for="charityImage">Charity Image</label>
+                        <input type="file" class="form-control-file" id="charityImage" @change="handleCharityImageUpload">
+                        <!-- Image Preview Area -->
+                        <div class="mt-2">
+                            <img :src="charityImagePreview" class="img-thumbnail" style="width: 100px; height: 100px;" v-if="charityImagePreview">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!-- Button to Add the New Charity -->
+                <button type="button" class="btn btn-primary" @click="addNewCharity">Add Charity</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
 </div>

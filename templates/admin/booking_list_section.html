@@ -25,8 +25,8 @@
                 <tbody>
                     <tr v-for="booking in bookings" :key="booking.id">
                         <td>${ booking.id }</td>
-                        <td>${ booking.user_name }</td> <!-- Assuming user_name is added -->
-                        <td>${ booking.service_name }</td> <!-- Assuming service_name is added -->
+                        <td>${ booking.user }</td>
+                        <td>${ booking.service }</td>
                         <td>${ formatDateTime(booking.booking_date) }</td>
                         <td>${ formatDateTime(booking.appointment_date) }</td>
                         <td>${ formatDateTime(booking.appointment_end) }</td>
@@ -35,16 +35,56 @@
                         </td>
                         <td>
                             <!-- Action Buttons -->
-                            <button class="btn btn-sm btn-primary">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-sm btn-info">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </td>
+                            <div class="btn-group" role="group" aria-label="Booking Actions">
+                                <!-- Confirm Button -->
+                                <button class="btn btn-sm btn-success" @click="confirmBooking(booking.id)" v-if="booking.status === 'Booked'">
+                                    <i class="fas fa-check"></i> Confirm
+                                </button>
+                                
+                                <!-- View Button -->
+                                <button class="btn btn-sm btn-info" @click="showViewBookingModal(booking)">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                            </div>
+                        </td>                        
                     </tr>
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+<!-- View Booking Modal -->
+<div id="viewBookingModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Booking Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Display booking details using Vue.js bindings -->
+                <p><strong>ID:</strong> ${ selectedBooking.id }</p>
+                <p><strong>User:</strong> ${ selectedBooking.user }</p>
+                <p><strong>Service:</strong> ${ selectedBooking.service }</p>
+
+                <!-- Additional Details -->
+                <p><strong>Booking Date:</strong> ${ formatDateTime(selectedBooking.booking_date) }</p>
+                <p><strong>Appointment Start:</strong> ${ formatDateTime(selectedBooking.appointment_date) }</p>
+                <p><strong>Appointment End:</strong> ${ formatDateTime(selectedBooking.appointment_end) }</p>
+
+                <!-- Add other details as needed -->
+            </div>
+            <div class="modal-footer">
+                <!-- Add Confirmation Button -->
+                <button type="button" class="btn btn-info" @click="confirmViewBooking(selectedBooking.id)">
+                    <i class="fas fa-check"></i> Confirm
+                </button>
+
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
 </div>

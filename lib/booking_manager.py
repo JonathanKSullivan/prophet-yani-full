@@ -57,3 +57,8 @@ class BookingManager:
     @staticmethod
     def list_all_bookings():
         return Booking.query.all()
+
+    @staticmethod
+    def confirm_booking(booking_id):
+        # Confirm the booking by updating the status to 'Confirmed'
+        return BookingManager.update_booking(booking_id, status='Confirmed')

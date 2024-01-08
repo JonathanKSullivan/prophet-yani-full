@@ -22,7 +22,7 @@ class User(db.Model):
     # Relationships
     bookings = db.relationship('Booking', backref='user', lazy=True)
     donations = db.relationship('Donation', backref='user', lazy=True)
-    payments = db.relationship('Payment', backref='user', lazy=True)
+    payments = db.relationship('Payment', backref='user_payments', lazy=True)
 
 class Service(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -65,7 +65,6 @@ class Charity(db.Model):
 
     # Relationships
     donations = db.relationship('Donation', backref='charity', lazy=True)
-    location_id = db.Column(db.Integer, db.ForeignKey('location.id'))
 
 class Location(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -78,7 +77,6 @@ class Location(db.Model):
 
     # Relationships
     services = db.relationship('Service', backref='location', lazy=True)
-    charities = db.relationship('Charity', backref='location', lazy=True)
 
 class Payment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -87,6 +85,10 @@ class Payment(db.Model):
     transaction_id = db.Column(db.String(100))
     payment_method = db.Column(db.String(50))
     payment_date = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Establish a relationship with User model
+    user = db.relationship('User', backref='payment_user', lazy=True)
+
 
 class AvailabilityRule(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -115,7 +117,24 @@ class ContactMessage(db.Model):
     message = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+    # Add a relationship to track replies
+    replies = db.relationship('MessageReply', backref='original_message', lazy=True)
+
     def __init__(self, name, email, message):
         self.name = name
         self.email = email
         self.message = message
+
+class MessageReply(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text)
+    sender_name = db.Column(db.String(100))  # Add sender's name
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Foreign key to link the reply to the original message
+    original_message_id = db.Column(db.Integer, db.ForeignKey('contact_message.id'), nullable=False)
+
+    def __init__(self, content, sender_name, original_message):
+        self.content = content
+        self.sender_name = sender_name
+        self.original_message = original_message

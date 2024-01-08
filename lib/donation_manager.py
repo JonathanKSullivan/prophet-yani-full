@@ -19,7 +19,7 @@ class DonationManager:
             charity_id=charity_id,
             service_id=service_id,
             donation_date=donation_date,
-            type=donation_type
+            donation_type=donation_type
         )
         db.session.add(new_donation)
         try:

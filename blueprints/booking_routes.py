@@ -12,7 +12,7 @@ from dateutil import parser
 
 
 # Set Stripe API key from environment variable
-stripe.api_key = os.environ.get('STRIPE_API_KEY')
+stripe.api_key = os.environ.get('STRIPE_TEST_SECRET_KEY')
 
 booking_blueprint = Blueprint('booking_blueprint', __name__)
 

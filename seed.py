@@ -1,11 +1,9 @@
 # seed.py
 from datetime import datetime
+import time
 from werkzeug.security import generate_password_hash
 from app import app, db  # Replace with your actual Flask app init file
-from model import User, Service, Charity
-
-import os
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_WRITER_URL')
+from model import AvailabilityRule, Location, User, Service, Charity
 
 def add_users():
     """
@@ -50,8 +48,8 @@ def add_services():
     service = Service(
         name='Customized Spiritual Consultations',
         description='Personalized one-on-one sessions tailored to your unique spiritual journey...',
-        duration=30,
-        price=20.00,
+        duration=15,
+        price=25.00,
         image_url='images/consultations.webp',
         service_type='Spiritual Guidance',
         donation_percentage=10.00
@@ -81,6 +79,44 @@ def add_charities():
     ]
     db.session.add_all(charities)
 
+def add_availability():
+    """
+    Adds predefined availability rule to the database for 24/7 availability.
+    """
+    availability_rule = AvailabilityRule(
+        day_of_week=0,  # None for all days
+        start_time=time(0, 0),  # 24-hour format for midnight
+        end_time=time(23, 59),  # 24-hour format for end of day
+        priority=0,  # You can set this based on your priorities
+        is_recurring=True
+    )
+    db.session.add(availability_rule)
+
+def add_locations():
+    """
+    Creates and adds predefined locations to the database.
+    """
+    locations = [
+        Location(
+            address='123 Main St',
+            city='Cityville',
+            state='Stateville',
+            country='Countryland',
+            zip_code='12345',
+            location_type='Business'
+        ),
+        Location(
+            address='456 Oak Ave',
+            city='Townsville',
+            state='Stateland',
+            country='Countryland',
+            zip_code='67890',
+            location_type='Residence'
+        )
+        # Add more locations as needed
+    ]
+    db.session.add_all(locations)
+
 def seed_database():
     """
     Drops existing tables, recreates them, and seeds the database with initial data.
@@ -97,8 +133,10 @@ def seed_database():
             db.create_all()
             print("Tables created successfully.")
             add_users()
-            add_services()
-            add_charities()
+            # add_services()
+            # add_charities()
+            # add_availability()
+            # add_locations()
             db.session.commit()
             print("Database seeded successfully.")
     except Exception as e:
@@ -106,5 +144,5 @@ def seed_database():
         print(f"Error seeding database: {e}")
 
 if __name__ == '__main__':
-    # seed_database()
-    print("DB Already Seeded.")
+    seed_database()
+    # print("DB Already Seeded.")

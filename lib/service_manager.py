@@ -2,7 +2,7 @@ from model import db, Service
 
 class ServiceManager:
     @staticmethod
-    def add_service(name, description, duration, price, image_url, service_type, location_id=None, donation_percentage=0):
+    def add_service(name, description, duration, price, service_type, donation_percentage=0, image_url=None, location_id=None):
         new_service = Service(
             name=name,
             description=description,
@@ -49,6 +49,3 @@ class ServiceManager:
     def list_all_services():
         return Service.query.all()
     
-    @staticmethod
-    def list_all_services():
-        return Service.query.all()

@@ -20,22 +20,50 @@
                 <tbody>
                     <tr v-for="donation in donations" :key="donation.id">
                         <td>${ donation.id }</td>
-                        <td>${ donation.user_name }</td> <!-- Assuming user_name is added -->
-                        <td>${ formatCurrency(donation.amount) }</td> <!-- Assuming formatCurrency method is defined -->
-                        <td>${ donation.charity_name }</td> <!-- Assuming charity_name is added -->
-                        <td>${ donation.service_name }</td> <!-- Assuming service_name is added -->
+                        <td>${ donation.user }</td>
+                        <td>${ formatCurrency(donation.amount) }</td>
+                        <td>${ donation.charity }</td>
+                        <td>${ donation.service }</td>
                         <td>${ formatDateTime(donation.donation_date) }</td>
                         <td>${ donation.type }</td>
                         <td>
                             <!-- Action Buttons -->
-                            <!-- Example: View Details Button -->
-                            <button class="btn btn-sm btn-info">
-                                <i class="fas fa-eye"></i>
+                            <!-- View Details Button -->
+                            <button class="btn btn-sm btn-info" @click="showViewDonationModal(donation)">
+                                <i class="fas fa-eye"></i> View
                             </button>
                         </td>
                     </tr>
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+<!-- View Donation Modal -->
+<div id="viewDonationModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Donation Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Display donation details using Vue.js bindings -->
+                <p><strong>ID:</strong> ${ selectedDonation.id }</p>
+                <p><strong>User:</strong> ${ selectedDonation.user }</p>
+                <p><strong>Amount:</strong> ${ formatCurrency(selectedDonation.amount) }</p>
+                <p><strong>Charity:</strong> ${ selectedDonation.charity }</p>
+                <p><strong>Service:</strong> ${ selectedDonation.service }</p>
+                <p><strong>Donation Date:</strong> ${ formatDateTime(selectedDonation.donation_date) }</p>
+                <p><strong>Type:</strong> ${ selectedDonation.type }</p>
+                <!-- Add other details as needed -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
 </div>

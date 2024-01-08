@@ -25,25 +25,15 @@
                         <td>${ user.id }</td>
                         <td>${ user.username }</td>
                         <td>${ user.email }</td>
-                        <td>
-                            <select class="form-control" v-model="user.status">
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" v-model="user.user_role">
-                                <option value="admin">Admin</option>
-                                <option value="user">User</option>
-                            </select>
-                        </td>
+                        <td>${ user.status }</td>
+                        <td>${ user.user_role }</td>
                         <td>
                             <!-- Icons for actions -->
-                            <button class="btn btn-sm btn-primary"  @click="openUserEditModal(user)">
-                                <i class="fas fa-edit"></i>
+                            <button class="btn btn-sm btn-primary"  @click="viewUserDetails(user)">
+                                <i class="fas fa-eye"></i>
                             </button>
-                            <button class="btn btn-sm btn-secondary">
-                                <i class="fas fa-redo"></i>
+                            <button class="btn btn-sm btn-secondary"  @click="editUser(user)">
+                                <i class="fas fa-edit"></i>
                             </button>
                             <!-- Add other action icons as needed -->
                         </td>
@@ -71,13 +61,22 @@
             </div>
             <div class="modal-body">
                 <form id="editUserForm">
+                    <!-- Image Preview Area -->
+                    <div class="form-group text-center">
+                        <img :src="selectedUser.profile_image_url || 'https://jonathanksullivan.github.io/prophet-yani/image/default_profile.webp'" class="profile-img-thumbnail mx-auto d-block" id="imagePreview" alt="Profile Image">
+                    </div>
+                    <!-- Image Upload Input -->
+                    <div class="form-group">
+                        <label for="imageUpload">Upload New Image</label>
+                        <input type="file" class="form-control-file" id="imageUpload" @change="handleImageUpload">
+                    </div>
                     <div class="form-group">
                         <label for="username">Username</label>
-                        <input type="text" class="form-control" id="username" v-model="selectedUser.username">
+                        <input type="text" class="form-control" id="username" v-model="selectedUser.username" disabled>
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" v-model="selectedUser.email">
+                        <input type="email" class="form-control" id="email" v-model="selectedUser.email" disabled>
                     </div>
                     <div class="form-group">
                         <label for="status">Status</label>
@@ -88,15 +87,65 @@
                     </div>
                     <div class="form-group">
                         <label for="role">Role</label>
-                        <select class="form-control" id="role" v-model="selectedUser.role">
+                        <select class="form-control" id="role" v-model="selectedUser.user_role">
                             <option value="admin">Admin</option>
                             <option value="user">User</option>
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="first_name">First Name</label>
+                        <input type="text" class="form-control" id="first_name" v-model="selectedUser.first_name">
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name">Last Name</label>
+                        <input type="text" class="form-control" id="last_name" v-model="selectedUser.last_name">
+                    </div>
+                    <div class="form-group">
+                        <label for="bio">Bio</label>
+                        <textarea class="form-control" id="bio" v-model="selectedUser.bio"></textarea>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" @click="updateUser">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- User Details Modal -->
+<div id="userDetailsModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">User Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <!-- Display user image -->
+                        <img :src="selectedUser.profile_image_url || 'https://jonathanksullivan.github.io/prophet-yani/image/default_profile.webp'" class="img-fluid rounded-circle" alt="Profile Image">
+                    </div>
+                    <div class="col-md-8">
+                        <!-- Display user details here -->
+                        <div class="mb-3">
+                            <p><strong>ID:</strong> <span class="badge badge-primary">${selectedUser.id}</span></p>
+                            <p><strong>Name:</strong> ${selectedUser.first_name} ${selectedUser.last_name}</p>
+                            <p><strong>Username:</strong> ${selectedUser.username}</p>
+                            <p><strong>Email:</strong> ${selectedUser.email}</p>
+                            <p><strong>Status:</strong> ${selectedUser.status}</p>
+                            <p><strong>Role:</strong> ${selectedUser.user_role}</p>
+                            <p><strong>Bio:</strong> ${selectedUser.bio}</p>
+                            <!-- Add other user details as needed -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
