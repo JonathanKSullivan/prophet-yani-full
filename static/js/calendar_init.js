@@ -35,12 +35,18 @@ document.addEventListener('DOMContentLoaded', function() {
         // Fetch service duration from Flask context
         var serviceDuration = modal.getAttribute('data-service-duration');
         var formattedServiceDuration = '00:' + serviceDuration + ':00';
+        var now = new Date();
+        var twelveHoursLater = new Date(now.getTime() + (12 * 60 * 60 * 1000)); // Add 12 hours
+
 
         if (calendarEl && !calendarEl.classList.contains('initialized')) {
             var lastSelectedEvent = null; // Variable to store the last selected slot
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'timeGridWeek',
+                validRange: {
+                    start: twelveHoursLater  // Disables past dates
+                },
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
