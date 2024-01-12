@@ -1,5 +1,53 @@
 {% extends "base.html" %}
 
+{% block head %}
+<style>
+    /* Custom styling for Stripe Elements */
+    .StripeElement {
+        background-color: white;
+        height: 40px;
+        padding: 10px 12px;
+        border-radius: 4px;
+        border: 1px solid #ccd0d2;
+        box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+        -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    }
+
+    .StripeElement--focus {
+        border-color: #80bdff;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    }
+
+    .StripeElement--invalid {
+        border-color: #fa755a;
+    }
+
+    .StripeElement--webkit-autofill {
+        background-color: #fefde5 !important;
+    }
+
+    .charity-image {
+        /* Additional styling if needed */
+    }
+
+    /* Custom styling for form elements and buttons */
+    input[type="text"], .custom-radio {
+        margin-bottom: 15px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-primary:hover {
+        background-color: #0069d9;
+        border-color: #0062cc;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="container my-5">
@@ -32,7 +80,8 @@
                             <p class="card-text"><strong>Donation Amount:</strong> ${{ "%.2f"|format(service.price * (service.donation_percentage / 100)) }}</p>
                             <p class="card-text">
                                 <strong>Time:</strong> 
-                                <span id="formattedBookingTime"></span>
+                                <span id="formattedBookingTime">{{ start_time }}</span> -
+                                <span id="formattedBookingTime">{{ end_time }}</span>
                             </p>
                         </div>
                     </div>
@@ -158,7 +207,4 @@
         }
     });
 </script>
-
-
-
 {% endblock %}

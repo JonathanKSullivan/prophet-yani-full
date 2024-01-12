@@ -1,6 +1,7 @@
 from flask import Blueprint, current_app, flash, redirect, request, render_template, session, url_for
 from sqlalchemy import func
 from data import home_page_content, about_page_content, user_dashboard_page_content
+from lib.booking_manager import BookingManager
 from lib.service_manager import ServiceManager
 from lib.donation_manager import DonationManager
 from extensions import db
@@ -18,6 +19,17 @@ general_blueprint = Blueprint('general_blueprint', __name__)
 
 @general_blueprint.route('/')
 def home():
+    impact_statistics = home_page_content["social_proof_section"]["impact_statistics"]
+
+    impact_statistics_count =[
+        BookingManager.count_past_bookings() + 1233,
+        f"${DonationManager.calculate_total_donations() + 1_150:.2f}",
+        UserManager.count_users_by_country()
+    ]
+
+    for stats, count in zip(impact_statistics, impact_statistics_count):
+        stats['count'] = count
+
     return render_template(
         'index.html',
         metadata=home_page_content['meta'],

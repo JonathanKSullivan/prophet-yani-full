@@ -245,7 +245,7 @@ div.benefit-impact {
 }
 
 #subtitle-div {
-    padding: 0 6em;
+    padding: 0 10%;
 }
 
 input, textarea, select {
@@ -277,4 +277,24 @@ input:focus, textarea:focus, select:focus {
 
 #partnerships {
     margin-bottom: 12em;
+}
+
+#home-hero-title {
+    font-size: min(6vw, 2.5em);
+}
+
+#subtitle {
+    font-size: min(3vw, 1.5em);
+}
+
+.hero-button {
+    margin: 5px 0;
+}
+
+.home-cta-button {
+    margin: 5px 0 5px 0;
+}
+
+input[type="file"].form-control-file#profile_image {
+    background-color: white;
 }

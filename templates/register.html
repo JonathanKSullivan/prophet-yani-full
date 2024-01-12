@@ -70,173 +70,164 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script>
     $(document).ready(function() {
-        var debounceTimer;
+    var debounceTimer;
 
-        function debounce(func, delay) {
-            return function() {
-                var context = this, args = arguments;
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(function() {
-                    func.apply(context, args);
-                }, delay);
-            };
+    function debounce(func, delay) {
+        return function() {
+            var context = this, args = arguments;
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function() {
+                func.apply(context, args);
+            }, delay);
+        };
+    }
+
+    function displayError(fieldId, message) {
+        $(fieldId + 'Error').text(message);
+        if (message) {
+            $(fieldId).addClass('error-field');
+        } else {
+            $(fieldId).removeClass('error-field');
         }
+    }
 
-        function displayError(fieldId, message) {
-            $(fieldId + 'Error').text(message);
-            if (message) {
-                $(fieldId).addClass('error-field');
-            } else {
-                $(fieldId).removeClass('error-field');
-            }
+    function validateUsername(showError) {
+        var username = $('#username').val();
+        var error = '';
+        if (username.length < 3) {
+            error = 'Username must be at least 3 characters long.';
         }
+        if (showError) displayError('#username', error);
+        return error === '';
+    }
 
-        function validateUsername() {
-            var username = $('#username').val();
-            if (username.length < 3) {
-                displayError('#username', 'Username must be at least 3 characters long.');
-                return false;
-            } else {
-                displayError('#username', '');
-                return true;
-            }
+    function validateEmail(showError) {
+        var email = $('#email').val();
+        var emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        var error = '';
+        if (!emailRegex.test(email)) {
+            error = 'Please enter a valid email address.';
         }
-        function validateEmail() {
-            var email = $('#email').val();
-            var emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-            if (!emailRegex.test(email)) {
-                displayError('#email', 'Please enter a valid email address.');
-                return false;
-            } else {
-                displayError('#email', '');
-                return true;
-            }
+        if (showError) displayError('#email', error);
+        return error === '';
+    }
+
+    function validatePassword(showError) {
+        var password = $('#password').val();
+        var lengthCheck = password.length >= 8;
+        var digitCheck = /[0-9]/.test(password);
+        var uppercaseCheck = /[A-Z]/.test(password);
+        var lowercaseCheck = /[a-z]/.test(password);
+
+        var error = '';
+        if (!lengthCheck) error += 'Password must be at least 8 characters long. ';
+        if (!digitCheck) error += 'Password must include a number. ';
+        if (!uppercaseCheck) error += 'Password must include an uppercase letter. ';
+        if (!lowercaseCheck) error += 'Password must include a lowercase letter. ';
+
+        if (showError) displayError('#password', error.trim());
+        return lengthCheck && digitCheck && uppercaseCheck && lowercaseCheck;
+    }
+
+    function validateFirstName(showError) {
+        var firstName = $('#first_name').val();
+        var error = '';
+        if (firstName.length < 1) {
+            error = 'First name is required.';
         }
+        if (showError) displayError('#first_name', error);
+        return error === '';
+    }
 
-        function validatePassword() {
-            var password = $('#password').val();
-            var lengthCheck = password.length >= 8;
-            var digitCheck = /[0-9]/.test(password);
-            var uppercaseCheck = /[A-Z]/.test(password);
-            var lowercaseCheck = /[a-z]/.test(password);
-
-            var passwordErrorText = '';
-            if (!lengthCheck) passwordErrorText += 'Password must be at least 8 characters long. ';
-            if (!digitCheck) passwordErrorText += 'Password must include a number. ';
-            if (!uppercaseCheck) passwordErrorText += 'Password must include an uppercase letter. ';
-            if (!lowercaseCheck) passwordErrorText += 'Password must include a lowercase letter. ';
-
-            displayError('#password', passwordErrorText.trim());
-            return lengthCheck && digitCheck && uppercaseCheck && lowercaseCheck;
+    function validateLastName(showError) {
+        var lastName = $('#last_name').val();
+        var error = '';
+        if (lastName.length < 1) {
+            error = 'Last name is required.';
         }
+        if (showError) displayError('#last_name', error);
+        return error === '';
+    }
 
-        function validateFirstName() {
-            var firstName = $('#first_name').val();
-            if (firstName.length < 1) {
-                displayError('#first_name', 'First name is required.');
-                return false;
-            } else {
-                displayError('#first_name', '');
-                return true;
-            }
+    function validateCountry(showError) {
+        var country = $('#country').val();
+        var error = '';
+        if (!country) {
+            error = 'Country selection is required.';
         }
+        if (showError) displayError('#country', error);
+        return error === '';
+    }
 
-        function validateLastName() {
-            var lastName = $('#last_name').val();
-            if (lastName.length < 1) {
-                displayError('#last_name', 'Last name is required.');
-                return false;
-            } else {
-                displayError('#last_name', '');
-                return true;
-            }
+    function validateField(fieldId, showError = false) {
+        switch(fieldId) {
+            case 'username':
+                return validateUsername(showError);
+            case 'email':
+                return validateEmail(showError);
+            case 'password':
+                return validatePassword(showError);
+            case 'first_name':
+                return validateFirstName(showError);
+            case 'last_name':
+                return validateLastName(showError);
+            case 'country':
+                return validateCountry(showError);
         }
+    }
 
-        function updateSubmitButtonState() {
-            var isUsernameValid = validateUsername();
-            var isEmailValid = validateEmail();
-            var isPasswordValid = validatePassword();
-            var isFirstNameValid = validateFirstName();
-            var isLastNameValid = validateLastName();
-            $('#submitBtn').prop('disabled', !(isUsernameValid && isEmailValid && isPasswordValid && isFirstNameValid && isLastNameValid));
-        }
-
-
-        function validateCountry() {
-            var country = $('#country').val();
-            if (!country) {
-                displayError('#country', 'Country selection is required.');
-                return false;
-            } else {
-                displayError('#country', '');
-                return true;
-            }
-        }
-
-        function updateSubmitButtonState() {
-            var isUsernameValid = validateUsername();
-            var isEmailValid = validateEmail();
-            var isPasswordValid = validatePassword();
-            var isFirstNameValid = validateFirstName();
-            var isLastNameValid = validateLastName();
-            var isCountryValid = validateCountry();
-            $('#submitBtn').prop('disabled', !(isUsernameValid && isEmailValid && isPasswordValid && isFirstNameValid && isLastNameValid && isCountryValid));
-        }
-
-        // Attach event handlers
-        $('#username, #email, #password, #first_name, #last_name').on('input', debounce(updateSubmitButtonState, 300));
-        $('#country').on('change', updateSubmitButtonState);
-
-        $('#registrationForm').on('submit', function(event) {
-            updateSubmitButtonState();
-            if ($('#submitBtn').prop('disabled')) {
-                event.preventDefault();
-            }
+    function updateSubmitButtonState() {
+        var isFormValid = true;
+        $('#username, #email, #password, #first_name, #last_name, #country').each(function() {
+            isFormValid = isFormValid && validateField($(this).attr('id'));
         });
+        $('#submitBtn').prop('disabled', !isFormValid);
+    }
 
-        // Call the update function to set the initial state of the submit button
+    // Attach event handlers for blur and input/change events
+    $('#username, #email, #password, #first_name, #last_name, #country').on('blur', function() {
+        validateField($(this).attr('id'), true);
         updateSubmitButtonState();
-
-        // Function to fetch and populate countries (remains unchanged)
-        // Function to fetch and populate countries
-        function populateCountries() {
-            $.ajax({
-                url: "https://restcountries.com/v3.1/all",
-                dataType: "json",
-                success: function(data) {
-                    // Sort countries alphabetically by name
-                    data.sort(function(a, b) {
-                        return a.name.common.localeCompare(b.name.common);
-                    });
-
-                    $('#country').empty(); // Clear existing options
-                    $('#country').append(new Option('Select Country', '')); // Default option
-                    data.forEach(function(country) {
-                        $('#country').append(new Option(country.name.common, country.cca2)); // Using common name and country code
-                    });
-                    $('#country').select2(); // Re-initialize Select2 for country dropdown
-                }
-            });
-        }
-
-        // Toggle Password Visibility
-        document.getElementById('togglePassword').addEventListener('click', function (e) {
-            // Prevent the button from submitting the form
-            e.preventDefault();
-
-            // Toggle the type attribute
-            const passwordInput = document.getElementById('password');
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-
-            // Toggle the eye / eye-slash icon
-            this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
-        });
-
-
-        // Call populateCountries on page load
-        populateCountries();
     });
+
+    $('#username, #email, #password, #first_name, #last_name').on('input', debounce(updateSubmitButtonState, 300));
+    $('#country').on('change', updateSubmitButtonState);
+
+    // Toggle Password Visibility
+    $('#togglePassword').click(function (e) {
+        e.preventDefault();
+        const passwordInput = $('#password');
+        const type = passwordInput.attr('type') === 'password' ? 'text' : 'password';
+        passwordInput.attr('type', type);
+        $(this).find('i').toggleClass('fa-eye fa-eye-slash');
+    });
+
+    // Function to fetch and populate countries
+    function populateCountries() {
+        $.ajax({
+            url: "https://restcountries.com/v3.1/all",
+            dataType: "json",
+            success: function(data) {
+                data.sort(function(a, b) {
+                    return a.name.common.localeCompare(b.name.common);
+                });
+                $('#country').empty();
+                $('#country').append(new Option('Select Country', ''));
+                data.forEach(function(country) {
+                    $('#country').append(new Option(country.name.common, country.cca2));
+                });
+                $('#country').select2();
+            }
+        });
+    }
+
+    // Call populateCountries on page load
+    populateCountries();
+
+    // Initialize the form with the submit button disabled
+    updateSubmitButtonState();
+});
+
 </script>
     
 {% endblock %}

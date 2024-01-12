@@ -89,7 +89,6 @@ class Payment(db.Model):
     # Establish a relationship with User model
     user = db.relationship('User', backref='payment_user', lazy=True)
 
-
 class AvailabilityRule(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     day_of_week = db.Column(db.Integer)
@@ -104,10 +103,6 @@ class AvailabilityRule(db.Model):
 class ExclusionDate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     availability_rule_id = db.Column(db.Integer, db.ForeignKey('availability_rule.id'))
-    date = db.Column(db.Date, nullable=False)
-
-class GlobalExclusionDate(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date, nullable=False)
 
 class ContactMessage(db.Model):

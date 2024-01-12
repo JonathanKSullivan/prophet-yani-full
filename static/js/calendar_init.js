@@ -8,7 +8,8 @@ function fetchBookingsAndRender(calendar) {
                 calendar.addEvent({
                     title: booking.title,
                     start: booking.start,
-                    end: booking.end
+                    end: booking.end,
+                    color: 'purple'
                 });
             });
         },
@@ -31,6 +32,10 @@ document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar-' + serviceId);
         console.log("Calendar element:", calendarEl);
 
+        // Fetch service duration from Flask context
+        var serviceDuration = modal.getAttribute('data-service-duration');
+        var formattedServiceDuration = '00:' + serviceDuration + ':00';
+
         if (calendarEl && !calendarEl.classList.contains('initialized')) {
             var lastSelectedEvent = null; // Variable to store the last selected slot
 
@@ -44,8 +49,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 events: [
                     { title: 'Meeting', start: new Date() }
                 ],
-                slotDuration: '00:30:00', // Slot duration set to 30 minutes
-                slotLabelInterval: '00:30:00', // Labels for time slots every 30 minutes
+                slotDuration: formattedServiceDuration, // Slot duration set to the service duration
+                slotLabelInterval: formattedServiceDuration, // Labels for time slots every service duration
                 slotMinTime: '08:00:00', // Calendar starts at 8 AM
                 slotMaxTime: '17:00:00', // Calendar ends at 5 PM
                 weekends: false, // Hide weekends (Saturday and Sunday)
@@ -56,8 +61,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Calculate the duration of the selected time slot in minutes
                     var duration = moment(selectionInfo.end).diff(moment(selectionInfo.start), 'minutes');
 
-                    // Check if the duration is exactly 30 minutes
-                    if(duration === 30) {
+                    // Check if the duration is exactly the same as the service duration
+                    if (duration === parseInt(serviceDuration, 10)) {
                         // Remove the last selected event if it exists
                         if (lastSelectedEvent) {
                             var lastEvent = calendar.getEventById('selectedSlot');
@@ -72,14 +77,15 @@ document.addEventListener('DOMContentLoaded', function() {
                             start: selectionInfo.start,
                             end: selectionInfo.end,
                             title: 'Selected Slot',
-                            allDay: selectionInfo.allDay
+                            allDay: selectionInfo.allDay,
+                            color: 'purple'
                         };
                         calendar.addEvent(newEvent);
                         lastSelectedEvent = newEvent;
 
                         // Optional: Update form or booking details here
-                        // For example, you might populate form fields with the selected time slot
                         // ...
+
                         // Example of creating a form dynamically and appending it to a DOM element
                         var formHtml = `
                             <form action="/book_service/${serviceId}" method="post">
@@ -91,7 +97,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         var bookingLink = `/booking/confirm_booking?service_id=${serviceId}&start=${selectionInfo.startStr}&end=${selectionInfo.endStr}`;
 
-                    
                         // Append the form to a specific element, e.g., below the calendar
                         document.getElementById('booking-form-container').innerHTML = formHtml;
 
@@ -103,9 +108,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         // Append the button to a specific element, e.g., below the calendar
                         document.getElementById('booking-form-container').innerHTML = buttonHtml;
                     } else {
-                        alert("Please select a 30-minute time slot.");
+                        alert(`Please select a ${serviceDuration}-minute time slot.`);
+                        calendar.unselect(); // Deselect the current selection
                     }
-                },                
+                },
                 eventClick: function(arg) {
                     if (arg.event.id === 'selectedSlot') {
                         arg.event.remove();
@@ -115,9 +121,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 editable: false,
                 // Disable selecting time ranges via clicking and dragging
                 selectable: true,
-
                 // Disable editing (moving and resizing) of events
                 editable: false,
+                eventResizableFromStart: false, // Prevent resizing from the start of the event
+                eventResizableFromEnd: false, // Prevent resizing from the end of the event
+                eventDurationEditable: false,
             });
 
             calendar.render();
@@ -127,4 +135,3 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-

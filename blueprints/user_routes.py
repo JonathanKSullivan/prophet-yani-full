@@ -1,6 +1,8 @@
+import uuid
 from flask import current_app
-
 from flask import Blueprint, redirect, request, render_template, session, flash, url_for
+from werkzeug.utils import secure_filename
+
 from itsdangerous import SignatureExpired, URLSafeTimedSerializer
 from lib.location_manager import LocationManager
 # from flask import Flask, request
@@ -11,7 +13,7 @@ from data import home_page_content, about_page_content, login_page_content, regi
 
 from werkzeug.security import generate_password_hash
 
-from utils import send_email
+from utils import send_email, send_username_recovery_email
 
 user_blueprint = Blueprint('user_blueprint', __name__)
 
@@ -109,13 +111,22 @@ def profile():
         # Handle profile image upload
         profile_image = request.files.get('profile_image')
         if profile_image:
+            folder_name = 'profile_images/'  # Specify the folder name
             bucket_name = 'prophet-yani-assests'  # Replace with your actual bucket name
-            image_url = UserManager.upload_to_s3(profile_image, bucket_name)
+
+            # Generate a unique file name
+            filename = secure_filename(profile_image.filename)
+            unique_filename = str(uuid.uuid4()) + "_" + filename
+
+            # Combine folder name and unique filename to create the S3 object key
+            s3_object_key = folder_name + unique_filename
+
+            image_url = UserManager.upload_to_s3(profile_image, bucket_name, s3_object_key)
             if image_url:
                 # Update user with new profile image URL
                 user_data['profile_image_url'] = image_url
                 # Update user in the database
-        UserManager.update_user(user_id, user_data)
+                UserManager.update_user(user_id, user_data)
 
 
         # Check and update password if new_password field is provided
@@ -157,7 +168,10 @@ def password_reset():
         else:
             flash('Email not found', 'error')
 
-    return render_template('password_reset.html')
+    return render_template('password_reset.html',
+                           metadata=profile_page_content["meta"],
+                            footer=profile_page_content["footer"]
+                            )
 
 @user_blueprint.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password_token(token):
@@ -198,4 +212,6 @@ def recover_username():
             flash('A recovery email with your username has been sent.', 'info')
         else:
             flash('No account found with that email.', 'error')
-    return render_template('recover_username.html')
+    return render_template('recover_username.html',
+                           metadata=profile_page_content["meta"],
+                           footer=profile_page_content["footer"])

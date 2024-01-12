@@ -1,6 +1,7 @@
 from lib.booking_manager import BookingManager
 from lib.donation_manager import DonationManager
 from lib.location_manager import LocationManager
+from lib.user_manager import UserManager
 
 
 
@@ -32,17 +33,17 @@ home_page_content = {
             {
                 "title": "Seeking Harmony in Chaos",
                 "description": "In a world brimming with uncertainties and challenges, finding inner peace and purpose can seem elusive. You may feel overwhelmed by ".title() + "Life's " + "complexities, struggling to find solace in the midst of chaos. The quest for spiritual guidance and emotional balance is more pressing than ever, yet the path to enlightenment remains clouded for many.".title(),
-                "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/problem-1.webp"
+                "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/problem-1.png"
             },
             {
                 "title": "The Quest for Meaning",
                 "description": "Without guidance, these feelings of unrest and disconnection can grow, leaving you more lost in the intricacies of life. The absence of spiritual alignment not only affects your inner peace but also hinders your ability to contribute positively to the world around you. The gap between your current state and where you aspire to be in your spiritual journey can widen, making the search for meaning and fulfillment increasingly difficult.".title(),
-                "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/problem-2.webp"
+                "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/problem-2.png"
             },
             {
                 "title": "Illuminating Your Path",
                 "description": "Prophet Yani offers a beacon of light in this journey. Through personalized spiritual consultations and guidance, you can navigate these turbulent times with wisdom and clarity. Our approach blends ancient wisdom with modern understanding, providing you with the tools and insights needed for personal growth and enlightenment. By joining our community, you not only embark on a path to self-discovery but also contribute to a greater cause, as your participation aids in our charitable missions worldwide. Begin your transformative journey today and find the peace and purpose you seek.".title(),
-                "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/problem-3.webp"
+                "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/problem-3.png"
             }
         ]
     },
@@ -53,21 +54,21 @@ home_page_content = {
                 "title": "Personal and Spiritual Transformation",
                 "features": "Customized Spiritual Consultations",
                 "description": "One-on-one sessions tailored to your unique spiritual journey, offering specific insights and guidance...",
-                "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/benefits-1.webp",
+                "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/benefits-1.png",
                 "impact": "Achieve lasting inner peace, heightened self-awareness, and a clearer life path."
             },
             {
                 "title": "Community of Compassion and Support",
                 "features": "Access to an Exclusive Online Community Platform",
                 "description": "Join an online forum where members share experiences, insights, and support, fostering a sense of belonging...",
-                "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/benefits-2.webp",
+                "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/benefits-2.png",
                 "impact": "Gain emotional support, build meaningful connections, and be part of a collective journey."
             },
             {
                 "title": "Contribution to a Greater Cause",
                 "features": "Integrated Charitable Giving Options",
                 "description": "With each consultation, contribute to a range of charitable causes, impacting the wider world positively...",
-                "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/benefits-3.webp",
+                "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/benefits-3.png",
                 "impact": "Experience the fulfillment of personal growth while contributing to global goodwill and change."
             }
             # Add more benefits as needed
@@ -177,21 +178,21 @@ home_page_content = {
                 "name": "Consultations",
                 "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/impact-1.webp",
                 "alt_text": "Consultations Statistic",
-                "count": BookingManager.count_past_bookings(),
+                "count": "",
                 "description": "Individual consultations conducted"
             },
             {
                 "name": "Donations",
                 "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/impact-2.webp",
                 "alt_text": "Donations Statistic",
-                "count": f"${DonationManager.calculate_total_donations():.2f}",
+                "count": "",
                 "description": "Contributed to charitable causes"
             },
             {
                 "name": "Global Impact",
                 "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/impact-3.webp",
                 "alt_text": "Global Impact Statistic",
-                "count": LocationManager.count_locations_by_country(),
+                "count": "",
                 "description": "Countries positively impacted"
             }
         ]
@@ -324,7 +325,7 @@ about_page_content = {
         },
         "sections": [
             {
-                "title": "The Transformational Odyssey",
+                "title": "The Transformation Odyssey",
                 "content": "Prophet Yani's story is one of transformation, shaped by personal challenges and a profound quest for understanding. Her empathetic approach to guiding others stems from this rich journey. Embracing both evidence-based practices and spiritual wisdom, she tailors her guidance to the unique journeys of her clients."
             },
             {

@@ -1,9 +1,8 @@
 # seed.py
-from datetime import datetime
-import time
+from datetime import datetime, time
 from werkzeug.security import generate_password_hash
 from app import app, db  # Replace with your actual Flask app init file
-from model import AvailabilityRule, Location, User, Service, Charity
+from model import AvailabilityRule, ExclusionDate, Location, User, Service, Charity
 
 def add_users():
     """
@@ -81,16 +80,40 @@ def add_charities():
 
 def add_availability():
     """
-    Adds predefined availability rule to the database for 24/7 availability.
+    Adds predefined availability rules to the database for each day of the week.
     """
-    availability_rule = AvailabilityRule(
-        day_of_week=0,  # None for all days
-        start_time=time(0, 0),  # 24-hour format for midnight
-        end_time=time(23, 59),  # 24-hour format for end of day
-        priority=0,  # You can set this based on your priorities
-        is_recurring=True
-    )
-    db.session.add(availability_rule)
+    for day in range(7):  # Days are typically represented from 0 to 6 (Monday to Sunday)
+        start_time = time(0, 0)  # 24-hour format for midnight
+        end_time = time(23, 59)  # 24-hour format for end o
+
+        availability_rule = AvailabilityRule(
+            day_of_week=day,
+            start_time=start_time,
+            end_time=end_time,
+            priority=0,
+            is_recurring=True
+        )
+
+        # Add exclusion dates if needed
+        exclusion_dates = [
+            ExclusionDate(date=datetime(2024, 1, 15, 0, 0)),
+            ExclusionDate(date=datetime(2024, 2, 1, 0, 0)),
+            # Add more exclusion dates as needed
+        ]
+
+        availability_rule.exclusion_dates.extend(exclusion_dates)
+
+        # Save the availability rule to the database
+        db.session.add(availability_rule)
+
+    try:
+        # Commit changes to the database
+        db.session.commit()
+        print("Availability rules added successfully.")
+    except Exception as e:
+        # Rollback changes in case of an error
+        db.session.rollback()
+        print(f"Error adding availability rules: {e}")
 
 def add_locations():
     """
@@ -133,9 +156,9 @@ def seed_database():
             db.create_all()
             print("Tables created successfully.")
             add_users()
-            # add_services()
-            # add_charities()
-            # add_availability()
+            add_services()
+            add_charities()
+            add_availability()
             # add_locations()
             db.session.commit()
             print("Database seeded successfully.")
@@ -144,5 +167,6 @@ def seed_database():
         print(f"Error seeding database: {e}")
 
 if __name__ == '__main__':
+    app.app_context().push()
     seed_database()
     # print("DB Already Seeded.")

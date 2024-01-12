@@ -1,5 +1,5 @@
 <!-- Modal Structure -->
-<div class="modal fade" id="calendarModal-{{ service.id }}" tabindex="-1" role="dialog" aria-labelledby="calendarModalLabel-{{ service.id }}" aria-hidden="true" data-service-id="{{ service.id }}">
+<div class="modal fade" id="calendarModal-{{ service.id }}" tabindex="-1" role="dialog" aria-labelledby="calendarModalLabel-{{ service.id }}" aria-hidden="true" data-service-id="{{ service.id }}" data-service-duration="{{ service.duration }}">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -11,7 +11,6 @@
             <div class="modal-body">
                 <div id="calendar-{{ service.id }}"></div> <!-- Calendar here -->
                 <div id="booking-form-container"></div> <!-- Container for the booking form -->
-
             </div>
         </div>
     </div>

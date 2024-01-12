@@ -1,4 +1,4 @@
-from model import db, AvailabilityRule, ExclusionDate, GlobalExclusionDate
+from model import db, AvailabilityRule, ExclusionDate
 
 class AvailabilityManager:
     @staticmethod
@@ -33,17 +33,6 @@ class AvailabilityManager:
             raise e
 
     @staticmethod
-    def add_global_exclusion_date(date):
-        global_exclusion = GlobalExclusionDate(date=date)
-        db.session.add(global_exclusion)
-        try:
-            db.session.commit()
-            return global_exclusion
-        except Exception as e:
-            db.session.rollback()
-            raise e
-
-    @staticmethod
     def get_availability_rule_by_id(rule_id):
         return AvailabilityRule.query.get(rule_id)
 
@@ -72,7 +61,7 @@ class AvailabilityManager:
         return AvailabilityRule.query.all()
 
     @staticmethod
-    def list_all_global_exclusions():
-        return GlobalExclusionDate.query.all()
-    
+    def list_exclusion_dates_by_rule(rule_id):
+        return ExclusionDate.query.filter_by(availability_rule_id=rule_id).all()
+
     # You may add more methods as necessary for other functionalities

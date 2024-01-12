@@ -107,7 +107,26 @@
             selectedDonation: {},
             newLocation: {},
             selectedLocation: {},
-            
+            newAvailability: {},
+            newExclusionDate: {},
+            newRule: {
+                dayOfWeek: null,
+                startTime: '',
+                endTime: '',
+                // Add more properties as needed
+            },
+            editedRule: {
+                id: null, // Add the rule ID if available
+                dayOfWeek: null,
+                startTime: '',
+                endTime: '',
+                priority: null,
+                isRecurring: null,
+                newExclusionDate: '', // Vue.js data property for the new exclusion date
+                availableDaysOfWeek: [], // Vue.js data property for available days of the week
+                excludedDays: [], // Vue.js data property for days to be disabled
+            },
+            countries: [],
         },
         
         watch: {
@@ -118,6 +137,7 @@
         
         mounted() {
             this.setActiveTabFromUrl();
+            this.populateCountries();
             fetch('/api/users')
                 .then(response => response.json())
                 .then(data => {
@@ -187,14 +207,20 @@
                 .then(response => response.json())
                 .then(data => {
                     this.availabilityRules = data.availability_rules.map(rule => {
-                        rule.start_time = new Date(rule.start_time);
-                        rule.end_time = new Date(rule.end_time);
-                        rule.exclusion_dates = rule.exclusion_dates.map(dateStr => new Date(dateStr));
+                        rule.start_time = this.formatTime(rule.start_time);
+                        rule.end_time = this.formatTime(rule.end_time);
+                        rule.exclusion_dates = rule.exclusion_dates.map(dateStr => {
+                            // Remove the time component for exclusion dates
+                            const dateWithoutTime = new Date(dateStr);
+                            dateWithoutTime.setHours(0, 0, 0, 0);
+                            return dateWithoutTime.toLocaleDateString(); // Use toLocaleDateString to get only the date part
+                        });
                         return rule;
                     });
-                    this.globalExclusions = data.global_exclusion_dates.map(dateStr => new Date(dateStr));
                 })
                 .catch(error => console.error('Error:', error));
+
+
 
             fetch('/api/contact_messages')
                 .then(response => response.json())
@@ -211,7 +237,7 @@
                 .catch(error => console.error('Error:', error));
         },
         
-        computed: {
+        computed: {  
             formattedLatestSignups() {
                 return this.data.latest_signups.all().map(user => ({
                     id: user.id,
@@ -222,6 +248,232 @@
         },
         
         methods: {
+            async populateCountries() {
+                try {
+                    const response = await fetch("https://restcountries.com/v3.1/all");
+                    const data = await response.json();
+                    this.countries = data.sort((a, b) => {
+                        return a.name.common.localeCompare(b.name.common);
+                    }).map(country => {
+                        return {
+                            name: country.name.common,
+                            code: country.cca2
+                        };
+                    });
+                } catch (error) {
+                    console.error("Error fetching countries:", error);
+                }
+            },
+            
+            showAddExclusionDateDialog(availability) {
+                // Assuming you're using Bootstrap, you can trigger the modal using jQuery
+                $('#addDateModal').modal('show');
+
+                // Set the available days of the week based on the selected rule
+                this.availableDaysOfWeek = [availability.day_of_week];
+            },
+           
+            saveNewExclusionDate() {
+                // Logic to save the new exclusion date
+                // Access the value from this.newExclusionDate and make necessary backend calls
+                // You may use a library like Axios for HTTP requests
+                axios.post(`/api/exclusion-dates/${availability.id}`, {
+                    date: this.newExclusionDate,
+                })
+                .then(response => {
+                    // Handle success, update the UI or perform any other necessary actions
+                    console.log('Exclusion date added successfully');
+
+                    // Optionally, reset the form field or close the modal
+                    this.newExclusionDate = '';
+                    $('#addDateModal').modal('hide');
+                })
+                .catch(error => {
+                    // Handle error, show a message to the user or log the error
+                    console.error('Error adding exclusion date:', error);
+                });
+            },
+
+            showAddExclusionDateDialog(availability) {
+                // Assuming you're using Bootstrap, you can trigger the modal using jQuery
+                $('#addDateModal').modal('show');
+            },
+
+            saveNewExclusionDate() {
+                // Logic to save the new exclusion date
+                // Access the value from this.newExclusionDate and make necessary backend calls
+                // You may use a library like Axios for HTTP requests
+                axios.post(`/api/exclusion-dates/${availability.id}`, {
+                    date: this.newExclusionDate,
+                })
+                .then(response => {
+                    // Handle success, update the UI or perform any other necessary actions
+                    console.log('Exclusion date added successfully');
+
+                    // Optionally, reset the form field or close the modal
+                    this.newExclusionDate = '';
+                    $('#addDateModal').modal('hide');
+                })
+                .catch(error => {
+                    // Handle error, show a message to the user or log the error
+                    console.error('Error adding exclusion date:', error);
+                });
+            },
+
+            editAvailability(availability) {
+                // Populate the editedRule with the selected rule's data
+                this.editedRule = {
+                    id: availability.id,
+                    dayOfWeek: availability.day_of_week,
+                    startTime: availability.start_time,
+                    endTime: availability.end_time,
+                    priority: availability.priority,
+                    isRecurring: availability.is_recurring.toString(), // Convert boolean to string
+                };
+
+                // Assuming you're using Bootstrap, you can trigger the modal using jQuery
+                $('#editRuleModal').modal('show');
+            },
+
+            saveEditedRule() {
+                // Logic to save the edited rule
+                // Access the values from this.editedRule and make necessary backend calls
+                // You may use a library like Axios for HTTP requests
+                axios.put(`/api/availabilities/${this.editedRule.id}`, {
+                    day_of_week: this.editedRule.dayOfWeek,
+                    start_time: this.editedRule.startTime,
+                    end_time: this.editedRule.endTime,
+                    priority: this.editedRule.priority,
+                    is_recurring: this.editedRule.isRecurring,
+                })
+                .then(response => {
+                    // Handle success, update the UI or perform any other necessary actions
+                    console.log('Rule edited successfully');
+
+                    // Optionally, reset the form fields or close the modal
+                    this.editedRule = {
+                        id: null,
+                        dayOfWeek: null,
+                        startTime: '',
+                        endTime: '',
+                        priority: null,
+                        isRecurring: null,
+                    };
+                    $('#editRuleModal').modal('hide');
+                })
+                .catch(error => {
+                    // Handle error, show a message to the user or log the error
+                    console.error('Error editing rule:', error);
+                });
+            },
+
+            showAddRuleModal() {
+                // Assuming you're using Bootstrap, you can trigger the modal using jQuery
+                $('#addRuleModal').modal('show');
+                // Add any additional logic needed for initialization
+            },
+
+            addNewAvailabilityRule() {
+                // Logic to add a new availability rule
+                // Access the values from this.newRule and make necessary backend calls
+                // You may use a library like Axios for HTTP requests
+                axios.post('/api/availabilities', {
+                    day_of_week: this.newRule.dayOfWeek,
+                    start_time: this.newRule.startTime,
+                    end_time: this.newRule.endTime,
+                    // Include other properties as needed
+                })
+                .then(response => {
+                    // Handle success, update the UI or perform any other necessary actions
+                    console.log('New availability rule added successfully');
+
+                    // Optionally, reset the form fields or close the modal
+                    this.newRule = {
+                        dayOfWeek: null,
+                        startTime: '',
+                        endTime: '',
+                        // Reset other properties as needed
+                    };
+                    $('#addRuleModal').modal('hide');
+                })
+                .catch(error => {
+                    // Handle error, show a message to the user or log the error
+                    console.error('Error adding new availability rule:', error);
+                });
+            },
+
+            saveNewExclusionDate() {
+                // Logic to save the new exclusion date
+                // Access the value from this.newExclusionDate and make necessary backend calls
+                // You may use a library like Axios for HTTP requests
+                axios.post('/api/exclusion-date', {
+                    availability_rule_id: this.selectedAvailability.id,
+                    date: this.newExclusionDate,
+                })
+                .then(response => {
+                    // Handle success, update the UI or perform any other necessary actions
+                    console.log('Exclusion date added successfully');
+                    
+                    // Optionally, reset the form field or close the modal
+                    this.newExclusionDate = '';
+                    $('#addDateModal').modal('hide');
+                })
+                .catch(error => {
+                    // Handle error, show a message to the user or log the error
+                    console.error('Error adding exclusion date:', error);
+                });
+            },
+            
+            showAddExclusionDateDialog(availability) {
+                // Assuming you're using Bootstrap, you can trigger the modal using jQuery
+                $('#addDateModal').modal('show');
+                // Add any additional logic needed for initialization based on the availability parameter
+            },
+
+            DeleteRule(ruleId) {
+                // Logic to confirm and delete the availability rule
+                const confirmDelete = confirm('Are you sure you want to delete this rule?');
+                
+                if (confirmDelete) {
+                    // Make a call to the backend to delete the rule based on ruleId
+                    // You may use a library like Axios for HTTP requests
+                    axios.delete(`/api/availability-rule/${ruleId}`)
+                        .then(response => {
+                            // Handle success, update the UI or perform any other necessary actions
+                            console.log('Rule deleted successfully');
+                        })
+                        .catch(error => {
+                            // Handle error, show a message to the user or log the error
+                            console.error('Error deleting rule:', error);
+                        });
+                }
+            },
+
+            RemoveExclusionDate(availability, date) {
+                // Logic to confirm and remove the exclusion date
+                const confirmRemove = confirm('Are you sure you want to remove this exclusion date?');
+                
+                if (confirmRemove) {
+                    // Make a call to the backend to remove the exclusion date
+                    // You may use a library like Axios for HTTP requests
+                    axios.delete(`/api/exclusion-date/${availability.id}/${date}`)
+                        .then(response => {
+                            // Handle success, update the UI or perform any other necessary actions
+                            console.log('Exclusion date removed successfully');
+                        })
+                        .catch(error => {
+                            // Handle error, show a message to the user or log the error
+                            console.error('Error removing exclusion date:', error);
+                        });
+                }
+            },
+
+            // Helper method to reset the form fields for adding a new rule
+            resetNewRuleForm() {
+                this.newRuleDayOfWeek = ''; // Reset other form fields similarly
+                // Optionally, close the modal or perform any other necessary actions
+            },
+            
             deleteService(service) {
                 // Prompt the user for confirmation (you can use a library or a custom modal)
                 const confirmed = confirm("Are you sure you want to delete this service?");
@@ -240,6 +492,7 @@
                         });
                 }
             },
+            
             confirmBooking(bookingId) {
                 // Implement logic to confirm the booking
                 const confirmed = confirm("Are you sure you want to confirm this booking?");
@@ -258,18 +511,21 @@
                         });
                 }
             },
+            
             viewLocation(location) {
                 // Set selectedLocation in your data to the clicked location
                 this.selectedLocation = location;
                 // Show the viewLocationModal
                 $('#viewLocationModal').modal('show');
             },
+            
             editLocation(location) {
                 // Set selectedLocation in your data to the clicked location
                 this.selectedLocation = location;
                 // Show the editLocationModal
                 $('#editLocationModal').modal('show');
             },
+            
             deleteLocation(location) {
                 // Set selectedLocation in your data to the clicked location
                 this.selectedLocation = location;
@@ -310,6 +566,7 @@
                         console.error("Error updating location:", error);
                     });
             },
+            
             saveLocation() {
                 // Validate the new location data (you can add more validation if needed)
 
@@ -328,6 +585,7 @@
                         console.error("Error adding new location:", error);
                     });
             },
+            
             addLocation() {
                 // Implement logic to show a modal or redirect to a page for adding a new location
                 // Example: $('#addLocationModal').modal('show');
@@ -335,6 +593,7 @@
                 this.newLocation = {};
                 $('#addLocationModal').modal('show');
             },
+            
             showViewDonationModal(donation) {
                 // Implement logic to handle the "View" modal
                 // You can set the selectedDonation data property and show the modal
@@ -344,6 +603,7 @@
 
                 $('#viewDonationModal').modal('show');
             },
+            
             showViewBookingModal(booking) {
                 // Set the selectedBooking data property to the provided booking
                 this.selectedBooking = booking;
@@ -351,13 +611,16 @@
                 // Show the "View Booking" modal using jQuery
                 $('#viewBookingModal').modal('show');
             },
+            
             showPaymentDetails(payment) {
                 // Set the selectedPayment data property
                 this.selectedPayment = payment;
                 // Trigger the modal to show
                 $('#viewPaymentModal').modal('show');
             },
+            
             charityImagePreview() {},
+            
             addNewCharity() {
                 // Validate the new charity data (you can add more validation if needed)
 
@@ -376,6 +639,7 @@
                         console.error("Error adding new charity:", error);
                     });
             },
+            
             handleCharityImageUpload(event) {
                 const file = event.target.files[0];
                 if (file) {
@@ -388,20 +652,25 @@
                     reader.readAsDataURL(file);
                 }
             },
+            
             editedCharityImage() {},
+            
             handleCharityImageUpload() {},
+            
             openViewCharityDetailsModal(charity) {
                 // Set the selected charity for displaying details
                 this.selectedCharity = charity;
                 // Open the "View Details" modal
                 $('#viewDetailsModal').modal('show');
             },
+            
             openEditCharityModal(charity) {
                 // Set the selected charity for editing
                 this.selectedCharity = { ...charity };
                 // Open the "Edit Charity" modal
                 $('#editCharityModal').modal('show');
             },
+            
             saveCharityChanges() {
                 // Validate the edited charity data (you can add more validation if needed)
 
@@ -419,6 +688,7 @@
                         console.error("Error saving charity changes:", error);
                     });
             },
+            
             deleteCharity(charityId) {
                 // Confirm before deleting
                 const confirmed = confirm("Are you sure you want to delete this charity?");
@@ -615,18 +885,22 @@
                     })
                     .catch(error => console.error('Error:', error));
             },
+            
             viewFullMessage(message) {
                 this.selectedMessage = message; // Set the selected message
                 this.showMessageModal = true; // Show the modal
                 $('#viewMessageModal').modal('show');
             },
+            
             changeTab(tabName) {
                 this.activeTab = tabName;
             },
+            
             updateUrl(tabName) {
                 const newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + '?tab=' + tabName;
                 window.history.pushState({ path: newUrl }, '', newUrl);
             },
+            
             setActiveTabFromUrl() {
                 const urlParams = new URLSearchParams(window.location.search);
                 const tabParam = urlParams.get('tab');
@@ -634,10 +908,12 @@
                     this.activeTab = tabParam;
                 }
             },
+            
             isTabValid(tabName) {
                 const validTabs = ['statistics', 'users', 'services', 'bookings', 'donations', 'charities', 'locations', 'payments', 'availabilities', 'contactMessages'];
                 return validTabs.includes(tabName);
             },
+            
             redirectTo(url) {
                 window.location.href = url;
             },
@@ -647,64 +923,34 @@
                 const date = new Date(datetimeStr);
                 return date.toLocaleString(); // You can customize the format as needed
             },
+            
             formatCurrency(amount) {
                 if (amount === null || amount === undefined) return '';
                 // Format the amount as currency
                 // The 'en-US' locale is used as an example, adjust as per your requirement
                 return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
             },
+            
             truncateMessage(message, maxLength = 100) {
                 if (!message) return '';
                 if (message.length <= maxLength) return message;
                 return message.substring(0, maxLength) + '...';
             },
-            addGlobalExclusionDate() {
-                // Use a simple prompt to get the date from the user
-                const newDateStr = prompt("Enter the date for exclusion (YYYY-MM-DD):");
-                if (!newDateStr) return; // Exit if no date is entered
-
-                // Validate the input date format (basic validation)
-                if (!/^\d{4}-\d{2}-\d{2}$/.test(newDateStr)) {
-                    alert("Invalid date format. Please use YYYY-MM-DD format.");
-                    return;
-                }
-
-                // Prepare the data to be sent
-                const newDate = { date: newDateStr };
-
-                // API call to add the date
-                fetch('/api/add-global-exclusion-date', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newDate)
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        // Add the new date to the globalExclusions array
-                        this.globalExclusions.push(newDateStr);
-                    } else {
-                        alert("Failed to add date. " + (data.message || 'Server error'));
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert("An error occurred while adding the date.");
-                });
-            },
+            
             editUser(user) {
                 this.selectedUser = { ...user }; // Clone the user object
                 console.log(this.selectedUser);
                 $('#userEditModal').modal('show');
             },
+            
             handleImageUpload(event) {
                 // Get the selected file from the input
                 const file = event.target.files[0];
+
+
+                // Log the file to check if it's present
+                console.log('Selected File:', file);
+
 
                 // Update the image preview onscreen
                 const imagePreview = document.getElementById('imagePreview');
@@ -719,13 +965,12 @@
                     imagePreview.src = 'https://jonathanksullivan.github.io/prophet-yani/image/default_profile.webp';
                 }
 
-                // Add the selected file to the form data (if needed)
+                // Update the selectedUser with the file
                 if (file) {
-                    // Assuming you have a property in your data named formData
-                    // Make sure to initialize it in your data() as an empty FormData object
-                    this.formData.set('profileImage', file);
+                    this.selectedUser.profileImage = file;
                 }
             },
+
             updateUser() {
                 // Implement the logic to update the user
                 console.log('Updating user:', this.selectedUser);
@@ -736,7 +981,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(this.selectedUser),
+                    body: this.selectedUser,
                 })
                 .then(response => {
                     if (!response.ok) {
@@ -755,18 +1000,42 @@
                     // Handle the error as needed
                 });
             },
+
             formatDayOfWeek(dayOfWeek) {
                 // Implement the formatting logic here
                 // For example, you can return the full name of the day
                 const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
                 return daysOfWeek[dayOfWeek];
             },
+            
             formatDate(date) {
                 if (!date) return '';
                 return new Date(date).toLocaleDateString(); // Adjust the date format as needed
             },
-        }
-    
+            
+            formatTime(time) {
+                if (!time || time === 'Invalid Date') return ''; // Handle the case when time is undefined, null, or 'Invalid Date'
+
+                // Split the time string into hours, minutes, and seconds
+                const [hours, minutes, seconds] = time.split(':');
+
+                // Create a new Date object with the current date and the extracted time components
+                const formattedTime = new Date();
+                formattedTime.setHours(parseInt(hours));
+                formattedTime.setMinutes(parseInt(minutes));
+                formattedTime.setSeconds(parseInt(seconds));
+
+                if (isNaN(formattedTime.getTime())) {
+                    return ''; // Handle invalid time
+                }
+
+                // Format the time as HH:mm for input type="time"
+                const formattedHours = String(formattedTime.getHours()).padStart(2, '0');
+                const formattedMinutes = String(formattedTime.getMinutes()).padStart(2, '0');
+
+                return `${formattedHours}:${formattedMinutes}`;
+            }
+        },
     });
 </script>
 {% endblock %}

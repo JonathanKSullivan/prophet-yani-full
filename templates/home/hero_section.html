@@ -2,13 +2,13 @@
     <div class="container">
         <h1 id="home-hero-title">{{ hero.title }}</h1>
         <div id="subtitle-div"> 
-         <h3 id="subtitle">{{ hero.subtitle }}</h3>
+         <h3 id="subtitle" >{{ hero.subtitle }}</h3>
         </div>
         {% for button in hero.buttons %}
           {% if button.action_type == "email" %}
-             <a href="mailto:{{ button.target }}" class="btn btn-{{ button.type }}" aria-label="{{ button.text }}">{{ button.text }}</a>
+             <a href="mailto:{{ button.target }}" class="hero-button btn btn-{{ button.type }}" aria-label="{{ button.text }}">{{ button.text }}</a>
           {% elif button.action_type == "link" %}
-             <a href="{{ button.target }}" class="btn btn-{{ button.type }}" aria-label="{{ button.text }}">{{ button.text }}</a>
+             <a href="{{ button.target }}" class="hero-button btn btn-{{ button.type }}" aria-label="{{ button.text }}">{{ button.text }}</a>
           {% endif %}
        {% endfor %}
  

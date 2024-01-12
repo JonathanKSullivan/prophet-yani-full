@@ -30,7 +30,6 @@ class UserListResource(Resource):
                 'password_hash': user.password_hash,
                 'first_name': user.first_name,
                 'last_name': user.last_name,
-                'profile_image_url': user.profile_image_url,
                 'bio': user.bio,
                 'create_date': user.create_date.strftime('%Y-%m-%d %H:%M:%S'),
                 'last_login_date': user.last_login_date.strftime('%Y-%m-%d %H:%M:%S'),
@@ -54,11 +53,23 @@ class UserListResource(Resource):
         parser.add_argument('last_name')
         parser.add_argument('bio')
         parser.add_argument('country')
+        parser.add_argument('profileImage', type=FileStorage, location='files')
 
         args = parser.parse_args()
 
+        print(args)
+
+
+        # Check if a file is present in the request
+        if args['profileImage']:
+            file = args['profileImage']
+            # Handle the image upload (use your preferred method)
+            file_url = UserManager.upload_to_s3(file, 'prophet-yani-assests', 'profile_images')
+            # Update the user's profile_image_url with the new URL
+            args['profile_image_url'] = file_url
+
         # Update the user using the UserManager class
-        updated_user = UserManager.update_user_with_location(user_id, args)
+        updated_user = UserManager.update_user(user_id, args)
 
         if updated_user:
             return {'message': 'User updated successfully'}, 200
@@ -173,7 +184,6 @@ class BookingListResource(Resource):
             return {'message': 'Booking confirmed successfully'}, 200
         else:
             return {'message': 'Error confirming booking'}, 500
-
 
 class DonationListResource(Resource):
     def get(self):
@@ -358,16 +368,46 @@ class AvailabilityListResource(Resource):
                 'is_recurring': rule.is_recurring,
                 'exclusion_dates': exclusion_dates
             }
+            print(rule_info)
             availability_data.append(rule_info)
 
-        # Fetch global exclusion dates
-        global_exclusions = AvailabilityManager.list_all_global_exclusions()
-        global_exclusion_dates = [exclusion.date.isoformat() for exclusion in global_exclusions]
-
+        
         return {
             'availability_rules': availability_data,
-            'global_exclusion_dates': global_exclusion_dates
         }
+    
+    def post(self):
+        # Logic to add a new availability rule
+        data = request.get_json()
+        new_rule = AvailabilityManager.add_availability_rule(
+            data['day_of_week'],
+            data['start_time'],
+            data['end_time'],
+            data.get('priority', 0),
+            data.get('is_recurring', True)
+        )
+        if new_rule:
+            return {'message': 'New rule added successfully'}, 201
+        else:
+            return {'error': 'Failed to add a new rule'}, 500
+        
+    def delete(self, rule_id):
+        # Logic to delete the availability rule
+        success = AvailabilityManager.delete_availability_rule(rule_id)
+        if success:
+            return {'message': 'Rule deleted successfully'}, 200
+        else:
+            return {'error': 'Rule not found'}, 404
+
+class ExclusionDateResource(Resource):
+    def delete(self, rule_id, date):
+        # Logic to remove the exclusion date
+        success = AvailabilityManager.remove_exclusion_date(rule_id, date)
+        if success:
+            return {'message': 'Exclusion date removed successfully'}, 200
+        else:
+            return {'error': 'Exclusion date not found'}, 404
+
 class ContactMessageListResource(Resource):
     def get(self):
         messages = ContactMessageManager.list_all_messages()

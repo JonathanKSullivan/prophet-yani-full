@@ -83,6 +83,27 @@ def confirm_booking():
     start_time = request.args.get('start')
     end_time = request.args.get('end')
     
+    # Assuming start_time and end_time are strings like "2024-01-11T09:30:00-06:00"
+    start_time_str = request.args.get('start')
+    end_time_str = request.args.get('end')
+
+    # Parse the ISO 8601 formatted strings
+    start_time = datetime.fromisoformat(start_time_str)
+    end_time = datetime.fromisoformat(end_time_str)
+
+    # Check if both start and end times are on the same day
+    same_day = start_time.date() == end_time.date()
+
+    # Format the datetime objects into a more readable format
+    # Format for start time: "Friday, January 11, 2024, at 09:30 AM"
+    friendly_start_time = start_time.strftime("%A, %B %d, %Y, at %I:%M %p")
+
+    # Format for end time: if same day, only include the time part
+    if same_day:
+        friendly_end_time = end_time.strftime("%I:%M %p")
+    else:
+        friendly_end_time = end_time.strftime("%A, %B %d, %Y, at %I:%M %p")
+    
     # Fetch additional details as needed, e.g., service details
     service = Service.query.get_or_404(service_id)
 
@@ -94,8 +115,8 @@ def confirm_booking():
         'confirm_booking.html', 
         service=service,
         charities=charities,
-        start_time=start_time,
-        end_time=end_time,
+        start_time=friendly_start_time,
+        end_time=friendly_end_time,
         metadata=confirm_booking_page_content["meta"],
         footer=confirm_booking_page_content["footer"]
         )

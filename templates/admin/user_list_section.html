@@ -13,6 +13,9 @@
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Photo</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
                         <th>Username</th>
                         <th>Email</th>
                         <th>Status</th>
@@ -23,6 +26,9 @@
                 <tbody>
                     <tr v-for="user in users" :key="user.id">
                         <td>${ user.id }</td>
+                        <td><img :src="selectedUser.profile_image_url || 'https://jonathanksullivan.github.io/prophet-yani/image/default_profile.webp'" class="img-fluid rounded-circle" alt="Profile Image" style="width:80px;"></td>
+                        <td>${ user.first_name }</td>
+                        <td>${ user.last_name }</td>
                         <td>${ user.username }</td>
                         <td>${ user.email }</td>
                         <td>${ user.status }</td>
@@ -75,6 +81,13 @@
                         <input type="text" class="form-control" id="username" v-model="selectedUser.username" disabled>
                     </div>
                     <div class="form-group">
+                        <label for="country">Country</label>
+                        <select class="form-control" id="country" v-model="selectedUser.country">
+                            <option value="">Select Country</option>
+                            <option v-for="country in countries" :value="country.name">${ country.name }</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" class="form-control" id="email" v-model="selectedUser.email" disabled>
                     </div>
@@ -116,7 +129,7 @@
 
 <!-- User Details Modal -->
 <div id="userDetailsModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">User Details</h5>
@@ -131,16 +144,22 @@
                         <img :src="selectedUser.profile_image_url || 'https://jonathanksullivan.github.io/prophet-yani/image/default_profile.webp'" class="img-fluid rounded-circle" alt="Profile Image">
                     </div>
                     <div class="col-md-8">
-                        <!-- Display user details here -->
                         <div class="mb-3">
-                            <p><strong>ID:</strong> <span class="badge badge-primary">${selectedUser.id}</span></p>
+                            <h6 class="mb-2">Personal Details</h6>
+                            <p><strong>ID:</strong> <span>${selectedUser.id}</span></p>
                             <p><strong>Name:</strong> ${selectedUser.first_name} ${selectedUser.last_name}</p>
                             <p><strong>Username:</strong> ${selectedUser.username}</p>
                             <p><strong>Email:</strong> ${selectedUser.email}</p>
+                            <p><strong>Bio:</strong> ${selectedUser.bio}</p>
+                        </div>
+                        <div class="mb-3">
+                            <h6 class="mb-2">Account Details</h6>
                             <p><strong>Status:</strong> ${selectedUser.status}</p>
                             <p><strong>Role:</strong> ${selectedUser.user_role}</p>
-                            <p><strong>Bio:</strong> ${selectedUser.bio}</p>
-                            <!-- Add other user details as needed -->
+                            <p><strong>Country:</strong> ${selectedUser.country}</p>
+                            <p><strong>Account Confirmed:</strong> ${selectedUser.confirmed ? 'Yes' : 'No'}</p>
+                            <p><strong>Create Date:</strong> ${new Date(selectedUser.create_date).toLocaleString()}</p>
+                            <p><strong>Last Login Date:</strong> ${selectedUser.last_login_date ? new Date(selectedUser.last_login_date).toLocaleString() : 'Never'}</p>
                         </div>
                     </div>
                 </div>

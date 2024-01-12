@@ -3,17 +3,6 @@ from model import db, Location
 
 class LocationManager:
     @staticmethod
-    def count_locations_by_country():
-        try:
-            country_counts = (db.session.query(Location.country, func.count(Location.id))
-                                      .group_by(Location.country)
-                                      .all())
-            return len(country_counts)
-        except Exception as e:
-            print("Error counting locations by country:", e)
-            return -1
-
-    @staticmethod
     def add_location(address, city, state, country, zip_code, location_type):
         new_location = Location(
             address=address,

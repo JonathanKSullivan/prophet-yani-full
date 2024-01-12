@@ -1,5 +1,7 @@
 import boto3
+from sqlalchemy import func
 from werkzeug.utils import secure_filename
+
 import os
 import uuid
 from lib.location_manager import LocationManager
@@ -9,6 +11,17 @@ import datetime
 
 
 class UserManager:
+    @staticmethod
+    def count_users_by_country():
+        try:
+            country_counts = (db.session.query(User.country, func.count(User.id))
+                                  .group_by(User.country)
+                                  .all())
+            return len(country_counts)
+        except Exception as e:
+            print("Error counting locations by country:", e)
+            return -1
+
     @staticmethod
     def get_user_by_email(email):
         return User.query.filter_by(email=email).first()
@@ -44,7 +57,7 @@ class UserManager:
         return User.query.filter_by(username=username).first()
 
     @staticmethod
-    def update_user_with_location(user_id, user_data):
+    def update_user(user_id, user_data):
         user = User.query.get(user_id)
         if not user:
             return None
@@ -93,7 +106,7 @@ class UserManager:
         return True
 
     @staticmethod
-    def upload_to_s3(file, bucket_name):
+    def upload_to_s3(file, bucket_name, folder_name):
         # Ensure boto3 is installed and configured correctly
         s3_client = boto3.client('s3')
 
@@ -101,17 +114,19 @@ class UserManager:
         filename = secure_filename(file.filename)
         unique_filename = str(uuid.uuid4()) + "_" + filename
 
+        # Construct the S3 object key with the folder name
+        s3_object_key = f"{folder_name}/{unique_filename}"
+
         try:
-            # Upload file to S3
+            # Upload file to S3 without specifying ACL
             s3_client.upload_fileobj(
                 file,
                 bucket_name,
-                unique_filename,
-                ExtraArgs={'ACL': 'public-read'}  # Make the file publicly readable
+                s3_object_key,
             )
 
             # Construct the file URL
-            file_url = f"https://{bucket_name}.s3.amazonaws.com/{unique_filename}"
+            file_url = f"https://{bucket_name}.s3.amazonaws.com/{s3_object_key}"
             return file_url
 
         except Exception as e:
