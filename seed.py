@@ -10,7 +10,7 @@ def add_users():
     """
     users = [
         User(
-            username='Prophet Yani',
+            username='Prophet Yani'.lower(),
             email='prophetyani@gmail.com',
             password_hash=generate_password_hash('password123'),
             first_name='Yani',
@@ -24,7 +24,7 @@ def add_users():
             confirmed=True
         ),
         User(
-            username='Tech Guy',
+            username='Tech Guy'.lower(),
             email='jonathan.k.sullivan@gmail.com',
             password_hash=generate_password_hash('password123'),
             first_name='Jonathan',
@@ -148,11 +148,6 @@ def seed_database():
         with app.app_context():
             db.drop_all()
             print("Tables dropped successfully.")
-    except Exception as e:
-        print(f"Error dropping tables: {e}")
-
-    try:
-        with app.app_context():
             db.create_all()
             print("Tables created successfully.")
             add_users()

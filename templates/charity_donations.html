@@ -1,0 +1,210 @@
+{% extends "base.html" %}  <!-- Replace 'base.html' with the actual name of your base template file -->
+
+{% block head %}
+    <!-- Additional head content specific to charity donations page -->
+    <style>
+        .header-section {
+            background: url("{{ url_for('static', filename='images/charity_donation.webp') }}") no-repeat center center;
+            background-size: cover;
+            height: 100vh;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5); /* Overlay for better readability */
+        }
+    
+        .charity-container {
+            margin-top: 30px;
+        }
+    
+        .charity-item {
+            margin-bottom: 30px; /* Increased spacing */
+            padding: 20px; /* Increased padding */
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+        }
+    
+        .charity-item:hover {
+            transform: translateY(-5px); /* Slight lift effect */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
+        }
+    
+        .charity-item img {
+            max-width: 100%;
+            height: auto;
+        }
+    
+        .donate-button {
+            background-color: #800080; /* Dark purple color */
+            color: white;
+            border-radius: 5px;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+        }
+    
+        .donate-button:hover {
+            background-color: #660066; /* Slightly darker purple */
+        }
+        .charity-item .card-img-top {
+            width: 100%; /* Ensures the image takes the full width of the card */
+            height: auto; /* Maintains aspect ratio */
+            object-fit: cover; /* Covers the frame
+            without stretching /
+            max-height: 200px; / Limits the maximum height */
+            width: 100%; /* Ensures the image takes the full width of the card */
+            height: 200px; /* Fixed height for the card image */
+            object-fit: cover; /* Covers the frame without stretching */
+        }
+    
+        @media (max-width: 768px) {
+            .header-section {
+                height: 60vh; /* Smaller height on smaller screens */
+            }
+        }
+    </style>    
+{% endblock %}
+
+{% block header %}
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <header class="header-section">
+        <div class="container text-center">
+            <h1 class="page-title">Support Our Charities</h1>
+        </div>
+    </header>
+{% endblock %}
+
+{% block content %}
+<div class="container charity-container">
+    <div class="row">
+        {% for charity in charities %}
+            <div class="col-md-4 mb-4"> <!-- Bootstrap column for each charity item -->
+                <div class="charity-item card h-100"> <!-- h-100 to make all cards equal height -->
+                    <img src="{{ url_for('static', filename=charity.image_url) }}" alt="{{ charity.name }}" class="card-img-top">
+                    <div class="card-body d-flex flex-column"> <!-- Flex to push the button to the bottom -->
+                        <h3 class="card-title">{{ charity.name }}</h3>
+                        <p class="card-text flex-grow-1">{{ charity.description }}</p> <!-- flex-grow-1 to push the button to the bottom -->
+                    </div>
+                    <div class="card-footer"> <!-- Separate section for the button -->
+                        <!-- <button data-toggle="modal" data-target="#donationModal{{ charity.id }}" data-charity-id="{{ charity.id }}" class="donate-button btn btn-primary">Donate Now</button> -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stripe Donation Modal for each Charity -->
+            <div class="modal fade charity-donation-modal" id="donationModal{{ charity.id }}" tabindex="-1" role="dialog" aria-labelledby="donationModalLabel{{ charity.id }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="donationModalLabel">Donate to Charity</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Stripe Form -->
+                            <form action="{{ url_for('donations_blueprint.charity_donations') }}" method="post" id="stripe-donation-form{{ charity.id }}" class="mt-3">
+                                <div class="form-group">
+                                    <label for="donation-amount">Donation Amount</label>
+                                    <input type="number" id="donation-amount" class="form-control" name="amount" placeholder="Enter amount" required>
+                                </div>
+                                <div id="card-element{{ charity.id }}" class="form-group">
+                                    <!-- Stripe Elements will be inserted here -->
+                                </div>
+                                
+                                <!-- Additional fields for cardholder's name and email -->
+                                <div class="form-group">
+                                    <label for="cardholder-name">Cardholder's Name</label>
+                                    <input type="text" id="cardholder-name" class="form-control" name="cardholder_name" placeholder="Name as it appears on your card" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cardholder-email">Email Address</label>
+                                    <input type="email" id="cardholder-email" class="form-control" name="cardholder_email" placeholder="Your email address">
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary">Submit Donation</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    var stripe = Stripe('pk_test_51ORmDrBO4RqVDnuZuqrlnOyhWBEJELt57CAxDpJDfcW7eVRFm1T4QwF9Sbhd0x1Vpb9iA1QOof1nU4PZvQZChS500036lqa94e');
+    var elements = stripe.elements();
+
+    $(document).on('show.bs.modal', '.charity-donation-modal', function (event) {
+        var charityId = $(event.relatedTarget).data('charity-id');
+        var modal = $(this);
+        modal.find('.modal-title').text('Donate to ' + charityId);
+
+        var cardElementId = 'card-element' + charityId;
+        var formId = 'stripe-donation-form' + charityId;
+
+          // Initialize Stripe card element
+  if (!modal.find('#' + cardElementId).hasClass('StripeElement')) {
+      var card = elements.create('card', {
+          style: {
+              base: {
+                  fontSize: '16px',
+                  color: '#32325d',
+              },
+          }
+      });
+      card.mount('#' + cardElementId);
+  }
+
+  // Handle form submission
+  var form = $('#' + formId);
+  form.off('submit').on('submit', function(event) {
+      event.preventDefault();
+      stripe.createToken(card).then(function(result) {
+          if (result.error) {
+              // Handle error in token creation
+              console.error('Error in token creation:', result.error.message);
+          } else {
+              // Append Stripe Token and Charity ID to the form
+              $('<input>').attr({
+                  type: 'hidden',
+                  name: 'stripeToken',
+                  value: result.token.id
+              }).appendTo(form);
+
+              $('<input>').attr({
+                  type: 'hidden',
+                  name: 'charityId',
+                  value: charityId
+              }).appendTo(form);
+
+              form[0].submit();
+          }
+      });
+  });
+});
+
+</script>
+{% endblock %}

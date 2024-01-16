@@ -63,6 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 allDaySlot: false, // Disable all-day slot
                 selectable: true, // Allows users to select time slots
                 selectMirror: true,
+                longPressDelay: 100,
                 select: function(selectionInfo) {
                     // Calculate the duration of the selected time slot in minutes
                     var duration = moment(selectionInfo.end).diff(moment(selectionInfo.start), 'minutes');

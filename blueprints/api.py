@@ -25,7 +25,7 @@ class UserListResource(Resource):
         for user in users:
             user_info = {
                 'id': user.id,
-                'username': user.username,
+                'username': user.username.lower(),
                 'email': user.email,
                 'password_hash': user.password_hash,
                 'first_name': user.first_name,

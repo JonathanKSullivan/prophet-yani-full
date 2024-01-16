@@ -54,7 +54,7 @@ class UserManager:
 
     @staticmethod
     def get_user_by_username(username):
-        return User.query.filter_by(username=username).first()
+        return User.query.filter(func.lower(User.username) == username.lower()).first()
 
     @staticmethod
     def update_user(user_id, user_data):

@@ -1,0 +1,88 @@
+{% extends "base.html" %}  <!-- Replace with your actual base template file name -->
+{% block head %}
+<!-- Any additional head content specific to the community page -->
+<style>
+    .header-section {
+        background: url("{{ url_for('static', filename='images/community_coming_soon.webp') }}") no-repeat center center;
+        background-size: cover;
+        height: 100vh; /* Make header take up the full viewport height */
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+   .feature-item {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+   }
+   .feature-icon {
+    font-size: 24px;
+    color: #800080; /* Dark purple color */
+   }
+   .join-btn {
+    background-color: #800080; /* Dark purple color */
+    color: white;
+    border-radius: 5px;
+    padding: 10px 20px;
+    text-decoration: none;
+    display:
+    inline-block;
+   }
+   .join-btn:hover {
+    background-color: #660066; /* Slightly darker purple */
+    color: #FFF; /* Slightly darker purple */
+   }
+</style>
+{% endblock %}
+{% block header %}
+<header class="header-section">
+    <div class="container text-center">
+        <h1 class="display-4">Our Community</h1>
+        <p class="lead">Exciting Community Features on Their Way</p>
+    </div>
+</header>
+{% endblock %}
+{% block content %}
+<div class="container py-5">
+<div class="row justify-content-center">
+   <div class="col-lg-10">
+      <p class="lead text-center mb-4">We're crafting a dynamic community space full of enriching features to connect, share, and grow. Get ready for:</p>
+      <div class="row">
+         <div class="col-md-6 mb-3">
+            <div class="feature-item">
+               
+               <h4><i class="fas fa-calendar-alt feature-icon"></i> Exclusive Events</h4>
+               <p>Interactive workshops, seminars, and gatherings tailored to foster learning and connection.</p>
+            </div>
+         </div>
+         <div class="col-md-6 mb-3">
+            <div class="feature-item">
+               <h4><i class="fas fa-comments feature-icon"></i> Engaging Forums</h4>
+               <p>Join insightful discussions, share unique experiences, and form bonds with peers globally.</p>
+            </div>
+         </div>
+         <div class="col-md-6 mb-3">
+            <div class="feature-item">
+               <h4><i class="fas fa-users feature-icon"></i> Dedicated Discord Servers</h4>
+               <p>A real-time platform for instant communication, community building, and collaborative experiences.</p>
+            </div>
+         </div>
+         <div class="col-md-6 mb-3">
+            <div class="feature-item">
+               <h4><i class="fas fa-video feature-icon"></i> Live Stream Conference Rooms</h4>
+               <p>Virtual live streaming sessions for more interactive and engaging online conferences and meetups.</p>
+            </div>
+         </div>
+      </div>
+      <div class="text-center mt-5">
+         <h3>Perpetual Google Meet Room</h3>
+         <p>Join our ever-open Google Meet room for real-time interactions and discussions with community members and leaders.</p>
+         <a href="https://meet.google.com/jdo-jhqo-nva" class="join-btn mt-3" target="_blank">Join Google Meet</a>
+      </div>
+   </div>
+</div>
+{% endblock %}

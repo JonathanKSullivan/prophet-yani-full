@@ -30,16 +30,17 @@
                <h4 class="card-title text-center mb-4 social-media-highlight-subtitle">Measure our Impact</h4>
                <div class="row social-media-highlight-section">
                   {% for statistic in social_proof.impact_statistics %}
-                     <div class="col-md-4 col-sm-6 mb-3 text-center">
+                        <div class="col-md-4 col-sm-6 mb-3 text-center">
                            <div class="d-flex flex-column align-items-center">
                               <img src="{{ statistic.image_url }}" alt="{{ statistic.alt_text }}" style="height: 10em; width: auto;">
                               <br/>
-                              <span>{{ statistic.name }}: <strong>{{ statistic.count }}</strong></span>
+                              <span>{{ statistic.name }}: <strong class="home-social-number">{{ statistic.count }}</strong></span>
+                              <p class="statistic-description">{{ statistic.description }}</p>
                            </div>
-                     </div>
+                        </div>
                   {% endfor %}
-               </div>
-               <h4 class="card-title text-center mb-4">Measure our Influnene</h4>
+               </div>              
+               <h4 class="card-title text-center mb-4">Measure our Influence</h4>
                <div class="row social-media-highlight-section">
                   {% for follower in social_proof.social_media_highlights.followers %}
                      <div class="col-md-4 col-sm-6 mb-3 text-center">
@@ -52,7 +53,7 @@
                                  {% endif %}
                               </a>
                               <a href="{{ follower.url }}" target="_blank">
-                                 <span>{{ follower.name }}: <strong>{{ follower.count }}</strong> Followers</span>
+                                 <span>{{ follower.name }}: <strong  class="home-social-number">{{ follower.count }}</strong> Followers</span>
                               </a>
                            </div>
                      </div>

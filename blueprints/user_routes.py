@@ -33,7 +33,7 @@ def register_user():
         # Continue with the user creation process
         country_code = data.get('country')
         new_user = UserManager.add_user(
-            username=data['username'],
+            username=data['username'].lower(),
             email=email,
             password=data['password'],
             first_name=data.get('first_name', ''),
@@ -65,7 +65,7 @@ def register_user():
 @user_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
+        username = request.form['username'].lower()
         password = request.form['password']
         user = UserManager.get_user_by_username(username)
 

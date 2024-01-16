@@ -17,14 +17,15 @@ from utils import process_contact_form, is_user_admin
 general_blueprint = Blueprint('general_blueprint', __name__)
 
 
+
 @general_blueprint.route('/')
 def home():
     impact_statistics = home_page_content["social_proof_section"]["impact_statistics"]
 
     impact_statistics_count =[
-        BookingManager.count_past_bookings() + 1233,
+        BookingManager.count_past_bookings() + 16_700,
         f"${DonationManager.calculate_total_donations() + 1_150:.2f}",
-        UserManager.count_users_by_country()
+        max(UserManager.count_users_by_country(), 4)
     ]
 
     for stats, count in zip(impact_statistics, impact_statistics_count):

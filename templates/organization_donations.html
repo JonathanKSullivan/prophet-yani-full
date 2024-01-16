@@ -1,0 +1,173 @@
+{% extends "base.html" %}  <!-- Replace 'base.html' with the actual name of your base template file -->
+
+{% block head %}
+    <!-- Additional head content specific to the organization donations page -->
+    <style>
+        .header-section {
+            background: url("{{ url_for('static', filename='images/organization_donation.webp') }}") no-repeat center center;
+            background-size: cover;
+            height: 100vh; /* Make header take up the full viewport height */
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        /* Custom styling for Stripe Elements */
+        .StripeElement {
+            background-color: white;
+            height: 40px;
+            padding: 10px 12px;
+            border-radius: 4px;
+            border: 1px solid #ccd0d2;
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+            transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        }
+
+        .StripeElement--focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        }
+
+        .StripeElement--invalid {
+            border-color: #fa755a;
+        }
+
+        .StripeElement--webkit-autofill {
+            background-color: #fefde5 !important;
+        }
+
+        .donation-container {
+            margin-top: 30px;
+        }
+        .donation-info {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .donate-button {
+            background-color: #800080; /* Dark purple color */
+            color: white;
+            border-radius: 5px;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .donate-button:hover {
+            background-color: #0353ff; /* Slightly darker purple */
+        }
+        form {
+            margin: 20px 0;
+        }
+    </style>
+{% endblock %}
+
+{% block header %}
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+    {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+{% endif %}
+{% endwith %}
+
+<header class="header-section">
+    <div class="container text-center">
+        <h1 class="page-title">Support the Mission of Prophet Yani</h1>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="container donation-container">
+    <div class="donation-info">
+        <!-- Stripe Donation Form -->
+        <form id="donation-form" action="{{ url_for('donations_blueprint.organization_donations')}}" method="post">
+            <div class="form-group">
+                <label for="donation-amount">Donation Amount</label>
+                <input type="number" id="donation-amount" name="donation-amount" class="form-control" placeholder="Enter amount" required>
+            </div>
+            <div id="card-element">
+              <!-- Stripe Elements will be inserted here -->
+            </div>
+            <div class="form-group text-right"> <!-- Added class for right alignment -->
+                <button type="submit" class="donate-button">Donate Now</button>
+            </div>
+        </form>
+
+        <h2>Mission Statement</h2>
+        <p>"Empowering individuals on their spiritual journey through personalized guidance, fostering a supportive community, and extending compassion globally through charitable endeavors."</p>
+        
+        <h2>Vision Statement</h2>
+        <p>"To be a beacon of spiritual enlightenment and global goodwill, transforming lives through wisdom, connection, and compassion, and creating a more harmonious and understanding world."</p>
+
+        <h2>About ProphetYani.com</h2>
+        <p>Prophet Yani's organization is dedicated to providing spiritual guidance and personal growth through a blend of traditional wisdom and modern practices. The core of the organization's offerings includes personalized spiritual consultations, tailored to the unique needs of each individual. These sessions aim to help people navigate life's complexities, find solace amidst chaos, and embark on a path towards enlightenment and emotional balance.</p>
+        
+        <p>The organization also focuses on community building and global charitable initiatives. It hosts an online platform where members can share experiences, gain support, and connect with like-minded individuals. This fosters a sense of belonging and a collective journey in spiritual and personal transformation.</p>
+
+        <p>Moreover, Prophet Yani's organization integrates charitable giving into its services. Each consultation or interaction contributes to a variety of charitable causes, reflecting a commitment to global goodwill and positive change. This unique approach combines personal spiritual development with a broader humanitarian outlook.</p>
+
+        <p>The organization's holistic approach incorporates various aspects of spiritual life, offering flexible consultation formats such as in-person, online, or group sessions. The website is a comprehensive platform providing resources, community interaction, and detailed information about its services, impacts, and success stories, emphasizing personal spiritual growth and contributions to global well-being.</p>
+
+        <p>In summary, Prophet Yani's organization stands as a beacon for those seeking harmony in a chaotic world and aiming to contribute positively to the broader community through spiritual guidance, personal growth, community support, and global charitable efforts.</p>
+    </div>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+
+<script>
+    // Create a Stripe client
+    var stripe = Stripe('pk_test_51ORmDrBO4RqVDnuZuqrlnOyhWBEJELt57CAxDpJDfcW7eVRFm1T4QwF9Sbhd0x1Vpb9iA1QOof1nU4PZvQZChS500036lqa94e');
+    var elements = stripe.elements();
+
+    // Custom styling for Stripe Elements
+    var style = {
+      base: {
+        // Add your base input styles here. For example:
+        fontSize: '16px',
+        color: '#32325d',
+      },
+    };
+
+    // Create an instance of the card Element
+    var card = elements.create('card', {style: style});
+
+    // Add an instance of the card Element into the `card-element` <div>
+    card.mount('#card-element');
+
+    var donationForm = document.getElementById('donation-form');
+    donationForm.addEventListener('submit', function(evt) {
+        evt.preventDefault();
+
+        stripe.createToken(card).then(function(result) {
+            if (result.error) {
+                // Handle error
+                console.error(result.error.message);
+            } else {
+                // Append the token to the form
+                var hiddenInput = document.createElement('input');
+                hiddenInput.setAttribute('type', 'hidden');
+                hiddenInput.setAttribute('name', 'stripeToken');
+                hiddenInput.setAttribute('value', result.token.id);
+                donationForm.appendChild(hiddenInput);
+
+                // Now submit the form with both the token and the amount
+                donationForm.submit();
+            }
+        });
+    });
+</script>
+{% endblock %}

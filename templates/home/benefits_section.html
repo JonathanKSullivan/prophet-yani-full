@@ -1,14 +1,15 @@
 <section id="benefits" class="container my-5">
-    <h2>{{ benefits.title }}</h2>
-    <div class="row">
-       {% for benefit in benefits.benefits %}
-          <div class="col-md-4">
-                <img src="{{ benefit.image_url }}" alt="Image description for {{ benefit.title }}" class="img-fluid mb-3">
-                <h3 class="subheading">{{ benefit.title }}</h3>
-                <div class="benefit-features"><strong> {{ benefit.features }}</strong></div>
-                <div class="benefit-description">{{ benefit.description }}</div>
-                <p class="benefit-impact"><em>{{ benefit.impact }}</em></p>
-          </div>
-       {% endfor %}
-    </div>
- </section>
+   <h2>{{ benefits.title }}</h2>
+   <div class="row">
+      {% for benefit in benefits.benefits %}
+         <div class="col-md-4">
+               <img src="{{ benefit.image_url }}" alt="Image description for {{ benefit.title }}" class="img-fluid mb-3">
+               <h3 class="subheading">{{ benefit.title }}</h3>
+               <div class="benefit-features"><strong> {{ benefit.features }}</strong></div>
+               <div class="benefit-description">{{ benefit.description }}</div>
+               <p class="benefit-impact"><em>{{ benefit.impact }}</em></p>
+               <a href="{{ url_for(benefit.cta.link) }}" class="benefit-link">{{ benefit.cta.text }}</a>
+         </div>
+      {% endfor %}
+   </div>
+</section>

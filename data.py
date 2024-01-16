@@ -16,14 +16,14 @@ home_page_content = {
             {
                 "text": "Book your Consultation", 
                 "type": "primary",
-                "action_type": "email",
-                "target": "ProphetYani@gmail.com"
+                "action_type": "internal_link",
+                "target": "general_blueprint.services"
             },
             {
                 "text": "Make a Difference", 
                 "type": "secondary",
-                "action_type": "link",
-                "target": "https://www.paypal.com/paypalme/tip69"
+                "action_type": "internal_link",
+                "target": "donations_blueprint.organization_donations"
             }
         ]
     },
@@ -55,21 +55,33 @@ home_page_content = {
                 "features": "Customized Spiritual Consultations",
                 "description": "One-on-one sessions tailored to your unique spiritual journey, offering specific insights and guidance...",
                 "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/benefits-1.png",
-                "impact": "Achieve lasting inner peace, heightened self-awareness, and a clearer life path."
+                "impact": "Achieve lasting inner peace, heightened self-awareness, and a clearer life path.",
+                "cta": {
+                    "text": "Embark on Your Spiritual Journey: Book a Consultation Today",
+                    "link": "general_blueprint.services"
+                }
             },
             {
                 "title": "Community of Compassion and Support",
                 "features": "Access to an Exclusive Online Community Platform",
                 "description": "Join an online forum where members share experiences, insights, and support, fostering a sense of belonging...",
                 "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/benefits-2.png",
-                "impact": "Gain emotional support, build meaningful connections, and be part of a collective journey."
+                "impact": "Gain emotional support, build meaningful connections, and be part of a collective journey.",
+                "cta": {
+                    "text": "Coming Soon: Join Our Compassionate Community",
+                    "link": "community_blueprint.community"
+                }
             },
             {
                 "title": "Contribution to a Greater Cause",
                 "features": "Integrated Charitable Giving Options",
                 "description": "With each consultation, contribute to a range of charitable causes, impacting the wider world positively...",
                 "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/benefits-3.png",
-                "impact": "Experience the fulfillment of personal growth while contributing to global goodwill and change."
+                "impact": "Experience the fulfillment of personal growth while contributing to global goodwill and change.",
+                "cta": {
+                    "text": "Make a Difference: Support Charitable Causes with Us",
+                    "link": "donations_blueprint.charity_donations"
+                }
             }
             # Add more benefits as needed
         ]
@@ -130,7 +142,7 @@ home_page_content = {
                 "feature_offering": "Personalized psychic readings and spiritual consultations.",
                 "unique_value": "Dive into a world of intuitive guidance and self-discovery with Prophet Yani, enhancing your spiritual journey.",
                 "image_url": "https://jonathanksullivan.github.io/prophet-yani/image/home_zodiac.png",
-                "url": "https://zodiacempress.com/"
+                "url": "https://www.zodiacpsychics.com/nicole-guru-dream-analysis-expert"
             },
         ],
         "social_media_highlights": {
@@ -145,8 +157,8 @@ home_page_content = {
                 {
                     "name": "Instagram",
                     "icon": "fab fa-instagram",
-                    "count": "1300",
-                    "url": "https://www.instagram.com/yani.vip/",
+                    "count": "1313",
+                    "url": "https://www.instagram.com/zodiac_empress/",
                     "color":"#E4405F"
                 },
                 {
@@ -157,17 +169,17 @@ home_page_content = {
                     "color":"#25F4EE"
                 },
                 {
-                    "name": "Twitter",
+                    "name": "X",
                     "icon": "fab fa-twitter",
                     "count": "64",
-                    "url": "https://www.youtube.com/yaniwhite",
+                    "url": "https://twitter.com/zodiacempress",
                     "color":"#1DA1F2"
                 },
                 {
                     "name": "YouTube",
                     "icon": "fab fa-youtube",
                     "count": "16",
-                    "url": "https://www.youtube.com/yaniwhite",
+                    "url": "https://www.youtube.com/channel/UClceXEpflEGR4moFeYlnQGw/videos",
                     "color":"#FF0000"
                 }
             ]
@@ -329,7 +341,7 @@ about_page_content = {
                 "content": "Prophet Yani's story is one of transformation, shaped by personal challenges and a profound quest for understanding. Her empathetic approach to guiding others stems from this rich journey. Embracing both evidence-based practices and spiritual wisdom, she tailors her guidance to the unique journeys of her clients."
             },
             {
-                "title": "Guided by Wisdom and Recognition",
+                "title": "Guided by the Holy Spirit, Wisdom, and Recognition",
                 "content": "As an ordained minister and a certified spiritual guide, Prophet Yani combines recognized qualifications with deep spiritual insight. This unique blend reflects her commitment to ethical, compassionate spiritual leadership. Her dedication to continuous learning and excellence shines through in her guidance, fostering trust and integrity in the journey toward enlightenment and inner peace."
             },
             {

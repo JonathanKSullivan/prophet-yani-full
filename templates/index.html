@@ -9,6 +9,20 @@
          font-weight: 400;
          font-size: 21px;
       }
+      .benefit-link {
+         color: darkpurple; /* Replace with your preferred shade of dark purple */
+         text-decoration: underline; /* Removes the default underline */
+         border-bottom: 2px solid darkpurple; /* Adds a flat underline */
+         padding-bottom: 2px; /* Adjusts the space between the text and the underline */
+         transition: border-color 0.3s; /* Smooth transition for hover effect */
+      }
+
+      .benefit-link:hover, .benefit-link:focus {
+         border-bottom-color: lighten(darkpurple, 10%); /* Lightens the underline on hover/focus */
+      }
+      .home-social-number {
+         font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+      }
    </style>
 {% endblock %}
 
@@ -19,7 +33,7 @@
 {% endblock %}
 
 {% block content %}
-   <!-- Problem/Solution Section -->''
+   <!-- Problem/Solution Section -->
    {% include "home/problem_solution_section.html" %}
 
    <!-- Benefits Section -->
@@ -28,6 +42,9 @@
    <!-- Social Proof Section -->
    {% include "home/social_proof_section.html" %}
 
+   <!-- Call to Action Section -->
+   {% include "home/cta_section.html" %}
+   
    <!-- Feature Section -->
    {% include "home/feature_section.html" %}
 

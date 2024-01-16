@@ -5,7 +5,8 @@ from data import home_page_content, about_page_content
 
 from blueprints.booking_routes import booking_blueprint
 from blueprints.charity_routes import charity_blueprint
-from blueprints.donation_routes import donation_blueprint
+from blueprints.community_routes import community_blueprint
+from blueprints.donation_routes import donations_blueprint
 from blueprints.general_routes import general_blueprint
 from blueprints.location_routes import location_blueprint
 from blueprints.payment_routes import payment_blueprint
@@ -63,7 +64,8 @@ def inject_admin_check():
 # Register blueprints
 app.register_blueprint(booking_blueprint, url_prefix='/booking')
 app.register_blueprint(charity_blueprint, url_prefix='/charity')
-app.register_blueprint(donation_blueprint, url_prefix='/donation')
+app.register_blueprint(community_blueprint, url_prefix='/community')
+app.register_blueprint(donations_blueprint, url_prefix='/donation')
 app.register_blueprint(general_blueprint)
 app.register_blueprint(location_blueprint, url_prefix='/location')
 app.register_blueprint(payment_blueprint, url_prefix='/payment')
