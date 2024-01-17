@@ -12,7 +12,15 @@ from dateutil import parser
 
 
 # Set Stripe API key from environment variable
-stripe.api_key = os.environ.get('STRIPE_TEST_SECRET_KEY')
+env = os.environ.get('FLASK_ENV', 'development')
+
+if env == 'production':
+    stripe.api_key = os.environ.get('STRIPE_PROD_SECRET_KEY')
+    stripe_public_key = os.environ.get('STRIPE_PROD_PUBLIC_KEY')
+else:
+    stripe.api_key = os.environ.get('STRIPE_TEST_SECRET_KEY')
+    stripe_public_key = os.environ.get('STRIPE_TEST_PUBLIC_KEY')
+
 
 booking_blueprint = Blueprint('booking_blueprint', __name__)
 
@@ -118,7 +126,8 @@ def confirm_booking():
         start_time=friendly_start_time,
         end_time=friendly_end_time,
         metadata=confirm_booking_page_content["meta"],
-        footer=confirm_booking_page_content["footer"]
+        footer=confirm_booking_page_content["footer"],
+        stripe_public_key=stripe_public_key
         )
 
 @booking_blueprint.route('/api/bookings')
