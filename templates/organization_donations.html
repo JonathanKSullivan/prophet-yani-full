@@ -130,7 +130,7 @@
 
 <script>
     // Create a Stripe client
-    var stripe = Stripe('pk_test_51ORmDrBO4RqVDnuZuqrlnOyhWBEJELt57CAxDpJDfcW7eVRFm1T4QwF9Sbhd0x1Vpb9iA1QOof1nU4PZvQZChS500036lqa94e');
+    var stripe = Stripe('{{ stripe_public_key }}');
     var elements = stripe.elements();
 
     // Custom styling for Stripe Elements

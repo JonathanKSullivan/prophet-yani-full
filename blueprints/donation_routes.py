@@ -8,7 +8,14 @@ from lib.donation_manager import DonationManager
 donations_blueprint = Blueprint('donations_blueprint', __name__)
 
 # Set Stripe API key from environment variable
-stripe.api_key = os.environ.get('STRIPE_TEST_SECRET_KEY')
+env = os.environ.get('FLASK_ENV', 'development')
+
+if env == 'production':
+    stripe.api_key = os.environ.get('STRIPE_PROD_SECRET_KEY')
+    stripe_public_key = os.environ.get('STRIPE_PROD_PUBLIC_KEY')
+else:
+    stripe.api_key = os.environ.get('STRIPE_TEST_SECRET_KEY')
+    stripe_public_key = os.environ.get('STRIPE_TEST_PUBLIC_KEY')
 
 # Helper function to create Stripe charge
 def create_stripe_charge(stripe_token, amount, description):
@@ -46,7 +53,7 @@ def organization_donations():
             flash(f'An error occurred: {str(e)}', 'error')
         return redirect(url_for('donations_blueprint.organization_donations'))
 
-    return render_template('organization_donations.html', metadata={}, footer={})
+    return render_template('organization_donations.html', metadata={}, footer={}, stripe_public_key=stripe_public_key)
 
 @donations_blueprint.route('/donations/charities', methods=['GET', 'POST'])
 def charity_donations():
@@ -67,4 +74,4 @@ def charity_donations():
             flash(f'An error occurred during the donation process: {str(e)}', 'error')
 
     all_charities = CharityManager.list_all_charities()
-    return render_template('charity_donations.html', charities=all_charities, metadata={}, footer={})
+    return render_template('charity_donations.html', charities=all_charities, metadata={}, footer={}, stripe_public_key=stripe_public_key)

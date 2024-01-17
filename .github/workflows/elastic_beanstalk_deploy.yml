@@ -29,3 +29,4 @@ jobs:
         region: "us-east-2" 
         version_label: ${{ github.sha }}
         deployment_package: deploy-package.zip
+        bucket_name: "prophet-yani-deployments"  # Add your AWS S3 bucket name here
