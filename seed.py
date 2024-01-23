@@ -175,5 +175,5 @@ def seed_database():
 
 if __name__ == '__main__':
     # app.app_context().push()
-    # seed_database()
+    seed_database()
     print("DB Already Seeded.")
