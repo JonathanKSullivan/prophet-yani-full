@@ -144,20 +144,20 @@ def seed_database():
     """
     Drops existing tables, recreates them, and seeds the database with initial data.
     """
-    try:
-        with app.app_context():
-            AvailabilityRule.__table__.drop()
-            ExclusionDate.__table__.drop()
-            Location.__table__.drop()
-            User.__table__.drop()
-            Service.__table__.drop()
-            Charity.__table__.drop()
-            db.drop_all()
-            print("Tables dropped successfully.")
+    # try:
+    #     with app.app_context():
+    #         AvailabilityRule.__table__.drop()
+    #         ExclusionDate.__table__.drop()
+    #         Location.__table__.drop()
+    #         User.__table__.drop()
+    #         Service.__table__.drop()
+    #         Charity.__table__.drop()
+    #         db.drop_all()
+    #         print("Tables dropped successfully.")
             
-    except Exception as e:
-        db.session.rollback()
-        print(f"Error seeding database: {e}")
+    # except Exception as e:
+    #     db.session.rollback()
+    #     print(f"Error seeding database: {e}")
     try:
         with app.app_context():
             db.create_all()
